@@ -13,10 +13,18 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638239155212759026
-    m_Hash: 3846799084
+      ticks: 638781557578702576
+    m_Hash: 2490221432
 m_EmbeddedPackageManifests:
-  m_ManifestsStatus: {}
+  m_ManifestsStatus:
+    F:/My Games/FlyingMan3D/FlyingMan3D/Packages/bz-soft.ragdoll-helper/package.json:
+      m_FilePath: F:/My Games/FlyingMan3D/FlyingMan3D/Packages/bz-soft.ragdoll-helper/package.json
+      m_PathExists: 1
+      m_ContentTrackingEnabled: 1
+      m_ModificationDate:
+        serializedVersion: 2
+        ticks: 638269882370000000
+      m_Hash: 1725553565
 m_LocalPackages:
   m_LocalFileStatus: []
 m_ProjectPath: F:/My Games/FlyingMan3D/FlyingMan3D/Packages
@@ -2824,6 +2832,51 @@ m_ResolvedPackages:
     path: 
   unityLifecycle:
     version: 1.0.0
+    nextVersion: 
+- packageId: bz-soft.ragdoll-helper@file:F:\My Games\FlyingMan3D\FlyingMan3D\Packages\bz-soft.ragdoll-helper
+  testable: 1
+  isDirectDependency: 1
+  version: 1.6.0
+  source: 3
+  resolvedPath: F:\My Games\FlyingMan3D\FlyingMan3D\Packages\bz-soft.ragdoll-helper
+  assetPath: Packages/bz-soft.ragdoll-helper
+  name: bz-soft.ragdoll-helper
+  displayName: Ragdoll Helper
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: tool
+  description: Ragdoll helper
+  status: 4
+  errors: []
+  versions:
+    all: []
+    compatible: []
+    verified: 
+  dependencies: []
+  resolvedDependencies: []
+  keywords: []
+  registry:
+    id: main
+    name: 
+    url: https://packages.unity.com
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+  hideInEditor: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 0
+  documentationUrl: https://docs.google.com/document/d/18Humy2lIKUQ6uM_dKbet6Ig12RcI6M2D2XWjD4L-NpQ/edit?usp=sharing
+  hasRepository: 0
+  repository:
+    type: 
+    url: 
+    revision: 
+    path: 
+  unityLifecycle:
+    version: 
     nextVersion: 
 - packageId: com.unity.modules.subsystems@1.0.0
   testable: 0
