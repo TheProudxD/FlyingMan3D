@@ -366,10 +366,12 @@
 "Assets/FX/Scripts/ETFXLightFade.cs"
 "Assets/FX/Scripts/ETFXPitchRandomizer.cs"
 "Assets/FX/Scripts/ETFXRotation.cs"
+"Assets/Models/Voodoo/VoodooCustomCharacter/Demo/Scripts/Rotate.cs"
 "Assets/Scripts/AdditiveRing.cs"
 "Assets/Scripts/EnemyFinish.cs"
 "Assets/Scripts/Finish.cs"
 "Assets/Scripts/GameManager.cs"
+"Assets/Scripts/GradientBackground/Scripts/GradientBackground.cs"
 "Assets/Scripts/Indicator.cs"
 "Assets/Scripts/MultiplierRing.cs"
 "Assets/Scripts/Needle.cs"
@@ -382,7 +384,6 @@
 "Assets/Scripts/Ring.cs"
 "Assets/Scripts/Spawner.cs"
 "Assets/Scripts/UIManager.cs"
-"Assets/Voodoo/VoodooCustomCharacter/Demo/Scripts/Rotate.cs"
 -langversion:9.0
 
 /deterministic
