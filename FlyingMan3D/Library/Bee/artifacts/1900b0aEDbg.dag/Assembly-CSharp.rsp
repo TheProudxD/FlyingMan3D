@@ -119,9 +119,6 @@
 -define:DREAMTECK_SPLINES
 -define:CSHARP_7_OR_LATER
 -define:CSHARP_7_3_OR_NEWER
--r:"Assets/Plugins/StarterPack2021Haziran/Plugins/Demigiant/DemiLib/Core/DemiLib.dll"
--r:"Assets/Plugins/StarterPack2021Haziran/Plugins/Demigiant/DOTween/DOTween.dll"
--r:"Assets/Plugins/StarterPack2021Haziran/Plugins/Demigiant/DOTweenPro/DOTweenPro.dll"
 -r:"F:/My Games/FlyingMan3D/FlyingMan3D/Library/PackageCache/com.unity.cinemachine@2.8.4/Runtime/ThirdParty/clipper_library.dll"
 -r:"F:/My Games/FlyingMan3D/FlyingMan3D/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.0.2/Runtime/Newtonsoft.Json.dll"
 -r:"F:/Programms/Unity/2021.3.3f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll"
@@ -373,10 +370,13 @@
 "Assets/Scripts/GameManager.cs"
 "Assets/Scripts/GradientBackground/Scripts/GradientBackground.cs"
 "Assets/Scripts/Indicator.cs"
+"Assets/Scripts/LevelManager.cs"
+"Assets/Scripts/Mechanics/SwipeMovement.cs"
 "Assets/Scripts/MultiplierRing.cs"
 "Assets/Scripts/Needle.cs"
 "Assets/Scripts/PlayerController.cs"
 "Assets/Scripts/PlayerMoveToFinish.cs"
+"Assets/Scripts/RagdollController.cs"
 "Assets/Scripts/Ragdolls/ColliderOperations.cs"
 "Assets/Scripts/Ragdolls/RagdollOperations.cs"
 "Assets/Scripts/Ragdolls/RigidbodyArrayOperations.cs"
