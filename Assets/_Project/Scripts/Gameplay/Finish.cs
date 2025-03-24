@@ -37,7 +37,7 @@ public class Finish : MonoBehaviour
             root.GetComponent<PlayerMoveToFinish>().enabled = true ;
             root.GetComponent<CapsuleCollider>().enabled = true;
 
-            GameObject hips = root.GetChild(0).gameObject.transform.GetChild(0).gameObject;
+            GameObject hips = root.GetComponent<PlayerController>().SelfHips;
             root.gameObject.AddComponent<Rigidbody>();
             root.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 

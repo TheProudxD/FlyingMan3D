@@ -12,14 +12,14 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] private Transform capsule;
     [SerializeField] private FixedJoint joint;
-    
+    [SerializeField] public GameObject SelfHips;
+
     [HideInInspector] public bool isPassed;
     [HideInInspector] public Rigidbody[] bodies;
 
     private float xValue;
     private Vector3 initialPos;
     private float time;
-    private GameObject SelfHips;
 
     private void Awake()
     {
@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        SelfHips = transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
         bodies = GetComponentsInChildren<Rigidbody>();
         initialPos = capsule.position;
         
