@@ -4,45 +4,51 @@ using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 public class Spawner : MonoBehaviour
 {
     public enum RingType
     {
-        Additive, Multiplier, Reducer
+        Additive,
+        Multiplier,
+        Reducer
     }
 
     [Serializable]
     public class Ring
     {
-        public RingType ringType;
-        public int effect;
+        [FormerlySerializedAs("ringType")] public RingType RingType;
+        [FormerlySerializedAs("effect")] public int Effect;
     }
 
     [Serializable]
     public class UpperRing
     {
-        public Ring[] insideRings = new Ring[2];
+        [FormerlySerializedAs("insideRings")] public Ring[] InsideRings = new Ring[2];
     }
 
     public static Spawner Instance;
-    public static List<GameObject> enemies;
-    [SerializeField]
-    private GameObject Platform;
+    public static List<GameObject> Enemies;
 
-    [SerializeField] private GameObject EnemyPrefab;
-    [SerializeField] private float enemyCount;
-    [SerializeField] private UpperRing[] rings;
-    [SerializeField] private GameObject ringPrefab;
-    [SerializeField] private Transform playerTransform;
-    [SerializeField] private GameObject finish;
-    [SerializeField] private float timeDif = 0.5f;
+    [FormerlySerializedAs("Platform")] [SerializeField] private GameObject _platform;
+    [FormerlySerializedAs("EnemyPrefab")] [SerializeField] private GameObject _enemyPrefab;
+    [FormerlySerializedAs("rings")] [SerializeField] private UpperRing[] _rings;
+    [FormerlySerializedAs("ringPrefab")] [SerializeField] private GameObject _ringPrefab;
+    [FormerlySerializedAs("playerTransform")] [SerializeField] private Transform _playerTransform;
+    [FormerlySerializedAs("finish")] [SerializeField] private GameObject _finish;
+    [FormerlySerializedAs("enemyCount")] [SerializeField] private float _enemyCount;
+    [FormerlySerializedAs("timeDif")] [SerializeField] private float _timeDif = 0.5f;
 
-    private float g, averageTime;
-    private float velY, velZ;
-    private float xPos, yPos, zPos;
-    
-    private int ringCount;
+    private readonly float _g = -Physics.gravity.y;
+    private float _averageTime;
+    private float _velY;
+    private float _velZ;
+    private float _xPos;
+    private float _yPos;
+    private float _zPos;
+
+    private int _ringCount;
 
     private void Awake()
     {
@@ -50,98 +56,111 @@ public class Spawner : MonoBehaviour
         {
             Instance = this;
         }
-        enemies = new List<GameObject>();
+
+        Enemies = new List<GameObject>();
     }
 
-    void Start()
+    private void Start()
     {
-        Platform.GetComponent<Renderer>().sharedMaterial.color = GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].PlatformColor;
-        ringPrefab.transform.GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial.color = GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].RingColor;
-        ringPrefab.transform.GetChild(0).gameObject.transform.GetChild(1).GetComponent<Renderer>().sharedMaterial.color = GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].RingTransColor;
-        ringPrefab.transform.GetChild(1).gameObject.GetComponent<Renderer>().sharedMaterial.color = GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].RingColor;
-        ringPrefab.transform.GetChild(1).gameObject.transform.GetChild(1).GetComponent<Renderer>().sharedMaterial.color = GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].RingTransColor;
-        g = -Physics.gravity.y;
-        ringCount = rings.Length;
+        _platform.GetComponent<Renderer>().sharedMaterial.color =
+            GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].PlatformColor;
+
+        _ringPrefab.transform.GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial.color =
+            GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].RingColor;
+
+        _ringPrefab.transform.GetChild(0).gameObject.transform.GetChild(1).GetComponent<Renderer>().sharedMaterial
+            .color = GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].RingTransColor;
+
+        _ringPrefab.transform.GetChild(1).gameObject.GetComponent<Renderer>().sharedMaterial.color =
+            GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].RingColor;
+
+        _ringPrefab.transform.GetChild(1).gameObject.transform.GetChild(1).GetComponent<Renderer>().sharedMaterial
+            .color = GameManager.Instance.ColorArray[SceneManager.GetActiveScene().buildIndex].RingTransColor;
+        
+        _ringCount = _rings.Length;
     }
 
     public void SpawnObjects(Vector3 velocity)
     {
-        velY = velocity.y;
-        velZ = velocity.z;
-        averageTime = velY / g;
-        yPos = playerTransform.position.y + (velY * averageTime) - (0.5f * g * averageTime * averageTime);
-        zPos = playerTransform.position.z + velZ * averageTime;
+        _velY = velocity.y;
+        _velZ = velocity.z;
+        _averageTime = _velY / _g;
+        _yPos = _playerTransform.position.y + (_velY * _averageTime) - (0.5f * _g * _averageTime * _averageTime);
+        _zPos = _playerTransform.position.z + _velZ * _averageTime;
 
-        float finishTime = averageTime * 2;
-        float finishZPos = playerTransform.position.z + velZ * finishTime;
-        GameObject finishGO = Instantiate(finish, new Vector3(0, 0, finishZPos), Quaternion.identity);
+        float finishTime = _averageTime * 2;
+        float finishZPos = _playerTransform.position.z + _velZ * finishTime;
+        GameObject finishGo = Instantiate(_finish, new Vector3(0, 0, finishZPos), Quaternion.identity);
 
-        float angle = 360 / enemyCount;
+        float angle = 360 / _enemyCount;
 
-        for (int i = 0; i < enemyCount; i++)
+        for (int i = 0; i < _enemyCount; i++)
         {
             float rotation = angle * i;
-            GameObject enemy = Instantiate(EnemyPrefab, finishGO.transform.position, Quaternion.Euler(0f, 180f, 0f));
+            GameObject enemy = Instantiate(_enemyPrefab, finishGo.transform.position, Quaternion.Euler(0f, 180f, 0f));
             enemy.transform.Rotate(0, rotation, 0);
             enemy.transform.Translate(new Vector3(0, 0, -16f));
-            enemies.Add(enemy);
+            Enemies.Add(enemy);
         }
-        
+
         float t;
-        
-        if (ringCount % 2 == 0)
+
+        if (_ringCount % 2 == 0)
         {
-            t = averageTime - timeDif / 2 - timeDif * (ringCount - 2) / 2;
+            t = _averageTime - _timeDif / 2 - _timeDif * (_ringCount - 2) / 2;
         }
         else
         {
-            t = averageTime - timeDif * (ringCount / 2);
+            t = _averageTime - _timeDif * (_ringCount / 2);
         }
-        
-        for (int i = 0; i < ringCount; i++)
+
+        for (int i = 0; i < _ringCount; i++)
         {
-            GameObject currentRing = Instantiate(ringPrefab, CalculateRingPosition(t, i), Quaternion.identity);
+            GameObject currentRing = Instantiate(_ringPrefab, CalculateRingPosition(t, i), Quaternion.identity);
 
             for (int j = 0; j < 2; j++)
             {
-                Ring currentInsideRing = rings[i].insideRings[j];
-                GameObject currentGO = currentRing.transform.GetChild(j).gameObject;
+                Ring currentInsideRing = _rings[i].InsideRings[j];
+                GameObject currentGo = currentRing.transform.GetChild(j).gameObject;
 
-                DetermineRingType(currentInsideRing, currentGO);
+                DetermineRingType(currentInsideRing, currentGo);
             }
-            t += timeDif;
+
+            t += _timeDif;
         }
     }
 
-    private void DetermineRingType(Ring insideRing, GameObject currentChildGO)
+    private void DetermineRingType(Ring insideRing, GameObject currentChildGo)
     {
-        if (insideRing.ringType == RingType.Additive)
+        switch (insideRing.RingType)
         {
-            currentChildGO.AddComponent<AdditiveRing>();
-            currentChildGO.GetComponent<AdditiveRing>().addition = insideRing.effect;
-            currentChildGO.GetComponentInChildren<TextMeshPro>().text = "+" + insideRing.effect;
-        }
-        else if (insideRing.ringType == RingType.Multiplier)
-        {
-            currentChildGO.AddComponent<MultiplierRing>();
-            currentChildGO.GetComponent<MultiplierRing>().multiplier = insideRing.effect;
-            currentChildGO.GetComponentInChildren<TextMeshPro>().text = "x" + insideRing.effect;
-        }
-        else if (insideRing.ringType == RingType.Reducer)
-        {
-            currentChildGO.AddComponent<ReducerRing>();
-            currentChildGO.GetComponent<ReducerRing>().reductionFactor = insideRing.effect;
-            currentChildGO.GetComponentInChildren<TextMeshPro>().text = "-" + insideRing.effect;
+            case RingType.Additive:
+                currentChildGo.AddComponent<AdditiveRing>();
+                currentChildGo.GetComponent<AdditiveRing>().addition = insideRing.Effect;
+                currentChildGo.GetComponentInChildren<TextMeshPro>().text = "+" + insideRing.Effect;
+                break;
+            case RingType.Multiplier:
+                currentChildGo.AddComponent<MultiplierRing>();
+                currentChildGo.GetComponent<MultiplierRing>().multiplier = insideRing.Effect;
+                currentChildGo.GetComponentInChildren<TextMeshPro>().text = "x" + insideRing.Effect;
+                break;
+            case RingType.Reducer:
+                currentChildGo.AddComponent<ReducerRing>();
+                currentChildGo.GetComponent<ReducerRing>().ReductionFactor = insideRing.Effect;
+                currentChildGo.GetComponentInChildren<TextMeshPro>().text = "-" + insideRing.Effect;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    Vector3 CalculateRingPosition(float t, int i)
+    private Vector3 CalculateRingPosition(float t, int i)
     {
-        xPos = (i == 0) ? Random.Range(-10f, 10f) : Mathf.Clamp(xPos + 2f, -20f, 20f);
+        _xPos = i == 0 ? Random.Range(-10f, 10f) : Mathf.Clamp(_xPos + 2f, -20f, 20f);
 
-        yPos = playerTransform.position.y + (velY * t) - (0.5f * g * t * t);
-        zPos = playerTransform.position.z + velZ * t;
+        _yPos = _playerTransform.position.y + (_velY * t) - (0.5f * _g * t * t);
+        _zPos = _playerTransform.position.z + _velZ * t;
 
-        return new Vector3(xPos, yPos, zPos);
+        return new Vector3(_xPos, _yPos, _zPos);
     }
 }

@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    private static readonly int Win = Animator.StringToHash("Win");
 
     [HideInInspector] public bool isPlayerEntered;
     [HideInInspector] public bool isGameStarted;
@@ -25,31 +27,29 @@ public class GameManager : MonoBehaviour
         public Color PlatformColor;
     }
 
-    public int currentLevel;
+    private int _currentLevel;
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance == null) 
+            Instance = this;
+        
         Application.targetFrameRate = 60;
     }
-
-    /// <summary>
-    /// Start is called on the frame when a script is enabled just before
-    /// any of the Update methods is called the first time.
-    /// </summary>
-    void Start()
+    
+    private void Start()
     {
-        currentLevel = PlayerPrefs.GetInt("level", 0);
-        levelText.text = "LEVEL " + (currentLevel + 1);
+        _currentLevel = PlayerPrefs.GetInt("level", 0);
+        levelText.text = "LEVEL " + (_currentLevel + 1);
     }
 
     private void Update()
     {
         if (Instance.isPlayerEntered)
         {
-            if (PlayerController.players.Count == 0 && Spawner.enemies.Count >= 0)
+            if (PlayerController.players.Count == 0 && Spawner.Enemies.Count >= 0)
             {
-                foreach (var item in Spawner.enemies)
+                foreach (GameObject item in Spawner.Enemies)
                 {
                     item.GetComponent<Animator>().SetBool("Win", true);
                     Destroy(item.GetComponent<Rigidbody>());
@@ -58,11 +58,11 @@ public class GameManager : MonoBehaviour
                 GameOver();
                 isPlayerEntered = false;
             }
-            else if (Spawner.enemies.Count == 0 && PlayerController.players.Count > 0)
+            else if (Spawner.Enemies.Count == 0 && PlayerController.players.Count > 0)
             {
-                foreach (var item in PlayerController.players)
+                foreach (PlayerController item in PlayerController.players)
                 {
-                    item.GetComponent<Animator>().SetBool("Win", true);
+                    item.Animator.SetBool(Win, true);
                     Destroy(item.GetComponent<Rigidbody>());
                 }
 
@@ -91,15 +91,15 @@ public class GameManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        currentLevel += 1;
-        PlayerPrefs.SetInt("level", currentLevel);
+        _currentLevel += 1;
+        PlayerPrefs.SetInt("level", _currentLevel);
 
-        if (currentLevel % SceneManager.sceneCountInBuildSettings == 0)
+        if (_currentLevel % SceneManager.sceneCountInBuildSettings == 0)
         {
             SceneManager.LoadScene(0);
         }
         else
-            SceneManager.LoadScene(currentLevel % SceneManager.sceneCountInBuildSettings + 1);
+            SceneManager.LoadScene(_currentLevel % SceneManager.sceneCountInBuildSettings + 1);
     }
 
     public void LoadAgain()

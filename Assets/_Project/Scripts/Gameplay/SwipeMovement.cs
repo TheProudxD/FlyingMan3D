@@ -8,9 +8,13 @@ namespace BhorGames.Mechanics
     {
         public enum Axis
         {
-            x, y, z
+            x,
+            y,
+            z
         }
+
         Vector3 movementMagnitude = -Vector3.one;
+
         public void SwipeMove(Transform _transform, Axis axis = Axis.x, float speed = 1)
         {
             switch (axis)
@@ -28,6 +32,7 @@ namespace BhorGames.Mechanics
                     break;
             }
         }
+
         public float GetMovementMagnitude(Axis axis = Axis.x, bool onMouseHold = true)
         {
             if (!Input.GetMouseButton(0))
@@ -35,13 +40,17 @@ namespace BhorGames.Mechanics
                 movementMagnitude = -Vector3.one;
                 return 0;
             }
+
             float mag = 0;
+
             if (movementMagnitude == -Vector3.one)
             {
                 movementMagnitude = Input.mousePosition;
             }
+
             movementMagnitude = Input.mousePosition - movementMagnitude;
             movementMagnitude /= 1000;
+
             switch (axis)
             {
                 case Axis.x:
@@ -56,6 +65,7 @@ namespace BhorGames.Mechanics
                 default:
                     break;
             }
+
             movementMagnitude = Input.mousePosition;
             return mag;
         }

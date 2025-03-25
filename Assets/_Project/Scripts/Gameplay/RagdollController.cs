@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+
 namespace BhorGames
 {
     public class RagdollController : MonoBehaviour
@@ -10,11 +11,13 @@ namespace BhorGames
         public Rigidbody body;
         public bool multiplyMass = false;
         public float multiplyBy = 3;
+
         private void Start()
         {
             rigids = transform.GetComponentsInChildren<Rigidbody>().ToList();
             DeactivateRagdoll();
         }
+
         [ContextMenu("DeActivate")]
         public void DeactivateRagdoll()
         {
@@ -25,6 +28,7 @@ namespace BhorGames
                 item.isKinematic = true;
             }
         }
+
         [ContextMenu("Activate")]
         public void ActivateRagdoll()
         {
@@ -37,11 +41,13 @@ namespace BhorGames
                 item.isKinematic = false;
             }
         }
+
         public void StickBodyToObject()
         {
             body.isKinematic = true;
             body.useGravity = false;
         }
+
         public void UnStickBodyToObject()
         {
             body.isKinematic = false;

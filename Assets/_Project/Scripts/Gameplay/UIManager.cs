@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -8,6 +7,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject text;
     [SerializeField] private GameObject canvas;
+    [SerializeField] private TMP_Text levelText;
 
     private void Awake()
     {
@@ -20,5 +20,11 @@ public class UIManager : MonoBehaviour
             Quaternion.identity);
 
         textGO.transform.SetParent(canvas.transform);
+    }
+    
+    public void UpdateLevelTxt()
+    {
+        LevelManager.Instance.currentLevel = PlayerPrefs.GetInt("level", 0);
+        levelText.text = "LEVEL " + (LevelManager.Instance.currentLevel + 1);
     }
 }

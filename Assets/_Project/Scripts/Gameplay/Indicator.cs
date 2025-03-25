@@ -5,7 +5,6 @@ public class Indicator : MonoBehaviour
     [SerializeField] private Needle _needle;
     
     private PlayerController _player;
-
     private readonly float _startPos = -50f;
     private readonly float _endPos = -130f;
     private float _desiredPos;

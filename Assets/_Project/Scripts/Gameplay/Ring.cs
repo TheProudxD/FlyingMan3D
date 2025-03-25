@@ -13,7 +13,7 @@ public class Ring : MonoBehaviour
         CopyTransformData(root.transform, duplicatedPlayer.transform);
     }
 
-    public static void CopyTransformData(Transform sourceTransform, Transform targetTransform)
+    private static void CopyTransformData(Transform sourceTransform, Transform targetTransform)
     {
         if (sourceTransform.childCount != targetTransform.childCount)
         {

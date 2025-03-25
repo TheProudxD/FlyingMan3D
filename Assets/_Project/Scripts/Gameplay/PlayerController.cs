@@ -9,17 +9,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxLaunchSpeed = 60f;
     [SerializeField] private float movementSpeed = 100f;
     [SerializeField] private float mobileSpeed = 10f;
-    
     [SerializeField] private Transform capsule;
     [SerializeField] private FixedJoint joint;
     [SerializeField] public GameObject SelfHips;
-
+    
     [HideInInspector] public bool isPassed;
     [HideInInspector] public Rigidbody[] bodies;
 
     private float xValue;
     private Vector3 initialPos;
     private float time;
+    public Animator Animator { get; private set; }
 
     private void Awake()
     {
@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
         {
             players = new List<PlayerController>();
         }
+
+        Animator = GetComponent<Animator>();
     }
 
     void Start()
