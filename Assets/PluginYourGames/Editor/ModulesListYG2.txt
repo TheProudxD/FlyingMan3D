@@ -4,6 +4,7 @@ InterstitialAdv v1.001
 Leaderboards v1.0
 Localization v1.001
 Metrica v1.01
+OpenURL v1.002
 Review v1.0
 RewardedAdv v1.001
 Storage v1.01

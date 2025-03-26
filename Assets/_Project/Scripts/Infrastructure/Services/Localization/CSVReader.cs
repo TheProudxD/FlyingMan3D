@@ -1,0 +1,60 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
+using UnityEngine;
+
+namespace _Project.Scripts.Infrastructure.Services.Localization
+{
+    public class CSVReader
+    {
+        private static string SPLIT_RE = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";
+        private static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r";
+        private static char[] TRIM_CHARS = { '\"' };
+
+        public static List<Dictionary<string, object>> Read(string file)
+        {
+            var list = new List<Dictionary<string, object>>();
+
+            string fileContent = File.ReadAllText(file);
+            TextAsset data = new TextAsset(fileContent);
+
+            var lines = Regex.Split(data.text, LINE_SPLIT_RE);
+
+            if (lines.Length <= 1) return list;
+
+            var header = Regex.Split(lines[0], SPLIT_RE);
+
+            foreach (string l in lines)
+            {
+                var values = Regex.Split(l, SPLIT_RE);
+                if (values.Length == 0 || values[0] == "") continue;
+
+                var entry = new Dictionary<string, object>();
+
+                for (var j = 0; j < header.Length && j < values.Length; j++)
+                {
+                    string value = values[j];
+                    value = value.TrimStart(TRIM_CHARS).TrimEnd(TRIM_CHARS); //.Replace("\\", "");
+                    object finalvalue = value;
+                    int n;
+                    float f;
+
+                    if (int.TryParse(value, out n))
+                    {
+                        finalvalue = n;
+                    }
+                    else if (float.TryParse(value, out f))
+                    {
+                        finalvalue = f;
+                    }
+
+                    entry[header[j]] = finalvalue;
+                }
+
+                list.Add(entry);
+            }
+
+            return list;
+        }
+    }
+}

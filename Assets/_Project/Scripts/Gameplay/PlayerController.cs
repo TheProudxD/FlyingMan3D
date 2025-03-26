@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
-    public static List<PlayerController> players;
+    public List<PlayerController> players;
 
     [SerializeField] private float maxLaunchSpeed = 60f;
     [SerializeField] private float movementSpeed = 100f;
@@ -16,9 +16,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool isPassed;
     [HideInInspector] public Rigidbody[] bodies;
 
-    private float xValue;
-    private Vector3 initialPos;
-    private float time;
+    private float _xValue;
+    private Vector3 _initialPos;
+    private float _time;
     public Animator Animator { get; private set; }
 
     private void Awake()
@@ -31,26 +31,26 @@ public class PlayerController : MonoBehaviour
         Animator = GetComponent<Animator>();
     }
 
-    void Start()
+    private void Start()
     {
         bodies = GetComponentsInChildren<Rigidbody>();
-        initialPos = capsule.position;
+        _initialPos = capsule.position;
         
         players.Add(this);
     }
 
-    void Update()
+    private void Update()
     {
 #if UNITY_EDITOR
         if (Input.GetMouseButton(0))
         {
             if (GameManager.Instance.isGameStarted)
             {
-                xValue = Input.GetAxis("Mouse X");
+                _xValue = Input.GetAxis("Mouse X");
 
                 foreach (Rigidbody rb in bodies)
                 {
-                    rb.velocity += new Vector3(xValue, 0, 0) * Time.deltaTime * movementSpeed;
+                    rb.velocity += new Vector3(_xValue, 0, 0) * Time.deltaTime * movementSpeed;
                 }
             }
             else
@@ -102,21 +102,21 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator ApplyLaunchForce(float factor)
     {
-        Vector3 targetPos = initialPos + new Vector3(0f, -1f, -4f) * factor;
+        Vector3 targetPos = _initialPos + new Vector3(0f, -1f, -4f) * factor;
 
-        while (time <= 0.8f)
+        while (_time <= 0.8f)
         {
-            capsule.position = Vector3.Lerp(initialPos, targetPos, time / 0.8f);
-            time += Time.deltaTime;
+            capsule.position = Vector3.Lerp(_initialPos, targetPos, _time / 0.8f);
+            _time += Time.deltaTime;
             yield return null;
         }
 
-        time = 0f;
+        _time = 0f;
 
-        while (time <= 0.1f)
+        while (_time <= 0.1f)
         {
-            capsule.position = Vector3.Lerp(targetPos, initialPos, time / 0.2f);
-            time += Time.deltaTime;
+            capsule.position = Vector3.Lerp(targetPos, _initialPos, _time / 0.2f);
+            _time += Time.deltaTime;
             yield return null;
         }
 
