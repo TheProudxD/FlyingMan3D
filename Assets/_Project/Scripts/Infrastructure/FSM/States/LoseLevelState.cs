@@ -1,6 +1,7 @@
 using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Audio;
+using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.UI.Windows;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
@@ -11,17 +12,20 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly WindowService _windowService;
         private readonly HintService _hintService;
         private readonly AudioService _audioService;
+        private readonly GameFactory _gameFactory;
 
-        public LoseLevelState(WindowService windowService, Timer timer, HintService hintService, AudioService audioService)
+        public LoseLevelState(WindowService windowService, Timer timer, HintService hintService, AudioService audioService, GameFactory gameFactory)
         {
             _windowService = windowService;
             _timer = timer;
             _hintService = hintService;
             _audioService = audioService;
+            _gameFactory = gameFactory;
         }
 
         public void Enter()
         {
+            _gameFactory.players = null;
             LoseLevel();
         }
 

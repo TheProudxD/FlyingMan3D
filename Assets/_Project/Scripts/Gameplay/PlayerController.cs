@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
+using _Project.Scripts.Infrastructure.Services.Factories;
+using Reflex.Attributes;
 
 public class PlayerController : MonoBehaviour
 {
-    public List<PlayerController> players;
+    [Inject] private GameFactory _gameFactory;
 
     [SerializeField] private float maxLaunchSpeed = 60f;
     [SerializeField] private float movementSpeed = 100f;
@@ -12,56 +13,41 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform capsule;
     [SerializeField] private FixedJoint joint;
     [SerializeField] public GameObject SelfHips;
-    
-    [HideInInspector] public bool isPassed;
-    [HideInInspector] public Rigidbody[] bodies;
+
+    public bool IsPassed { get; set; }
+    private Rigidbody[] _bodies;
 
     private float _xValue;
     private Vector3 _initialPos;
     private float _time;
+    private bool _isGameStarted;
+
     public Animator Animator { get; private set; }
 
-    private void Awake()
-    {
-        if (players == null || players.Count == 0)
-        {
-            players = new List<PlayerController>();
-        }
-
-        Animator = GetComponent<Animator>();
-    }
+    private void Awake() => Animator = GetComponent<Animator>();
 
     private void Start()
     {
-        bodies = GetComponentsInChildren<Rigidbody>();
+        _bodies = GetComponentsInChildren<Rigidbody>();
         _initialPos = capsule.position;
-        
-        players.Add(this);
     }
 
     private void Update()
     {
-#if UNITY_EDITOR
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !_isGameStarted)
         {
-            if (GameManager.Instance.isGameStarted)
-            {
-                _xValue = Input.GetAxis("Mouse X");
+            //tapToThrow.SetActive(false);
+            _isGameStarted = true;
 
-                foreach (Rigidbody rb in bodies)
-                {
-                    rb.velocity += new Vector3(_xValue, 0, 0) * Time.deltaTime * movementSpeed;
-                }
-            }
-            else
+            _xValue = Input.GetAxis("Mouse X");
+
+            foreach (Rigidbody rb in _bodies)
             {
-                GameManager.Instance.CloseTapText();
-                GameManager.Instance.isGameStarted = true;
+                rb.velocity += new Vector3(_xValue, 0, 0) * (Time.deltaTime * movementSpeed);
             }
         }
 
-#elif UNITY_ANDROID || UNITY_IOS
-        if (Input.touchCount > 0)
+/*        if (Input.touchCount > 0)
         {
             if (GameManager.Instance.isGameStarted)
             {
@@ -84,7 +70,7 @@ public class PlayerController : MonoBehaviour
                 GameManager.Instance.isGameStarted = true;
             }
         }
-#endif
+*/
 
         CheckForBoundaries();
     }
@@ -93,11 +79,13 @@ public class PlayerController : MonoBehaviour
     {
         float xPos = SelfHips.transform.position.x;
 
-        if (xPos >= 20f || xPos <= -20f)
-        {
-            float newX = Mathf.Sign(xPos) * -3f;
-            SelfHips.GetComponent<Rigidbody>().velocity = new Vector3(newX, SelfHips.GetComponent<Rigidbody>().velocity.y, SelfHips.GetComponent<Rigidbody>().velocity.z);
-        }
+        if (xPos is < 20f and > -20f)
+            return;
+
+        float newX = Mathf.Sign(xPos) * -3f;
+
+        SelfHips.GetComponent<Rigidbody>().velocity = new Vector3(newX, SelfHips.GetComponent<Rigidbody>().velocity.y,
+            SelfHips.GetComponent<Rigidbody>().velocity.z);
     }
 
     public IEnumerator ApplyLaunchForce(float factor)
@@ -124,15 +112,14 @@ public class PlayerController : MonoBehaviour
 
         Vector3 forceVector = new Vector3(0, factor, factor * 2f) * maxLaunchSpeed;
 
-        foreach (Rigidbody rb in bodies)
+        foreach (Rigidbody rb in _bodies)
         {
             rb.velocity = forceVector;
         }
 
         if (factor > 0.1f)
         {
-            Spawner.Instance.SpawnObjects(bodies[0].velocity);
+            _gameFactory.GetSpawner().SpawnObjects(_bodies[0].velocity);
         }
     }
-    
 }

@@ -80,6 +80,65 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public WindowStaticData GetWindowStaticData() => Load<WindowStaticData>(AssetPath.WINDOW_CONFIG_PATH);
 
+        public EnemyFinish GetEnemy(Vector3 position, Quaternion rotation) =>
+            Instantiate<EnemyFinish>(AssetPath.ENEMY, position, rotation);
+
+        public Finish GetFinish(Vector3 position) => Instantiate<Finish>(AssetPath.FINISH, position);
+
+        public RingHolder GetRing(Vector3 position, Spawner.Colors[] colors, int level)
+        {
+            var ringPrefab = Instantiate<RingHolder>(AssetPath.RING, position);
+
+            ringPrefab.LeftRenderer.sharedMaterial.color = colors[level].RingColor;
+            ringPrefab.LeftTransRenderer.sharedMaterial.color = colors[level].RingTransColor;
+            ringPrefab.RightRenderer.sharedMaterial.color = colors[level].RingColor;
+            ringPrefab.RightTransRenderer.sharedMaterial.color = colors[level].RingTransColor;
+
+            return ringPrefab;
+        }
+
+        public GameObject GetSmoke(Vector3 position, Quaternion rotation) =>
+            Instantiate(AssetPath.SMOKE, position, rotation);
+
+        public GameObject GetEnemyRagdoll(Vector3 position, Quaternion rotation)
+        {
+            GameObject enemy = Instantiate(AssetPath.ENEMY_RAGDOLL, position, rotation);
+            enemy.layer = 8;
+            return enemy;
+        }
+
+        public GameObject GetPlayerRagdoll(Vector3 position, Quaternion rotation)
+        {
+            GameObject player = Instantiate(AssetPath.ENEMY_RAGDOLL, position, rotation);
+            player.layer = 8;
+            return player;
+        }
+
+        private GameObject Instantiate(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
+            Transform parent = null, bool isActivateGameObject = true)
+        {
+            prefab.SetActive(false);
+            GameObject gameObject = Object.Instantiate(prefab, position, rotation, parent);
+            _container.Inject(gameObject);
+            gameObject.SetActive(isActivateGameObject);
+            prefab.SetActive(isActivateGameObject);
+            return gameObject;
+        }
+
+        private GameObject Instantiate(string path, Vector3 position = default, Quaternion rotation = default,
+            Transform parent = null, bool overrideTransform = true, bool isActivateGameObject = true)
+        {
+            var prefab = Load<GameObject>(path);
+
+            if (overrideTransform == false)
+            {
+                position = prefab.transform.position;
+                rotation = prefab.transform.rotation;
+            }
+
+            return Instantiate(prefab, position, rotation, parent, isActivateGameObject);
+        }
+
         private T Instantiate<T>(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
             Transform parent = null, bool isActivateGameObject = true, bool componentEnabled = true)
             where T : MonoBehaviour

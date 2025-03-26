@@ -1,28 +1,30 @@
+using System.Collections;
+using _Project.Scripts.Infrastructure.FSM;
+using _Project.Scripts.Infrastructure.FSM.States;
+using _Project.Scripts.Infrastructure.Services.Factories;
+using Reflex.Attributes;
 using UnityEngine;
 
 public class Indicator : MonoBehaviour
 {
+    [Inject] private StateMachine _stateMachine;
+    [Inject] private GameFactory _gameFactory;
+
     [SerializeField] private Needle _needle;
-    
-    private PlayerController _player;
+
     private readonly float _startPos = -50f;
     private readonly float _endPos = -130f;
     private float _desiredPos;
     private float _speed;
     private bool _up;
-
-    private void Awake()
-    {
-        _player = FindObjectOfType<PlayerController>();
-    }
-
+    
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             float launchFactor = CreateLaunchForce();
 
-            StartCoroutine(_player.ApplyLaunchForce(launchFactor));
+            StartCoroutine(_gameFactory.GetPlayer().ApplyLaunchForce(launchFactor));
 
             enabled = false;
         }
@@ -52,8 +54,7 @@ public class Indicator : MonoBehaviour
         switch (_speed)
         {
             case > 70:
-                UIManager.Instance.Invoke(nameof(UIManager.BadShot), 0.5f);
-                GameManager.Instance.Invoke(nameof(GameManager.GameOver), 2.5f);
+                StartCoroutine(GameOverCo());
                 return 0.1f;
             case > 50:
                 return 0.65f;
@@ -64,5 +65,13 @@ public class Indicator : MonoBehaviour
             default:
                 return 1.0f;
         }
+    }
+
+    private IEnumerator GameOverCo()
+    {
+        yield return new WaitForSeconds(3);
+
+        //UIManager.Instance.Invoke(nameof(UIManager.BadShot), 0.5f);
+        _stateMachine.Enter<LoseLevelState>();
     }
 }

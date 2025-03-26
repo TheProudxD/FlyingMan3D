@@ -10,11 +10,12 @@ namespace _Project.Scripts.Infrastructure.Services.LevelSystem
         [Inject] private Timer _timer;
 
         [field: SerializeField] public int LevelTimer { get; private set; }
-        [field: SerializeField] public int TimerMistakePrice { get; private set; } = 10; // IN SECONDS
-        [field: SerializeField] public int HintReward { get; private set; } = 1;
+        [field: SerializeField] public UpperRing[] Rings { get; private set; }
+        [field: SerializeField] public int EnemyCount { get; private set; }
+        [field: SerializeField] public float TimeDif { get; private set; }
 
         public Score Score { get; private set; } = new();
-        
+
         public event Action LevelStarted;
         public event Action<LevelResultType> LevelFinished;
 

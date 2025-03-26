@@ -1,10 +1,20 @@
+using _Project.Scripts.Infrastructure.Services.Factories;
+using Reflex.Attributes;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class AdditiveRing : MonoBehaviour
 {
-    [SerializeField] public int addition;
+    [Inject] private GameFactory _gameFactory;
+    
+    [field: SerializeField] public TextMeshProUGUI Text { get; private set; }
+
+    public int Addition { get; set; }
 
     private bool _additionHappened;
+    
+    private void Awake() => Text = GetComponentInChildren<TextMeshProUGUI>();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -16,8 +26,8 @@ public class AdditiveRing : MonoBehaviour
         if (_additionHappened)
             return;
 
-        for (int i = 0; i < addition; i++)
-            Ring.DuplicatePlayer(root);
+        for (int i = 0; i < Addition; i++)
+            _gameFactory.GetNewPlayer(root);
 
         _additionHappened = true;
     }

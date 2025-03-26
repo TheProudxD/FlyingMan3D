@@ -1,16 +1,50 @@
+using _Project.Scripts.Infrastructure.FSM;
+using _Project.Scripts.Infrastructure.FSM.States;
+using _Project.Scripts.Infrastructure.Services.Factories;
 using UnityEngine;
 using Cinemachine;
+using Reflex.Attributes;
 
 public class Finish : MonoBehaviour
 {
-    private static readonly int CanAttack = Animator.StringToHash("CanAttack");
-    
-    private CinemachineVirtualCamera finishCamera;
-    private bool CanCalculate;
+    [Inject] private StateMachine _stateMachine;
+    [Inject] private GameFactory _gameFactory;
 
-    private void Start()
+    private static readonly int Win = Animator.StringToHash("Win");
+    private static readonly int CanAttack = Animator.StringToHash("CanAttack");
+
+    private CinemachineVirtualCamera _finishCamera;
+    private bool _canCalculate;
+    private bool _isPlayerEntered;
+
+    private void Start() => _finishCamera = GameObject.Find("FinishCamera").GetComponent<CinemachineVirtualCamera>();
+
+    private void Update()
     {
-        finishCamera = GameObject.Find("FinishCamera").GetComponent<CinemachineVirtualCamera>();
+        if (!_isPlayerEntered) return;
+
+        if (_gameFactory.players.Count == 0 && _gameFactory.Enemies.Count >= 0)
+        {
+            foreach (var item in _gameFactory.Enemies)
+            {
+                item.Animator.SetBool(Win, true);
+                Destroy(item.GetComponent<Rigidbody>());
+            }
+
+            _stateMachine.Enter<LoseLevelState>();
+            _isPlayerEntered = false;
+        }
+        else if (_gameFactory.Enemies.Count == 0 && _gameFactory.players.Count > 0)
+        {
+            foreach (PlayerController item in _gameFactory.players)
+            {
+                item.Animator.SetBool(Win, true);
+                Destroy(item.GetComponent<Rigidbody>());
+            }
+
+            _stateMachine.Enter<WinLevelState>();
+            _isPlayerEntered = false;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -18,20 +52,20 @@ public class Finish : MonoBehaviour
         if (!other.gameObject.transform.root.CompareTag("Player"))
             return;
 
-        if (!CanCalculate)
+        if (!_canCalculate)
         {
-            finishCamera.Priority = 15;
-            finishCamera.transform.position = new Vector3(0, 23, transform.position.z - 30f);
+            _finishCamera.Priority = 15;
+            _finishCamera.transform.position = new Vector3(0, 23, transform.position.z - 30f);
 
-            CanCalculate = true;
+            _canCalculate = true;
 
-            for (int i = 0; i < Spawner.Enemies.Count; i++)
+            foreach (EnemyFinish e in _gameFactory.Enemies)
             {
-                Spawner.Enemies[i].GetComponent<EnemyFinish>().enabled = true;
-                Spawner.Enemies[i].GetComponent<Animator>().SetBool(CanAttack, true);
+                e.enabled = true;
+                e.Animator.SetBool(CanAttack, true);
             }
 
-            GameManager.Instance.isPlayerEntered = true;
+            _isPlayerEntered = true;
         }
 
         Transform root = other.gameObject.transform.root.gameObject.transform;

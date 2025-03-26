@@ -1,16 +1,23 @@
+using System;
+using _Project.Scripts.Infrastructure.Services.Factories;
+using Reflex.Attributes;
 using UnityEngine;
 
 public class EnemyFinish : MonoBehaviour
 {
+    [Inject] private GameFactory _gameFactory;
+
     public bool IsDie { get; set; }
+    public Animator Animator { get; private set; }
+    
+    private readonly float _stopDistance = 0.2f;
+    private readonly float _moveSpeed = 2.4f;
 
     private GameObject _target;
     private float _minDistance;
     private int _index;
     private Vector3 _moveDistance;
     private Collider[] _colliders;
-    private readonly float _stopDistance = 0.2f;
-    private readonly float _moveSpeed = 2.4f;
 
     private void Start()
     {
@@ -20,17 +27,20 @@ public class EnemyFinish : MonoBehaviour
         {
             Destroy(_colliders[i]);
         }
+
+        Animator = GetComponent<Animator>();
     }
 
     private GameObject NearestTarget()
     {
         _index = 0;
         _minDistance = float.MaxValue;
-        if (PlayerController.players == null || PlayerController.players.Count == 0) return null;
+        
+        if (_gameFactory.players == null || _gameFactory.players.Count == 0) return null;
 
-        for (int i = 1; i < PlayerController.players.Count; i++)
+        for (int i = 1; i < _gameFactory.players.Count; i++)
         {
-            float distance = Distance(PlayerController.players[i].transform.position, transform.position);
+            float distance = Distance(_gameFactory.players[i].transform.position, transform.position);
 
             if (_minDistance <= distance)
                 continue;
@@ -39,7 +49,7 @@ public class EnemyFinish : MonoBehaviour
             _index = i;
         }
 
-        _target = PlayerController.players.Count > 0 ? PlayerController.players[_index].gameObject : null;
+        _target = _gameFactory.players.Count > 0 ? _gameFactory.players[_index].gameObject : null;
 
         return _target;
     }
@@ -68,9 +78,9 @@ public class EnemyFinish : MonoBehaviour
                 transform.rotation =
                     Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * 120f);
             }
-            catch
+            catch (Exception e)
             {
-                // ignored
+                Debug.Log(e);
             }
         }
     }

@@ -21,7 +21,11 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public const string POST_PROCESS_VOLUME = "PostProcessVolume";
 
-        public const string SUCCESS_ICON = GAMEPLAY_FOLDER + "/SuccessIcon";
-        public const string MISS_ICON = GAMEPLAY_FOLDER + "/MissIcon";
+        public const string ENEMY = GAMEPLAY_FOLDER + "/Enemy";
+        public const string FINISH = GAMEPLAY_FOLDER + "/Finish";
+        public const string SMOKE = GAMEPLAY_FOLDER + "/Smoke";
+        public const string RING = GAMEPLAY_FOLDER + "/Ring";
+        public const string ENEMY_RAGDOLL = GAMEPLAY_FOLDER + "/EnemyRagdoll";
+        public const string PLAYER_RAGDOLL = GAMEPLAY_FOLDER + "/PlayerRagdoll";
     }
 }

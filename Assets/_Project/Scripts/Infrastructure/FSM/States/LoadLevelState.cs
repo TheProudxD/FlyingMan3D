@@ -50,7 +50,8 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             yield return _uiFactory.Initialize();
             yield return _gameFactory.Initialize();
-
+            yield return _gameFactory.GetSpawner().Initialize();
+            
             _uiFactory.GetHUD().Initialize();
             _heartTracker.Initialize();
 

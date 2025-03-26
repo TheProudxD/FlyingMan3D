@@ -96,7 +96,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private void CreateLevel()
         {
             _level = _gameFactory.CreateLevel(_levelResourceService.Current.Value);
-            _timer.Start(_level.LevelTimer);
+            //_timer.Start(_level.LevelTimer);
         }
 
         private void DestroyCurrentLevel()

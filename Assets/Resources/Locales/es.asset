@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5f21c316dc78354383759b662a96069, type: 3}
+  m_Name: es
+  m_EditorClassIdentifier: 
+  _keys:
+  - settingsTitle
+  - gameOver
+  - about
+  - continue
+  - review
+  - restart
+  - leaderboard
+  - feedback
+  - sound
+  - fruitsMerged
+  - watermelons
+  - gamesPlayed
+  - richestScore
+  - statistics
+  - Loading
+  - removeSmallFruits
+  - fruitOrder
+  - moreGames
+  - free
+  - timeOut
+  - gift
+  - LevelPassed
+  - Level
+  - LevelFail
+  _values:
+  - Ajustes
+  - "Se acab\xF3 el juego"
+  - "Despu\xE9s de ver el anuncio, \xA1puedes continuar el nivel con 60 segundos!"
+  - "Continuaci\xF3n"
+  - Deja un comentario
+  - De nuevo
+  - "Clasificaci\xF3n"
+  - Comentarios\n<i><size=75%>platypusGames@yandex.ru</i>
+  - Suena
+  - Total de frutas fusionadas
+  - "Sand\xEDas fusionadas"
+  - Partidas jugadas
+  - "Mayor n\xFAmero de puntos"
+  - "Estad\xEDsticas"
+  - Cargando..
+  - "Saca los frutos peque\xF1os"
+  - Orden de frutas
+  - Otros juegos
+  - Gratis
+  - "se acab\xF3 el tiempo"
+  - Un regalo
+  - Nivel superado
+  - Nivel
+  - "Int\xE9ntalo de nuevo"

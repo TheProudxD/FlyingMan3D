@@ -9,6 +9,10 @@ namespace _Project.Scripts.Infrastructure.DI
 {
     public class MainSceneInstaller : MonoBehaviour, IInstaller
     {
+        [SerializeField] private PlayerController _playerController;
+        [SerializeField] private Indicator _indicator;
+        [SerializeField] private Spawner _spawner;
+        
         public void InstallBindings(ContainerBuilder builder) => builder.OnContainerBuilt += OnContainerBuilt;
 
         private void OnContainerBuilt(Container container)
@@ -16,6 +20,11 @@ namespace _Project.Scripts.Infrastructure.DI
 #if UNITY_EDITOR
             InjectDebug(container);
 #endif
+            
+            container.Inject(_playerController);
+            container.Inject(_indicator);
+            container.Inject(_spawner);
+
             InjectLocalizedLabel(container);
         }
 

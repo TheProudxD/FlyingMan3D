@@ -1,17 +1,26 @@
+using _Project.Scripts.Infrastructure.Services.Factories;
+using Reflex.Attributes;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MultiplierRing : MonoBehaviour
 {
-    public int multiplier;
+    [Inject] private GameFactory _gameFactory;
+    
+    [field: SerializeField] public TextMeshProUGUI Text { get; private set; }
+    public int Multiplier { get; set; }
 
     private bool _firstPlayer;
     private int _playerCount;
+
+    private void Awake() => Text = GetComponentInChildren<TextMeshProUGUI>();
 
     private void OnTriggerEnter(Collider other)
     {
         GameObject root = other.transform.root.gameObject;
 
-        if (!root.CompareTag("Player"))
+        if (!root.TryGetComponent(out PlayerController player))
             return;
 
         if (!_firstPlayer)
@@ -20,14 +29,14 @@ public class MultiplierRing : MonoBehaviour
             _firstPlayer = true;
         }
 
-        if (root.GetComponent<PlayerController>().isPassed || _playerCount <= 0)
+        if (player.IsPassed || _playerCount <= 0)
             return;
 
-        root.GetComponent<PlayerController>().isPassed = true;
+        player.IsPassed = true;
 
-        for (int i = 0; i < multiplier - 1; i++)
+        for (int i = 0; i < Multiplier - 1; i++)
         {
-            Ring.DuplicatePlayer(root);
+            _gameFactory.GetNewPlayer(root);
         }
 
         _playerCount--;
@@ -37,10 +46,10 @@ public class MultiplierRing : MonoBehaviour
     {
         GameObject root = other.transform.root.gameObject;
 
-        if (!root.CompareTag("Player"))
+        if (!root.TryGetComponent(out PlayerController player))
             return;
 
-        if (root.GetComponent<PlayerController>().isPassed)
-            root.GetComponent<PlayerController>().isPassed = false;
+        if (player.IsPassed)
+            player.IsPassed = false;
     }
 }

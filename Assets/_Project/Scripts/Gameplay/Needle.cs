@@ -1,6 +1,3 @@
 ﻿using UnityEngine;
 
-public class Needle : MonoBehaviour
-{
-    
-}
+public class Needle : MonoBehaviour { }
