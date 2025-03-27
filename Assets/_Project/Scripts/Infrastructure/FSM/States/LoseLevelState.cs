@@ -25,7 +25,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public void Enter()
         {
-            _gameFactory.players = null;
+            _gameFactory.DestroyPlayers();
             LoseLevel();
         }
 

@@ -8,16 +8,18 @@ public class PlayerMoveToFinish : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private AssetProvider _assetProvider;
-    
+
     private static readonly int IsGround = Animator.StringToHash("IsGround");
 
-    private Vector3 _moveDistance;
     private float _moveSpeed = 2.4f;
     private float _stopDistance = 0.2f;
-    private bool _canMove = false;
-    private bool _isDie = false;
     private GameObject _target;
+    private Vector3 _moveDistance;
+    private bool _canMove;
+    private bool _isDie;
     private bool _canSmoke = true;
+
+    public void Initialize() { }
 
     private void Start()
     {
@@ -37,23 +39,17 @@ public class PlayerMoveToFinish : MonoBehaviour
         }
         else
         {
-            try
-            {
-                _moveDistance = _target.transform.position - transform.position;
-                _moveDistance.y = 0f;
+            _moveDistance = _target.transform.position - transform.position;
+            _moveDistance.y = 0f;
 
-                if (_moveDistance.magnitude <= _stopDistance) return;
+            if (_moveDistance.magnitude <= _stopDistance) return;
 
-                transform.position += _moveDistance.normalized * (_moveSpeed * Time.deltaTime);
-                Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
-
-                transform.rotation =
-                    Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * 120f);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-            }
+            // transform.position += _moveDistance.normalized * (_moveSpeed * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
+            float rotationSpeed = 120;
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            transform.Translate(Vector3.forward * (_moveSpeed * Time.deltaTime));
+            // transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * 120f);
         }
     }
 
@@ -79,29 +75,28 @@ public class PlayerMoveToFinish : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!collision.gameObject.transform.root.GetComponent<EnemyFinish>().IsDie && !_isDie)
+        if (collision.gameObject.transform.root.TryGetComponent(out EnemyFinish finish) && !finish.IsDie && !_isDie)
         {
             if (_canSmoke)
             {
                 _canSmoke = false;
 
-                _assetProvider.GetSmoke(new Vector3(0f, 2f, transform.position.z),Quaternion.Euler(-90f, 0f, 0f));
+                _assetProvider.GetSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
             }
 
             collision.gameObject.transform.root.GetComponent<EnemyFinish>().IsDie = true;
             _gameFactory.Enemies.Remove(collision.gameObject.transform.root.gameObject.GetComponent<EnemyFinish>());
-
             _assetProvider.GetEnemyRagdoll(transform.position, Quaternion.identity);
             Destroy(collision.gameObject.transform.root.gameObject);
 
             _isDie = true;
-            _gameFactory.players.Remove(gameObject.GetComponent<PlayerController>());
+            _gameFactory.Players.Remove(gameObject.GetComponent<PlayerController>());
             _assetProvider.GetPlayerRagdoll(transform.position, Quaternion.identity);
+
             Destroy(gameObject);
         }
 
-        if (gameObject.transform.root.gameObject.CompareTag("Enemy") ||
-            !collision.gameObject.CompareTag("Platform"))
+        if (gameObject.transform.root.gameObject.CompareTag("Enemy") || !collision.gameObject.CompareTag("Platform"))
             return;
 
         GetComponent<Animator>().SetBool(IsGround, true);

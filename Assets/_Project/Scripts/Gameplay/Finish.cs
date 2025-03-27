@@ -11,7 +11,6 @@ public class Finish : MonoBehaviour
     [Inject] private GameFactory _gameFactory;
 
     private static readonly int Win = Animator.StringToHash("Win");
-    private static readonly int CanAttack = Animator.StringToHash("CanAttack");
 
     private CinemachineVirtualCamera _finishCamera;
     private bool _canCalculate;
@@ -23,9 +22,9 @@ public class Finish : MonoBehaviour
     {
         if (!_isPlayerEntered) return;
 
-        if (_gameFactory.players.Count == 0 && _gameFactory.Enemies.Count >= 0)
+        if (_gameFactory.Players.Count == 0 && _gameFactory.Enemies.Count >= 0)
         {
-            foreach (var item in _gameFactory.Enemies)
+            foreach (EnemyFinish item in _gameFactory.Enemies)
             {
                 item.Animator.SetBool(Win, true);
                 Destroy(item.GetComponent<Rigidbody>());
@@ -34,9 +33,9 @@ public class Finish : MonoBehaviour
             _stateMachine.Enter<LoseLevelState>();
             _isPlayerEntered = false;
         }
-        else if (_gameFactory.Enemies.Count == 0 && _gameFactory.players.Count > 0)
+        else if (_gameFactory.Enemies.Count == 0 && _gameFactory.Players.Count > 0)
         {
-            foreach (PlayerController item in _gameFactory.players)
+            foreach (PlayerController item in _gameFactory.Players)
             {
                 item.Animator.SetBool(Win, true);
                 Destroy(item.GetComponent<Rigidbody>());
@@ -49,36 +48,33 @@ public class Finish : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.gameObject.transform.root.CompareTag("Player"))
+        if (other.gameObject.transform.root.CompareTag("Player") == false)
             return;
 
         if (!_canCalculate)
         {
+            _canCalculate = true;
+
             _finishCamera.Priority = 15;
             _finishCamera.transform.position = new Vector3(0, 23, transform.position.z - 30f);
 
-            _canCalculate = true;
-
             foreach (EnemyFinish e in _gameFactory.Enemies)
             {
-                e.enabled = true;
-                e.Animator.SetBool(CanAttack, true);
+                e.SetAttackState();
             }
 
             _isPlayerEntered = true;
         }
 
-        Transform root = other.gameObject.transform.root.gameObject.transform;
+        Transform root = other.gameObject.transform.root;
         root.tag = "FreePlayer";
 
         root.GetComponent<PlayerMoveToFinish>().enabled = true;
         root.GetComponent<CapsuleCollider>().enabled = true;
 
-        GameObject hips = root.GetComponent<PlayerController>().SelfHips;
-        root.gameObject.AddComponent<Rigidbody>();
-
-        root.gameObject.GetComponent<Rigidbody>().constraints =
-            RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        var hips = root.GetComponent<PlayerController>().SelfHips;
+        var rg = root.gameObject.AddComponent<Rigidbody>();
+        rg.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
         root.GetComponent<Animator>().enabled = true;
         Collider[] colliders = root.GetComponentsInChildren<Collider>();

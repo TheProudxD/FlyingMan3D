@@ -9,7 +9,8 @@ public class EnemyFinish : MonoBehaviour
 
     public bool IsDie { get; set; }
     public Animator Animator { get; private set; }
-    
+    private static readonly int CanAttack = Animator.StringToHash("CanAttack");
+
     private readonly float _stopDistance = 0.2f;
     private readonly float _moveSpeed = 2.4f;
 
@@ -18,6 +19,13 @@ public class EnemyFinish : MonoBehaviour
     private int _index;
     private Vector3 _moveDistance;
     private Collider[] _colliders;
+    private bool _enabled;
+    
+    public void SetAttackState()
+    {
+        _enabled = true;
+        Animator.SetBool(CanAttack, true);
+    }
 
     private void Start()
     {
@@ -36,11 +44,11 @@ public class EnemyFinish : MonoBehaviour
         _index = 0;
         _minDistance = float.MaxValue;
         
-        if (_gameFactory.players == null || _gameFactory.players.Count == 0) return null;
+        if (_gameFactory.Players == null || _gameFactory.Players.Count == 0) return null;
 
-        for (int i = 1; i < _gameFactory.players.Count; i++)
+        for (int i = 1; i < _gameFactory.Players.Count; i++)
         {
-            float distance = Distance(_gameFactory.players[i].transform.position, transform.position);
+            float distance = Distance(_gameFactory.Players[i].transform.position, transform.position);
 
             if (_minDistance <= distance)
                 continue;
@@ -49,7 +57,7 @@ public class EnemyFinish : MonoBehaviour
             _index = i;
         }
 
-        _target = _gameFactory.players.Count > 0 ? _gameFactory.players[_index].gameObject : null;
+        _target = _gameFactory.Players.Count > 0 ? _gameFactory.Players[_index].gameObject : null;
 
         return _target;
     }
@@ -58,6 +66,9 @@ public class EnemyFinish : MonoBehaviour
 
     private void Update()
     {
+        if (_enabled == false)
+            return;
+        
         if (_target == null)
         {
             _target = NearestTarget();

@@ -83,7 +83,8 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public EnemyFinish GetEnemy(Vector3 position, Quaternion rotation) =>
             Instantiate<EnemyFinish>(AssetPath.ENEMY, position, rotation);
 
-        public Finish GetFinish(Vector3 position) => Instantiate<Finish>(AssetPath.FINISH, position);
+        public Finish GetFinish(Vector3 position, Quaternion rotation) =>
+            Instantiate<Finish>(AssetPath.FINISH, position, rotation);
 
         public RingHolder GetRing(Vector3 position, Spawner.Colors[] colors, int level)
         {
@@ -109,7 +110,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public GameObject GetPlayerRagdoll(Vector3 position, Quaternion rotation)
         {
-            GameObject player = Instantiate(AssetPath.ENEMY_RAGDOLL, position, rotation);
+            GameObject player = Instantiate(AssetPath.PLAYER_RAGDOLL, position, rotation);
             player.layer = 8;
             return player;
         }
@@ -180,11 +181,41 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public void Dispose() { }
 
+        public PlayerController CreatePlayer(GameObject root, Vector3 position, Quaternion rotation) =>
+            Instantiate<PlayerController>(root, position, rotation);
+
         public Level CreateLevel(int levelId)
         {
             var levelContainer = _configService.Get<LevelContainer>();
             Level levelPrefab = levelContainer[levelId];
             return Instantiate<Level>(levelPrefab.gameObject, new Vector3(0, -250, 0));
+        }
+
+        public void GetRingByType(RingData ringData, GameObject currentChildGo)
+        {
+            switch (ringData.RingType)
+            {
+                case RingType.Additive:
+                    var a = currentChildGo.AddComponent<AdditiveRing>();
+                    a.Addition = ringData.Effect;
+                    a.Text.SetText("+" + ringData.Effect);
+                    _container.Inject(a);
+                    break;
+                case RingType.Multiplier:
+                    var m = currentChildGo.AddComponent<MultiplierRing>();
+                    m.Multiplier = ringData.Effect;
+                    m.Text.SetText("x" + ringData.Effect);
+                    _container.Inject(m);
+                    break;
+                case RingType.Reducer:
+                    var r = currentChildGo.AddComponent<ReducerRing>();
+                    r.ReductionFactor = ringData.Effect;
+                    r.Text.SetText("-" + ringData.Effect);
+                    _container.Inject(r);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

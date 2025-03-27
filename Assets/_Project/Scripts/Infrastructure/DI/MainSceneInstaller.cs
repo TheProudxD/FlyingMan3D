@@ -1,7 +1,6 @@
 using _Project.Scripts.Infrastructure.Services.Debug;
 using _Project.Scripts.Infrastructure.Services.Localization.UI;
 using _Project.Scripts.Tools;
-using _Project.Scripts.Tools.Camera;
 using Reflex.Core;
 using UnityEngine;
 
@@ -12,6 +11,7 @@ namespace _Project.Scripts.Infrastructure.DI
         [SerializeField] private PlayerController _playerController;
         [SerializeField] private Indicator _indicator;
         [SerializeField] private Spawner _spawner;
+        [SerializeField] private PlayerMoveToFinish _playerMoveToFinish;
         
         public void InstallBindings(ContainerBuilder builder) => builder.OnContainerBuilt += OnContainerBuilt;
 
@@ -24,6 +24,7 @@ namespace _Project.Scripts.Infrastructure.DI
             container.Inject(_playerController);
             container.Inject(_indicator);
             container.Inject(_spawner);
+            container.Inject(_playerMoveToFinish);
 
             InjectLocalizedLabel(container);
         }

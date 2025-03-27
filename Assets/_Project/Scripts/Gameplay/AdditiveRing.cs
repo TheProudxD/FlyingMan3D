@@ -2,19 +2,18 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class AdditiveRing : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     
-    [field: SerializeField] public TextMeshProUGUI Text { get; private set; }
+    [field: SerializeField] public TMP_Text Text { get; private set; }
 
     public int Addition { get; set; }
 
     private bool _additionHappened;
     
-    private void Awake() => Text = GetComponentInChildren<TextMeshProUGUI>();
+    private void Awake() => Text = GetComponentInChildren<TMP_Text>();
 
     private void OnTriggerEnter(Collider other)
     {

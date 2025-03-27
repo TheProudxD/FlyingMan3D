@@ -13,6 +13,8 @@ namespace _Project.Scripts.Infrastructure.Services.LevelSystem
         [field: SerializeField] public UpperRing[] Rings { get; private set; }
         [field: SerializeField] public int EnemyCount { get; private set; }
         [field: SerializeField] public float TimeDif { get; private set; }
+        [field: SerializeField] public float MaxLaunchSpeed { get; private set; }
+        [field: SerializeField] public float MovementSpeed { get; private set; }
 
         public Score Score { get; private set; } = new();
 

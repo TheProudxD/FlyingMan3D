@@ -2,19 +2,18 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class MultiplierRing : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
-    
-    [field: SerializeField] public TextMeshProUGUI Text { get; private set; }
+
+    [field: SerializeField] public TMP_Text Text { get; private set; }
     public int Multiplier { get; set; }
 
     private bool _firstPlayer;
     private int _playerCount;
 
-    private void Awake() => Text = GetComponentInChildren<TextMeshProUGUI>();
+    private void Awake() => Text = GetComponentInChildren<TMP_Text>();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,7 +24,7 @@ public class MultiplierRing : MonoBehaviour
 
         if (!_firstPlayer)
         {
-            _playerCount = FindObjectsOfType<PlayerController>().Length;
+            _playerCount = _gameFactory.Players.Count;
             _firstPlayer = true;
         }
 
@@ -44,9 +43,7 @@ public class MultiplierRing : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        GameObject root = other.transform.root.gameObject;
-
-        if (!root.TryGetComponent(out PlayerController player))
+        if (!other.transform.root.TryGetComponent(out PlayerController player))
             return;
 
         if (player.IsPassed)

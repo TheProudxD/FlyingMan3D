@@ -18,7 +18,7 @@ namespace _Project.Scripts.UI
 
         public void Show()
         {
-            gameObject.SetActive(true);
+            // gameObject.SetActive(true);
             _curtain.alpha = 1;
         }
 
@@ -38,7 +38,7 @@ namespace _Project.Scripts.UI
             }
 
             _curtain.alpha = 0;
-            gameObject.SetActive(false);
+            // gameObject.SetActive(false);
         }
     }
 }

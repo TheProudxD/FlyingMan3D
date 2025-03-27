@@ -17,14 +17,14 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private readonly LeaderboardService _leaderboardService;
         private readonly AssetProvider _assetProvider;
 
-        public List<PlayerController> players;
-        public List<EnemyFinish> Enemies = new();
-        
+        public readonly List<PlayerController> Players = new();
+        public readonly List<EnemyFinish> Enemies = new();
+
         private Score _score;
         private HeartTracker _heartTracker;
         private Level _gameLevel;
         private PlayerController _player;
-        private float spawnGap = 1.8f;
+        private readonly float _spawnGap = 1.8f;
 
         public GameFactory(SaveLoadService saveLoadService,
             LeaderboardService leaderboardService, AssetProvider assetProvider,
@@ -52,20 +52,14 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public PlayerController GetNewPlayer(GameObject root)
         {
-            if (players == null || players.Count == 0)
-            {
-                players = new List<PlayerController>();
-            }
+            Vector3 randomPos = Random.onUnitSphere * _spawnGap;
 
-            Vector3 randomPos = Random.onUnitSphere * spawnGap;
+            var player =
+                _assetProvider.CreatePlayer(root, root.transform.position + randomPos, root.transform.rotation);
 
-            PlayerController player = Object
-                .Instantiate(root, root.transform.position + randomPos, root.transform.rotation)
-                .GetComponent<PlayerController>();
-
+            player.Initialize();
             CopyTransformData(root.transform, player.transform);
-
-            players.Add(player);
+            Players.Add(player);
             return player;
         }
 
@@ -97,5 +91,21 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         public PlayerController GetPlayer() => _player;
 
         public Spawner GetSpawner() => Object.FindObjectOfType<Spawner>();
+
+        public void DestroyPlayers()
+        {
+            foreach (var player in Players)
+            {
+                Object.Destroy(player.gameObject);
+            }
+
+            Players.Clear();
+        }
+
+        public void DestroyLastPlayer()
+        {
+            Object.Destroy(Players[^1].gameObject);
+            Players.RemoveAt(Players.Count - 1);
+        }
     }
 }

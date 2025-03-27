@@ -6,44 +6,53 @@ using Reflex.Attributes;
 public class PlayerController : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
+    [Inject] private UIFactory _uiFactory;
 
-    [SerializeField] private float maxLaunchSpeed = 60f;
-    [SerializeField] private float movementSpeed = 100f;
-    [SerializeField] private float mobileSpeed = 10f;
     [SerializeField] private Transform capsule;
     [SerializeField] private FixedJoint joint;
-    [SerializeField] public GameObject SelfHips;
+    [field: SerializeField] public Rigidbody SelfHips { get; private set; }
 
-    public bool IsPassed { get; set; }
     private Rigidbody[] _bodies;
-
-    private float _xValue;
     private Vector3 _initialPos;
+    private float _xValue;
     private float _time;
-    private bool _isGameStarted;
+    private bool _enabled;
+    private float _maxLaunchSpeed;
+    private float _movementSpeed;
 
     public Animator Animator { get; private set; }
-
-    private void Awake() => Animator = GetComponent<Animator>();
+    public bool IsPassed { get; set; }
 
     private void Start()
     {
+        Animator = GetComponent<Animator>();
         _bodies = GetComponentsInChildren<Rigidbody>();
         _initialPos = capsule.position;
     }
 
+    public void Initialize()
+    {
+        _enabled = true;
+        _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
+        _movementSpeed = _gameFactory.GetCurrentLevel().MovementSpeed;
+    }
+
     private void Update()
     {
-        if (Input.GetMouseButton(0) && !_isGameStarted)
+        if (_enabled == false)
+            return;
+
+        bool pressed = Input.GetMouseButton(0);
+
+        if (pressed)
         {
-            //tapToThrow.SetActive(false);
-            _isGameStarted = true;
+            _uiFactory.GetHUD().DeactivateStartText();
 
             _xValue = Input.GetAxis("Mouse X");
 
             foreach (Rigidbody rb in _bodies)
             {
-                rb.velocity += new Vector3(_xValue, 0, 0) * (Time.deltaTime * movementSpeed);
+                rb.velocity += new Vector3(_xValue, 0, 0) * (Time.deltaTime * _movementSpeed);
             }
         }
 
@@ -60,7 +69,7 @@ public class PlayerController : MonoBehaviour
 
                     foreach (Rigidbody rb in bodies)
                     {
-                        rb.velocity += new Vector3(xValue, 0, 0) * Time.deltaTime * mobileSpeed;
+                        rb.velocity += new Vector3(xValue, 0, 0) * Time.deltaTime * movementSpeed;
                     }
                 }
             }
@@ -78,14 +87,14 @@ public class PlayerController : MonoBehaviour
     private void CheckForBoundaries()
     {
         float xPos = SelfHips.transform.position.x;
+        const float DELTA = 20f;
 
-        if (xPos is < 20f and > -20f)
+        if (xPos is < DELTA and > -DELTA)
             return;
 
         float newX = Mathf.Sign(xPos) * -3f;
 
-        SelfHips.GetComponent<Rigidbody>().velocity = new Vector3(newX, SelfHips.GetComponent<Rigidbody>().velocity.y,
-            SelfHips.GetComponent<Rigidbody>().velocity.z);
+        SelfHips.velocity = new Vector3(newX, SelfHips.velocity.y, SelfHips.velocity.z);
     }
 
     public IEnumerator ApplyLaunchForce(float factor)
@@ -110,7 +119,7 @@ public class PlayerController : MonoBehaviour
 
         Destroy(joint);
 
-        Vector3 forceVector = new Vector3(0, factor, factor * 2f) * maxLaunchSpeed;
+        Vector3 forceVector = new Vector3(0, factor, factor * 2f) * _maxLaunchSpeed;
 
         foreach (Rigidbody rb in _bodies)
         {

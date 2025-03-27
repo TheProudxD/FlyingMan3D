@@ -9,13 +9,13 @@ public class ReducerRing : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     
-    [field: SerializeField] public TextMeshProUGUI Text { get; private set; }
+    [field: SerializeField] public TMP_Text Text { get; private set; }
     
     [FormerlySerializedAs("reductionFactor")] [SerializeField] public int ReductionFactor;
     
     private bool _reductionHappened;
 
-    private void Awake() => Text = GetComponentInChildren<TextMeshProUGUI>();
+    private void Awake() => Text = GetComponentInChildren<TMP_Text>();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,10 +25,9 @@ public class ReducerRing : MonoBehaviour
 
         if (_reductionHappened) return;
 
-        for (int i = 0; i < ReductionFactor && _gameFactory.players.Count > 1; i++)
+        for (int i = 0; i < ReductionFactor && _gameFactory.Players.Count > 1; i++)
         {
-            Destroy(_gameFactory.players[^1].gameObject);
-            _gameFactory.players.RemoveAt(_gameFactory.players.Count - 1);
+            _gameFactory.DestroyLastPlayer();
         }
 
         _reductionHappened = true;

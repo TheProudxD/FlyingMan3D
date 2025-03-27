@@ -89,6 +89,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             }
 
             // _gameFactory.GetInputService().Enable();
+            _gameFactory.GetPlayer().Initialize();
             CreateHUD();
             _loadingCurtain.Hide();
         }

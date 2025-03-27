@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 using TMPro;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using Reflex.Attributes;
 
@@ -40,8 +41,7 @@ public class Spawner : MonoBehaviour, IInitializable
         int level = _levelResourceService.Current.Value;
         _index = level % _colorArray.Length;
 
-        _gameFactory.GetPlatform().GetComponent<Renderer>().sharedMaterial.color =
-            _colorArray[_index].PlatformColor;
+        _gameFactory.GetPlatform().GetComponent<Renderer>().sharedMaterial.color = _colorArray[_index].PlatformColor;
 
         _playerTransform = _gameFactory.GetPlayer().transform;
 
@@ -50,6 +50,7 @@ public class Spawner : MonoBehaviour, IInitializable
 
     public void SpawnObjects(Vector3 velocity)
     {
+        print("spawner !");
         _velY = velocity.y;
         _velZ = velocity.z;
         _averageTime = _velY / _g;
@@ -58,9 +59,10 @@ public class Spawner : MonoBehaviour, IInitializable
 
         float finishTime = _averageTime * 2;
         float finishZPos = _playerTransform.position.z + _velZ * finishTime;
-        Finish finishGo = _assetProvider.GetFinish(new Vector3(0, 0, finishZPos));
+        Finish finishGo = _assetProvider.GetFinish(new Vector3(0, 0, finishZPos), Quaternion.identity);
 
-        int enemyCount = _gameFactory.GetCurrentLevel().EnemyCount;
+        Level level = _gameFactory.GetCurrentLevel();
+        int enemyCount = level.EnemyCount;
 
         float angle = 360f / enemyCount;
 
@@ -73,8 +75,8 @@ public class Spawner : MonoBehaviour, IInitializable
             _gameFactory.Enemies.Add(enemy);
         }
 
-        int ringCount = _gameFactory.GetCurrentLevel().Rings.Length;
-        float timeDif = _gameFactory.GetCurrentLevel().TimeDif;
+        int ringCount = level.Rings.Length;
+        float timeDif = level.TimeDif;
 
         float t = ringCount % 2 == 0
             ? _averageTime - timeDif / 2 - timeDif * (ringCount - 2) / 2
@@ -86,44 +88,19 @@ public class Spawner : MonoBehaviour, IInitializable
 
             for (int j = 0; j < currentRingHolder.transform.childCount; j++)
             {
-                RingData ringData = _gameFactory.GetCurrentLevel().Rings[i].InsideRings[j];
+                RingData ringData = level.Rings[i].InsideRings[j];
                 GameObject currentGo = currentRingHolder.transform.GetChild(j).gameObject;
 
-                DetermineRingType(ringData, currentGo);
+                _assetProvider.GetRingByType(ringData, currentGo);
             }
 
             t += timeDif;
         }
     }
 
-    private void DetermineRingType(RingData ringData, GameObject currentChildGo)
-    {
-        switch (ringData.RingType)
-        {
-            case RingType.Additive:
-                var a = currentChildGo.AddComponent<AdditiveRing>();
-                a.Addition = ringData.Effect;
-                a.Text.SetText("+" + ringData.Effect);
-                break;
-            case RingType.Multiplier:
-                var m = currentChildGo.AddComponent<MultiplierRing>();
-                m.Multiplier = ringData.Effect;
-                m.Text.SetText("x" + ringData.Effect);
-                break;
-            case RingType.Reducer:
-                var r = currentChildGo.AddComponent<ReducerRing>();
-                r.ReductionFactor = ringData.Effect;
-                r.Text.SetText("-" + ringData.Effect);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-    }
-
     private Vector3 CalculateRingPosition(float t, int i)
     {
         _xPos = i == 0 ? Random.Range(-10f, 10f) : Mathf.Clamp(_xPos + 2f, -20f, 20f);
-
         _yPos = _playerTransform.position.y + _velY * t - 0.5f * _g * t * t;
         _zPos = _playerTransform.position.z + _velZ * t;
 

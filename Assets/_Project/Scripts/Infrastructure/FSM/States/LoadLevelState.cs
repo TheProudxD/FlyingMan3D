@@ -51,7 +51,9 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             yield return _uiFactory.Initialize();
             yield return _gameFactory.Initialize();
             yield return _gameFactory.GetSpawner().Initialize();
-            
+
+            Object.FindObjectOfType<Indicator>().Initialize();
+            //Object.FindObjectOfType<PlayerMoveToFinish>().Initialize();
             _uiFactory.GetHUD().Initialize();
             _heartTracker.Initialize();
 
@@ -60,7 +62,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             {
                 view.Initialize();
             }
-            
+
             _sceneLoader.Load(_sceneName, OnLoaded);
         }
 
