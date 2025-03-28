@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 
@@ -7,12 +8,13 @@ public class PlayerController : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private UIFactory _uiFactory;
+    [Inject] private AssetProvider _assetProvider;
 
     [SerializeField] private Transform capsule;
     [SerializeField] private FixedJoint joint;
     [field: SerializeField] public Rigidbody SelfHips { get; private set; }
 
-    private Rigidbody[] _bodies;
+    public Rigidbody[] Bodies { get; private set; }
     private Vector3 _initialPos;
     private float _xValue;
     private float _time;
@@ -22,11 +24,12 @@ public class PlayerController : MonoBehaviour
 
     public Animator Animator { get; private set; }
     public bool IsPassed { get; set; }
+    public bool IsDie { get; private set; }
 
     private void Start()
     {
         Animator = GetComponent<Animator>();
-        _bodies = GetComponentsInChildren<Rigidbody>();
+        Bodies = GetComponentsInChildren<Rigidbody>();
         _initialPos = capsule.position;
     }
 
@@ -34,7 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         _enabled = true;
         _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
-        _movementSpeed = _gameFactory.GetCurrentLevel().MovementSpeed;
+        _movementSpeed = _gameFactory.GetCurrentLevel().FlyingSpeed;
     }
 
     private void Update()
@@ -50,7 +53,7 @@ public class PlayerController : MonoBehaviour
 
             _xValue = Input.GetAxis("Mouse X");
 
-            foreach (Rigidbody rb in _bodies)
+            foreach (Rigidbody rb in Bodies)
             {
                 rb.velocity += new Vector3(_xValue, 0, 0) * (Time.deltaTime * _movementSpeed);
             }
@@ -95,6 +98,13 @@ public class PlayerController : MonoBehaviour
         float newX = Mathf.Sign(xPos) * -3f;
 
         SelfHips.velocity = new Vector3(newX, SelfHips.velocity.y, SelfHips.velocity.z);
+
+        float yPos = SelfHips.transform.position.y;
+
+        float dieHeight = -10;
+
+        if (yPos < dieHeight)
+            Die();
     }
 
     public IEnumerator ApplyLaunchForce(float factor)
@@ -121,14 +131,22 @@ public class PlayerController : MonoBehaviour
 
         Vector3 forceVector = new Vector3(0, factor, factor * 2f) * _maxLaunchSpeed;
 
-        foreach (Rigidbody rb in _bodies)
+        foreach (Rigidbody rb in Bodies)
         {
             rb.velocity = forceVector;
         }
 
         if (factor > 0.1f)
         {
-            _gameFactory.GetSpawner().SpawnObjects(_bodies[0].velocity);
+            _gameFactory.GetSpawner().SpawnObjects(Bodies[0].velocity);
         }
+    }
+
+    public void Die()
+    {
+        IsDie = true;
+        _gameFactory.Players.Remove(this);
+        _assetProvider.GetPlayerRagdoll(transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

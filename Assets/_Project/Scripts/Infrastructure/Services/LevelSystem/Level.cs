@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.LevelSystem
 {
-    public class Level : MonoBehaviour
+    [CreateAssetMenu(menuName = "Create Level", fileName = "Level", order = 0)]
+    public class Level : ScriptableObject
     {
         [Inject] private Timer _timer;
 
@@ -15,6 +16,10 @@ namespace _Project.Scripts.Infrastructure.Services.LevelSystem
         [field: SerializeField] public float TimeDif { get; private set; }
         [field: SerializeField] public float MaxLaunchSpeed { get; private set; }
         [field: SerializeField] public float MovementSpeed { get; private set; }
+        [field: SerializeField] public float FlyingSpeed { get; private set; }
+        [field: SerializeField] public float StopDistance { get; private set; }
+        [field: SerializeField] public float EnemyStopDistance { get; private set; }
+        [field: SerializeField] public float EnemyMoveSpeed { get; private set; }
 
         public Score Score { get; private set; } = new();
 

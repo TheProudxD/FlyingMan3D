@@ -1,3 +1,4 @@
+using System.Collections;
 using _Project.Scripts.Infrastructure.FSM;
 using _Project.Scripts.Infrastructure.FSM.States;
 using _Project.Scripts.Infrastructure.Services.Factories;
@@ -13,10 +14,15 @@ public class Finish : MonoBehaviour
     private static readonly int Win = Animator.StringToHash("Win");
 
     private CinemachineVirtualCamera _finishCamera;
-    private bool _canCalculate;
+    private bool _attack;
     private bool _isPlayerEntered;
+    private WaitForSeconds _waiter;
 
-    private void Start() => _finishCamera = GameObject.Find("FinishCamera").GetComponent<CinemachineVirtualCamera>();
+    private void Start()
+    {
+        _finishCamera = GameObject.Find("FinishCamera").GetComponent<CinemachineVirtualCamera>();
+        _waiter = new WaitForSeconds(2.5f);
+    }
 
     private void Update()
     {
@@ -24,7 +30,7 @@ public class Finish : MonoBehaviour
 
         if (_gameFactory.Players.Count == 0 && _gameFactory.Enemies.Count >= 0)
         {
-            foreach (EnemyFinish item in _gameFactory.Enemies)
+            foreach (Enemy item in _gameFactory.Enemies)
             {
                 item.Animator.SetBool(Win, true);
                 Destroy(item.GetComponent<Rigidbody>());
@@ -51,30 +57,54 @@ public class Finish : MonoBehaviour
         if (other.gameObject.transform.root.CompareTag("Player") == false)
             return;
 
-        if (!_canCalculate)
+        StartCoroutine(SetAttackState(other));
+
+        if (_attack)
+            return;
+
+        _attack = true;
+        _finishCamera.Priority = 15;
+        _finishCamera.transform.position = new Vector3(0, 23, transform.position.z - 30f);
+
+        foreach (Enemy e in _gameFactory.Enemies)
         {
-            _canCalculate = true;
-
-            _finishCamera.Priority = 15;
-            _finishCamera.transform.position = new Vector3(0, 23, transform.position.z - 30f);
-
-            foreach (EnemyFinish e in _gameFactory.Enemies)
-            {
-                e.SetAttackState();
-            }
-
-            _isPlayerEntered = true;
+            e.SetAttackState();
         }
 
+        _isPlayerEntered = true;
+    }
+
+    private IEnumerator SetAttackState(Collider other)
+    {
         Transform root = other.gameObject.transform.root;
         root.tag = "FreePlayer";
 
-        root.GetComponent<PlayerMoveToFinish>().enabled = true;
-        root.GetComponent<CapsuleCollider>().enabled = true;
+        var playerController = root.GetComponent<PlayerController>();
 
-        var hips = root.GetComponent<PlayerController>().SelfHips;
+        float maxVelocity = 4;
+
+        foreach (Rigidbody r in playerController.Bodies)
+        {
+            r.velocity /= maxVelocity;
+
+            // Utils.LerpFunction(1, x =>
+            // {
+            //     if (r.velocity.x > maxVelocity)
+            //     {
+            //         r.velocity = maxVelocity * new Vector3(Math.Abs(x), Math.Abs(x), Math.Abs(x));
+            //     }
+            // });
+        }
+
+        Rigidbody hips = playerController.SelfHips;
+        Destroy(hips.GetComponent<TrailRenderer>());
+        yield return _waiter;
+
         var rg = root.gameObject.AddComponent<Rigidbody>();
         rg.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        root.GetComponent<PlayerFinishMover>().enabled = true;
+
+        root.GetComponent<CapsuleCollider>().enabled = true;
 
         root.GetComponent<Animator>().enabled = true;
         Collider[] colliders = root.GetComponentsInChildren<Collider>();
@@ -84,11 +114,8 @@ public class Finish : MonoBehaviour
             colliders[i].enabled = false;
         }
 
-        Destroy(hips.GetComponent<TrailRenderer>());
-
-        root.position = new Vector3(Random.Range(-8, 8), transform.position.y + root.transform.position.y,
-            transform.position.z + Random.Range(-8f, 8f));
-
+        //root.position = new Vector3(Random.Range(-8, 8), transform.position.y + root.transform.position.y, transform.position.z + Random.Range(-8f, 8f));
+        root.position = new Vector3(hips.transform.position.x, hips.transform.position.y, hips.transform.position.z);
         hips.transform.localPosition = Vector3.zero;
     }
 }

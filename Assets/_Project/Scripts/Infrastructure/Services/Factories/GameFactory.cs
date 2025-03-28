@@ -18,7 +18,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private readonly AssetProvider _assetProvider;
 
         public readonly List<PlayerController> Players = new();
-        public readonly List<EnemyFinish> Enemies = new();
+        public readonly List<Enemy> Enemies = new();
 
         private Score _score;
         private HeartTracker _heartTracker;

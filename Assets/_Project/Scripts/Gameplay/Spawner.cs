@@ -50,7 +50,6 @@ public class Spawner : MonoBehaviour, IInitializable
 
     public void SpawnObjects(Vector3 velocity)
     {
-        print("spawner !");
         _velY = velocity.y;
         _velZ = velocity.z;
         _averageTime = _velY / _g;
@@ -58,8 +57,8 @@ public class Spawner : MonoBehaviour, IInitializable
         _zPos = _playerTransform.position.z + _velZ * _averageTime;
 
         float finishTime = _averageTime * 2;
-        float finishZPos = _playerTransform.position.z + _velZ * finishTime;
-        Finish finishGo = _assetProvider.GetFinish(new Vector3(0, 0, finishZPos), Quaternion.identity);
+        float finishZPos = _playerTransform.position.z + (_velZ + Random.Range(3, 8)) * finishTime;
+        Finish finishGo = _assetProvider.GetFinish(new Vector3(0, -0.5f, finishZPos), Quaternion.identity);
 
         Level level = _gameFactory.GetCurrentLevel();
         int enemyCount = level.EnemyCount;
@@ -69,7 +68,7 @@ public class Spawner : MonoBehaviour, IInitializable
         for (int i = 0; i < enemyCount; i++)
         {
             float rotation = angle * i;
-            EnemyFinish enemy = _assetProvider.GetEnemy(finishGo.transform.position, Quaternion.Euler(0f, 180f, 0f));
+            Enemy enemy = _assetProvider.GetEnemy(finishGo.transform.position, Quaternion.Euler(0f, 180f, 0f));
             enemy.transform.Rotate(0, rotation, 0);
             enemy.transform.Translate(new Vector3(0, 0, -16f));
             _gameFactory.Enemies.Add(enemy);

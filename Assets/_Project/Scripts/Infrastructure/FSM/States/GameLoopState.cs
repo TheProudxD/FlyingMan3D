@@ -64,7 +64,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
                     _timer.Start(additionalTime);
                     break;
                 case GameEnterState.LoadNext:
-                    DestroyCurrentLevel();
                     TryShowTutorial();
                     ResetScore();
                     _statisticsService.IncreaseGamesPlayedNumberCounter();
@@ -72,13 +71,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
                     CreateLevel();
                     break;
                 case GameEnterState.Restart:
-                    DestroyCurrentLevel();
                     ResetScore();
                     _statisticsService.IncreaseGamesPlayedNumberCounter();
                     CreateLevel();
                     break;
                 case GameEnterState.Replay:
-                    DestroyCurrentLevel();
                     ResetScore();
                     _statisticsService.IncreaseGamesPlayedNumberCounter();
                     _levelResourceService.Current.Value = _levelResourceService.ObservableValue.Value - 1;
@@ -98,11 +95,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             _level = _gameFactory.CreateLevel(_levelResourceService.Current.Value);
             //_timer.Start(_level.LevelTimer);
-        }
-
-        private void DestroyCurrentLevel()
-        {
-            if (_level != null) Object.Destroy(_level.gameObject);
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;

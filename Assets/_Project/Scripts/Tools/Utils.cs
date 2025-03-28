@@ -113,6 +113,19 @@ namespace _Project.Scripts.Tools
                 neither();
         }
 
+        public static IEnumerator LerpFunction(float duration, Action<float> action)
+        {
+            float time = 0f;
+
+            while (time < duration)
+            {
+                action?.Invoke(time / duration);
+
+                time += Time.deltaTime;
+                yield return null;
+            }
+        }
+
         public static IEnumerator LerpFunction(float duration, List<Action<float>> action)
         {
             var time = 0f;
@@ -121,7 +134,7 @@ namespace _Project.Scripts.Tools
             {
                 action.ForEach(a => a?.Invoke(time / duration));
 
-                time += UnityEngine.Time.deltaTime;
+                time += Time.deltaTime;
                 yield return null;
             }
         }

@@ -80,8 +80,8 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public WindowStaticData GetWindowStaticData() => Load<WindowStaticData>(AssetPath.WINDOW_CONFIG_PATH);
 
-        public EnemyFinish GetEnemy(Vector3 position, Quaternion rotation) =>
-            Instantiate<EnemyFinish>(AssetPath.ENEMY, position, rotation);
+        public Enemy GetEnemy(Vector3 position, Quaternion rotation) =>
+            Instantiate<Enemy>(AssetPath.ENEMY, position, rotation);
 
         public Finish GetFinish(Vector3 position, Quaternion rotation) =>
             Instantiate<Finish>(AssetPath.FINISH, position, rotation);
@@ -187,8 +187,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public Level CreateLevel(int levelId)
         {
             var levelContainer = _configService.Get<LevelContainer>();
-            Level levelPrefab = levelContainer[levelId];
-            return Instantiate<Level>(levelPrefab.gameObject, new Vector3(0, -250, 0));
+            return levelContainer[levelId];
         }
 
         public void GetRingByType(RingData ringData, GameObject currentChildGo)
@@ -197,21 +196,27 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             {
                 case RingType.Additive:
                     var a = currentChildGo.AddComponent<AdditiveRing>();
-                    a.Addition = ringData.Effect;
+                    a.Effect = ringData.Effect;
                     a.Text.SetText("+" + ringData.Effect);
                     _container.Inject(a);
                     break;
                 case RingType.Multiplier:
                     var m = currentChildGo.AddComponent<MultiplierRing>();
-                    m.Multiplier = ringData.Effect;
+                    m.Effect = ringData.Effect;
                     m.Text.SetText("x" + ringData.Effect);
                     _container.Inject(m);
                     break;
                 case RingType.Reducer:
                     var r = currentChildGo.AddComponent<ReducerRing>();
-                    r.ReductionFactor = ringData.Effect;
+                    r.Effect = ringData.Effect;
                     r.Text.SetText("-" + ringData.Effect);
                     _container.Inject(r);
+                    break;
+                case RingType.Divider:
+                    var d = currentChildGo.AddComponent<DividerRing>();
+                    d.Effect = ringData.Effect;
+                    d.Text.SetText("/" + ringData.Effect);
+                    _container.Inject(d);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
