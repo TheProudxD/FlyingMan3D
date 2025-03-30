@@ -183,6 +183,9 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public PlayerController CreatePlayer(GameObject root, Vector3 position, Quaternion rotation) =>
             Instantiate<PlayerController>(root, position, rotation);
+        
+        public PlayerController CreatePlayer(Vector3 position) =>
+            Instantiate<PlayerController>(AssetPath.PLAYER, position);
 
         public Level CreateLevel(int levelId)
         {

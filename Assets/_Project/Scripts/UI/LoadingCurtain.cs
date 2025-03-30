@@ -18,18 +18,19 @@ namespace _Project.Scripts.UI
 
         public void Show()
         {
-            // gameObject.SetActive(true);
             _curtain.alpha = 1;
+            gameObject.SetActive(true);
         }
 
         public void Hide()
         {
-            StartCoroutine(FadeIn());
+            if (gameObject.activeInHierarchy)
+                StartCoroutine(FadeIn());
         }
 
         private IEnumerator FadeIn()
         {
-            yield return null;
+            // yield return null;
 
             while (_curtain.alpha > 0)
             {
@@ -38,7 +39,7 @@ namespace _Project.Scripts.UI
             }
 
             _curtain.alpha = 0;
-            // gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
     }
 }

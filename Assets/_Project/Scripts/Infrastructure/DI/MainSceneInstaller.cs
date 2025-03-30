@@ -1,20 +1,15 @@
 using _Project.Scripts.Infrastructure.Services.Debug;
-using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Localization.UI;
 using _Project.Scripts.Tools;
-using Reflex.Attributes;
 using Reflex.Core;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Infrastructure.DI
 {
     public class MainSceneInstaller : MonoBehaviour, IInstaller
     {
-        [SerializeField] private PlayerController _playerController;
         [SerializeField] private Indicator _indicator;
         [SerializeField] private Spawner _spawner;
-        [FormerlySerializedAs("_playerMoveToFinish")] [SerializeField] private PlayerFinishMover _playerFinishMover;
         
         public void InstallBindings(ContainerBuilder builder) => builder.OnContainerBuilt += OnContainerBuilt;
 
@@ -24,10 +19,8 @@ namespace _Project.Scripts.Infrastructure.DI
             InjectDebug(container);
 #endif
             
-            container.Inject(_playerController);
             container.Inject(_indicator);
             container.Inject(_spawner);
-            container.Inject(_playerFinishMover);
             InjectLocalizedLabel(container);
         }
 

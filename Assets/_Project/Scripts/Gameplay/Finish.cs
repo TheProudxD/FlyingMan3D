@@ -37,6 +37,7 @@ public class Finish : MonoBehaviour
                 Destroy(item.GetComponent<Rigidbody>());
             }
 
+            _isGameOver = true;
             _stateMachine.Enter<LoseLevelState>();
         }
         else if (_gameFactory.Enemies.Count == 0 && _gameFactory.Players.Count > 0)
@@ -63,7 +64,7 @@ public class Finish : MonoBehaviour
 
         _attack = true;
         _finishCamera.Priority = 15;
-        _finishCamera.transform.position = new Vector3(0, 25, transform.position.z - 30f);
+        _finishCamera.transform.position = new Vector3(0, 20, transform.position.z - 26f);
 
         foreach (Enemy e in _gameFactory.Enemies)
         {

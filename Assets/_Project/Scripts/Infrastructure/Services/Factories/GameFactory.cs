@@ -7,6 +7,7 @@ using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using BhorGames.Mechanics;
+using Cinemachine;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.Factories
@@ -48,9 +49,6 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _score = new Score();
             EnemiesCounter = new ObservableVariable<int>(Enemies.Count);
             PlayersCounter = new ObservableVariable<int>(Players.Count);
-
-            _player = Object.FindObjectOfType<PlayerController>();
-            AddPlayer(_player);
             yield break;
         }
 
@@ -137,10 +135,8 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public PlayerController GetNewPlayer(GameObject root)
         {
-            float spawnGap = Random.Range(1f, 2f);
+            float spawnGap = Random.Range(1.3f, 3f);
             Vector3 randomPos = Random.onUnitSphere * spawnGap;
-            float forceMagnitude = 0.5f;
-            float torqueMagnitude = 0.5f;
 
             PlayerController player =
                 _assetProvider.CreatePlayer(root, root.transform.position + randomPos, root.transform.rotation);
@@ -148,18 +144,22 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             player.Initialize();
             CopyTransformData(root.transform, player.transform);
 
-            // foreach (Rigidbody rb in player.Bodies)
-            // {
-            //     Vector3 randomForce = Random.insideUnitSphere * forceMagnitude;
-            //     rb.AddForce(randomForce, ForceMode.Impulse);
-            //
-            //     Vector3 randomTorque = Random.insideUnitSphere * torqueMagnitude;
-            //     rb.AddTorque(randomTorque, ForceMode.Impulse);
-            // }
-
             //player.transform.Rotate(player.transform.right, rot, Space.Self);
             AddPlayer(player);
             return player;
+        }
+
+        public void CreatePlayer()
+        {
+            var startPosition = new Vector3(0, 1.75f, -1);
+            _player = _assetProvider.CreatePlayer(startPosition);
+            var capsule = GameObject.Find("Capsule").GetComponent<Rigidbody>();
+            var fixedJoint = _player.SelfHips.gameObject.AddComponent<FixedJoint>();
+            fixedJoint.connectedBody = capsule;
+            _player.SetInitial(fixedJoint, capsule.transform);
+            AddPlayer(_player);
+            var camera = GameObject.Find("Cinemachine").GetComponent<CinemachineVirtualCamera>();
+            camera.Follow = _player.SelfHips.transform;
         }
     }
 }

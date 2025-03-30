@@ -2,6 +2,7 @@ using System.Collections;
 using _Project.Scripts.Infrastructure.FSM;
 using _Project.Scripts.Infrastructure.FSM.States;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Tools;
 using Reflex.Attributes;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class Indicator : MonoBehaviour
 {
     [Inject] private StateMachine _stateMachine;
     [Inject] private GameFactory _gameFactory;
+    [Inject] private UIFactory _uiFactory;
 
     [SerializeField] private Needle _needle;
 
@@ -28,14 +30,17 @@ public class Indicator : MonoBehaviour
     {
         if (_enabled == false)
             return;
-
-        if (Input.GetMouseButtonDown(0))
+        
+        if (Utils.IsPointerOverUI() == false && Input.GetMouseButtonDown(0))
         {
             float launchFactor = CreateLaunchForce();
+            // if (launchFactor)
+            //     StartCoroutine(GameOverCo());
 
             StartCoroutine(_gameFactory.GetPlayer().ApplyLaunchForce(launchFactor));
 
             enabled = false;
+            _uiFactory.GetHUD().DeactivateStartText();
         }
         else
         {
@@ -60,20 +65,14 @@ public class Indicator : MonoBehaviour
     {
         _speed = Mathf.Abs(90f - _speed);
 
-        switch (_speed)
+        return _speed switch
         {
-            case > 70:
-                StartCoroutine(GameOverCo());
-                return 0.1f;
-            case > 50:
-                return 0.65f;
-            case > 30:
-                return 0.75f;
-            case > 10:
-                return 0.85f;
-            default:
-                return 1.0f;
-        }
+            > 70 => 0.1f,
+            > 50 => 0.65f,
+            > 30 => 0.75f,
+            > 10 => 0.85f,
+            _ => 1.0f
+        };
     }
 
     private IEnumerator GameOverCo()

@@ -204,8 +204,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: TAP TO THROW
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 152ceb93d800be0459f05d2c3e0e19aa, type: 2}
-  m_sharedMaterial: {fileID: 8374992287482890875, guid: 152ceb93d800be0459f05d2c3e0e19aa, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5e795c7fb5b0f7c47b7df188644e09a3, type: 2}
+  m_sharedMaterial: {fileID: -5579844985158701310, guid: 5e795c7fb5b0f7c47b7df188644e09a3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -229,7 +229,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 89.7
+  m_fontSize: 94
   m_fontSizeBase: 66
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -945,7 +945,7 @@ PrefabInstance:
     - target: {fileID: 5970428474127881730, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: dbe6d48bfc94c48e3827cf7ac176a944, type: 3}
+      objectReference: {fileID: 21300000, guid: 8dfa0969120c09d48a8ef91374548f8b, type: 3}
     - target: {fileID: 8828544701449296325, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -1084,14 +1084,14 @@ PrefabInstance:
     - target: {fileID: 5970428474127881730, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4a0cb101304f771448ce202bf79633d0, type: 3}
+      objectReference: {fileID: 21300000, guid: f00aefd50371bca43908a2f55834f2a5, type: 3}
     - target: {fileID: 5970428474127881730, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
       propertyPath: m_Color.b
-      value: 0
+      value: 0.7028302
       objectReference: {fileID: 0}
     - target: {fileID: 5970428474127881730, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
       propertyPath: m_Color.g
-      value: 0
+      value: 0.7028302
       objectReference: {fileID: 0}
     - target: {fileID: 5970428474127881730, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
       propertyPath: m_Color.r
