@@ -8,38 +8,75 @@ public class MultiplierRing : RingBase
     private bool _firstPlayer;
     private int _playerCount;
     
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     GameObject root = other.transform.root.gameObject;
+    //
+    //     if (!root.CompareTag("Player"))
+    //         return;
+    //
+    //     if (!_firstPlayer)
+    //     {
+    //         _playerCount = GameFactory.PlayersCounter.Value;
+    //         _firstPlayer = true;
+    //     }
+    //
+    //     if (player.IsPassed || _playerCount <= 0)
+    //         return;
+    //
+    //     player.IsPassed = true;
+    //
+    //     for (int i = 0; i < Effect - 1; i++)
+    //     {
+    //         GameFactory.GetNewPlayer(root);
+    //     }
+    //
+    //     _playerCount--;
+    // }
+    
     private void OnTriggerEnter(Collider other)
     {
         GameObject root = other.transform.root.gameObject;
 
-        if (!root.TryGetComponent(out PlayerController player))
+        if (!root.CompareTag("Player")) 
             return;
 
         if (!_firstPlayer)
         {
-            _playerCount = GameFactory.Players.Count;
+            _playerCount = FindObjectsOfType<PlayerController>().Length;
             _firstPlayer = true;
         }
 
-        if (player.IsPassed || _playerCount <= 0)
+        var playerController = root.GetComponent<PlayerController>();
+
+        if (playerController.IsPassed || _playerCount <= 0) 
             return;
 
-        player.IsPassed = true;
+        playerController.IsPassed = true;
 
         for (int i = 0; i < Effect - 1; i++)
         {
             GameFactory.GetNewPlayer(root);
         }
-
         _playerCount--;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!other.transform.root.TryGetComponent(out PlayerController player))
-            return;
+        GameObject root = other.transform.root.gameObject;
 
-        if (player.IsPassed)
-            player.IsPassed = false;
+        if (root.CompareTag("Player"))
+        {
+            if (root.GetComponent<PlayerController>().IsPassed)
+            {
+                root.GetComponent<PlayerController>().IsPassed = false;
+            }
+        }
+        
+        // if (!other.transform.root.TryGetComponent(out PlayerController player))
+        //     return;
+        //
+        // if (player.IsPassed)
+        //     player.IsPassed = false;
     }
 }

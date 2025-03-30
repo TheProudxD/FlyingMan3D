@@ -1,6 +1,8 @@
 using _Project.Scripts.Infrastructure.Services.Debug;
+using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Localization.UI;
 using _Project.Scripts.Tools;
+using Reflex.Attributes;
 using Reflex.Core;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -26,7 +28,6 @@ namespace _Project.Scripts.Infrastructure.DI
             container.Inject(_indicator);
             container.Inject(_spawner);
             container.Inject(_playerFinishMover);
-
             InjectLocalizedLabel(container);
         }
 

@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         IsDie = true;
-        _gameFactory.Players.Remove(this);
+        _gameFactory.RemovePlayer(this);
         _assetProvider.GetPlayerRagdoll(transform.position, Quaternion.identity);
         Destroy(gameObject);
     }

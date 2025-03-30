@@ -12,10 +12,10 @@ public class Finish : MonoBehaviour
     [Inject] private GameFactory _gameFactory;
 
     private static readonly int Win = Animator.StringToHash("Win");
-
+    
     private CinemachineVirtualCamera _finishCamera;
     private bool _attack;
-    private bool _isPlayerEntered;
+    private bool _isGameOver;
     private WaitForSeconds _waiter;
 
     private void Start()
@@ -26,7 +26,8 @@ public class Finish : MonoBehaviour
 
     private void Update()
     {
-        if (!_isPlayerEntered) return;
+        if (_isGameOver)
+            return;
 
         if (_gameFactory.Players.Count == 0 && _gameFactory.Enemies.Count >= 0)
         {
@@ -37,7 +38,6 @@ public class Finish : MonoBehaviour
             }
 
             _stateMachine.Enter<LoseLevelState>();
-            _isPlayerEntered = false;
         }
         else if (_gameFactory.Enemies.Count == 0 && _gameFactory.Players.Count > 0)
         {
@@ -47,8 +47,7 @@ public class Finish : MonoBehaviour
                 Destroy(item.GetComponent<Rigidbody>());
             }
 
-            _stateMachine.Enter<WinLevelState>();
-            _isPlayerEntered = false;
+            StartCoroutine(WinCoroutine());
         }
     }
 
@@ -64,14 +63,23 @@ public class Finish : MonoBehaviour
 
         _attack = true;
         _finishCamera.Priority = 15;
-        _finishCamera.transform.position = new Vector3(0, 23, transform.position.z - 30f);
+        _finishCamera.transform.position = new Vector3(0, 25, transform.position.z - 30f);
 
         foreach (Enemy e in _gameFactory.Enemies)
         {
             e.SetAttackState();
         }
+    }
 
-        _isPlayerEntered = true;
+    private IEnumerator WinCoroutine()
+    {
+        _isGameOver = true;
+        ParticleSystem winParticle = _gameFactory.GetSpawner().WinParticle;
+        winParticle.transform.position = transform.position;
+        winParticle.Play();
+        yield return new WaitForSeconds(2);
+
+        _stateMachine.Enter<WinLevelState>();
     }
 
     private IEnumerator SetAttackState(Collider other)

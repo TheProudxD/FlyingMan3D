@@ -3,7 +3,6 @@ using System.Collections;
 using _Project.Scripts.Infrastructure;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using TMPro;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
@@ -17,6 +16,7 @@ public class Spawner : MonoBehaviour, IInitializable
     [Inject] private LevelResourceService _levelResourceService;
 
     [SerializeField] private Colors[] _colorArray;
+    [field: SerializeField] public ParticleSystem WinParticle { get; private set; }
 
     [Serializable]
     public class Colors
@@ -57,7 +57,7 @@ public class Spawner : MonoBehaviour, IInitializable
         _zPos = _playerTransform.position.z + _velZ * _averageTime;
 
         float finishTime = _averageTime * 2;
-        float finishZPos = _playerTransform.position.z + (_velZ + Random.Range(3, 8)) * finishTime;
+        float finishZPos = _playerTransform.position.z + (_velZ + Random.Range(2, 5)) * finishTime;
         Finish finishGo = _assetProvider.GetFinish(new Vector3(0, -0.5f, finishZPos), Quaternion.identity);
 
         Level level = _gameFactory.GetCurrentLevel();
@@ -68,10 +68,8 @@ public class Spawner : MonoBehaviour, IInitializable
         for (int i = 0; i < enemyCount; i++)
         {
             float rotation = angle * i;
-            Enemy enemy = _assetProvider.GetEnemy(finishGo.transform.position, Quaternion.Euler(0f, 180f, 0f));
-            enemy.transform.Rotate(0, rotation, 0);
-            enemy.transform.Translate(new Vector3(0, 0, -16f));
-            _gameFactory.Enemies.Add(enemy);
+
+            _gameFactory.AddEnemy(finishGo.transform.position, rotation);
         }
 
         int ringCount = level.Rings.Length;

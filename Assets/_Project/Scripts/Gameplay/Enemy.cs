@@ -103,7 +103,7 @@ public class Enemy : MonoBehaviour
     public void Die()
     {
         IsDie = true;
-        _gameFactory.Enemies.Remove(this);
+        _gameFactory.RemoveEnemy(this);
         _assetProvider.GetEnemyRagdoll(transform.position, Quaternion.identity);
         Destroy(gameObject);
     }

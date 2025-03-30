@@ -15,25 +15,30 @@ MonoBehaviour:
   <LevelTimer>k__BackingField: 3
   <Rings>k__BackingField:
   - InsideRings:
-    - RingType: 2
-      Effect: 3
-    - RingType: 2
-      Effect: 1
-  - InsideRings:
     - RingType: 0
       Effect: 8
     - RingType: 0
       Effect: 10
   - InsideRings:
+    - RingType: 2
+      Effect: 3
+    - RingType: 2
+      Effect: 5
+  - InsideRings:
     - RingType: 0
       Effect: 3
     - RingType: 1
       Effect: 2
+  - InsideRings:
+    - RingType: 3
+      Effect: 3
+    - RingType: 1
+      Effect: 2
   <EnemyCount>k__BackingField: 12
-  <TimeDif>k__BackingField: 2.5
+  <TimeDif>k__BackingField: 3
   <MaxLaunchSpeed>k__BackingField: 70
   <MovementSpeed>k__BackingField: 0.3
   <FlyingSpeed>k__BackingField: 85
   <StopDistance>k__BackingField: 0.2
   <EnemyStopDistance>k__BackingField: 0.2
-  <EnemyMoveSpeed>k__BackingField: 2
+  <EnemyMoveSpeed>k__BackingField: 3
