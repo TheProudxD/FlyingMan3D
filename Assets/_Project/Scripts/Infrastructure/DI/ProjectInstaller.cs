@@ -89,8 +89,7 @@ namespace _Project.Scripts.Infrastructure.DI
         private void BindGameplayServices(ContainerBuilder builder)
         {
             builder.AddSingleton(typeof(LevelResourceService));
-            builder.AddSingleton(typeof(HintResourceService));
-            builder.AddSingleton(typeof(HintService));
+            builder.AddSingleton(typeof(MoneyResourceService));
             builder.AddSingleton(typeof(AnimationService));
             builder.AddSingleton(typeof(SceneLoader));
             builder.AddSingleton(typeof(HeartTracker));

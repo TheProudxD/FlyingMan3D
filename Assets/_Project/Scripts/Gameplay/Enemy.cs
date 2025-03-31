@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
@@ -8,12 +9,12 @@ public class Enemy : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private AssetProvider _assetProvider;
-    
+
     private static readonly int CanAttack = Animator.StringToHash("CanAttack");
 
     public bool IsDie { get; private set; }
     public Animator Animator { get; private set; }
-    
+
     private GameObject _target;
     private float _minDistance;
     private int _index;
@@ -47,8 +48,12 @@ public class Enemy : MonoBehaviour
     {
         _index = 0;
         _minDistance = float.MaxValue;
-        
-        if (_gameFactory.Players == null || _gameFactory.Players.Count == 0) return null;
+
+        if (_gameFactory.Players.Any(p => p.Animator.enabled == false) || _gameFactory.Players == null ||
+            _gameFactory.Players.Count == 0)
+        {
+            return null;
+        }
 
         for (int i = 1; i < _gameFactory.Players.Count; i++)
         {
@@ -61,7 +66,7 @@ public class Enemy : MonoBehaviour
             _index = i;
         }
 
-        _target = _gameFactory.Players.Count > 0 ? _gameFactory.Players[_index].gameObject : null;
+        _target = _gameFactory.Players[_index].gameObject;
 
         return _target;
     }
@@ -72,31 +77,26 @@ public class Enemy : MonoBehaviour
     {
         if (_enabled == false)
             return;
-        
+
         if (_target == null)
         {
+            Animator.SetBool(CanAttack, false);
             _target = NearestTarget();
         }
         else
         {
-            try
-            {
-                _moveDistance = _target.transform.position - transform.position;
-                _moveDistance.y = 0f;
+            Animator.SetBool(CanAttack, true);
+            _moveDistance = _target.transform.position - transform.position;
+            _moveDistance.y = 0f;
 
-                if (_moveDistance.magnitude <= _stopDistance)
-                    return;
+            if (_moveDistance.magnitude <= _stopDistance)
+                return;
 
-                transform.position += _moveDistance.normalized * (_moveSpeed * Time.deltaTime);
-                Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
+            transform.position += _moveDistance.normalized * (_moveSpeed * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
 
-                transform.rotation =
-                    Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * 120f);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-            }
+            transform.rotation =
+                Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * 120f);
         }
     }
 

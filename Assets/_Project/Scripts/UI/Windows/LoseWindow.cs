@@ -3,7 +3,6 @@ using _Project.Scripts.Infrastructure.FSM;
 using _Project.Scripts.Infrastructure.FSM.States;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
-using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.SO;
 using _Project.Scripts.Tools.Extensions;
 using _Project.Scripts.UI.Buttons;
@@ -17,7 +16,6 @@ namespace _Project.Scripts.UI.Windows
 {
     public class LoseWindow : WindowBase
     {
-        [Inject] private HintResourceService _hintResourceService;
         [Inject] private AnimationService _animationService;
         [Inject] private GameFactory _gameFactory;
         [Inject] private StateMachine _stateMachine;

@@ -20,6 +20,7 @@ namespace _Project.Scripts.UI
         [SerializeField] private TMP_Text _playersNumberText;
 
         [field: SerializeField] public GameObject TapToThrow { get; private set; }
+        [field: SerializeField] public GameObject PowerupShop { get; private set; }
 
         public void Initialize()
         {
@@ -58,6 +59,9 @@ namespace _Project.Scripts.UI
         {
             if (TapToThrow.activeInHierarchy)
                 TapToThrow.SetActive(false);
+            
+            if (PowerupShop.activeInHierarchy)
+                PowerupShop.SetActive(false);
         }
     }
 }

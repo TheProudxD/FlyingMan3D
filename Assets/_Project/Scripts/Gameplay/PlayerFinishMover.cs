@@ -15,9 +15,9 @@ public class PlayerFinishMover : MonoBehaviour
     private float _stopDistance;
     private GameObject _target;
     private Vector3 _moveDistance;
-    private bool _canMove;
     private bool _canSmoke = true;
     private float _rotationSpeed = 100;
+    public bool CanMove { get; private set; }
 
     public void Initialize()
     {
@@ -29,13 +29,13 @@ public class PlayerFinishMover : MonoBehaviour
     {
         if (gameObject.CompareTag("Enemy"))
         {
-            _canMove = true;
+            CanMove = true;
         }
     }
 
     private void Update()
     {
-        if (!_canMove)
+        if (!CanMove)
             return;
 
         if (_target == null)
@@ -98,6 +98,6 @@ public class PlayerFinishMover : MonoBehaviour
             return;
 
         _playerController.Animator.SetBool(IsGround, true);
-        _canMove = true;
+        CanMove = true;
     }
 }

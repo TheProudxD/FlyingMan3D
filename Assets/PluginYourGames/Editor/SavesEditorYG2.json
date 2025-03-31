@@ -7,8 +7,14 @@
         false,
         false
     ],
-    "idSave": 316,
-    "hints": 3,
-    "level": 12,
-    "richestLevel": 0
+    "idSave": 98,
+    "level": 3,
+    "richestLevel": 0,
+    "money": 0,
+    "health": 1,
+    "healthProgress": 1,
+    "movingSpeed": 7,
+    "movingSpeedProgress": 7,
+    "launchForce": 4,
+    "launchForceProgress": 4
 }

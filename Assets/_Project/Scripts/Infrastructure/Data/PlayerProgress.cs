@@ -5,18 +5,15 @@ namespace _Project.Scripts.Data
 {
     public class PlayerProgress
     {
-        public readonly ObservableVariable<int> HintsNumber;
         public readonly ObservableVariable<int> CurrentLevel;
+        public readonly ObservableVariable<int> MoneyNumber;
 
-        public PlayerProgress(int hintsNumber, int currentLevel)
+        public PlayerProgress(int currentLevel, int moneyNumber)
         {
-            if (hintsNumber < 0) throw new ArgumentOutOfRangeException(nameof(hintsNumber));
-            if (currentLevel < 0) throw new ArgumentOutOfRangeException(nameof(currentLevel));
-
-            HintsNumber = new ObservableVariable<int>(hintsNumber);
             CurrentLevel = new ObservableVariable<int>(currentLevel);
+            MoneyNumber = new ObservableVariable<int>(moneyNumber);
         }
 
-        public override string ToString() => HintsNumber.Value + ", " + CurrentLevel.Value;
+        public override string ToString() => CurrentLevel.Value + ", " + MoneyNumber.Value;
     }
 }

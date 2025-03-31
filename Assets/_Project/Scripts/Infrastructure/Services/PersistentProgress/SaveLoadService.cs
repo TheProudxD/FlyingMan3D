@@ -15,14 +15,14 @@ namespace _Project.Scripts.Infrastructure.Services.PersistentProgress
 
         public void Save()
         {
-            YG2.saves.hints = _playerProgress.HintsNumber.Value;
+            YG2.saves.money = _playerProgress.MoneyNumber.Value;
             YG2.saves.level = _playerProgress.CurrentLevel.Value;
             YG2.SaveProgress();
         }
 
         public PlayerProgress LoadProgress()
         {
-            _playerProgress = new PlayerProgress(YG2.saves.hints, YG2.saves.level);
+            _playerProgress = new PlayerProgress(YG2.saves.level, YG2.saves.money);
 
             return _playerProgress;
         }
