@@ -2,6 +2,7 @@ using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 using UnityEngine;
+using YG;
 
 public class PlayerFinishMover : MonoBehaviour
 {
@@ -16,26 +17,28 @@ public class PlayerFinishMover : MonoBehaviour
     private GameObject _target;
     private Vector3 _moveDistance;
     private bool _canSmoke = true;
+    private bool _canMove;
     private float _rotationSpeed = 100;
-    public bool CanMove { get; private set; }
+    private int _health;
 
     public void Initialize()
     {
-        _moveSpeed = _gameFactory.GetCurrentLevel().MovementSpeed;
         _stopDistance = _gameFactory.GetCurrentLevel().StopDistance;
+        _moveSpeed = YG2.saves.movingSpeed;
+        _health = YG2.saves.health;
     }
 
     private void Start()
     {
         if (gameObject.CompareTag("Enemy"))
         {
-            CanMove = true;
+            _canMove = true;
         }
     }
 
     private void Update()
     {
-        if (!CanMove)
+        if (!_canMove)
             return;
 
         if (_target == null)
@@ -90,7 +93,12 @@ public class PlayerFinishMover : MonoBehaviour
             }
 
             enemy.Die();
-            _playerController.Die();
+            _health--;
+
+            if (_health <= 0)
+            {
+                _playerController.Die();
+            }
         }
 
         if (gameObject.transform.root.gameObject.CompareTag("Enemy") ||
@@ -98,6 +106,6 @@ public class PlayerFinishMover : MonoBehaviour
             return;
 
         _playerController.Animator.SetBool(IsGround, true);
-        CanMove = true;
+        _canMove = true;
     }
 }

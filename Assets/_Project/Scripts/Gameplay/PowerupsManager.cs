@@ -6,6 +6,7 @@ using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools.Extensions;
 using Reflex.Attributes;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using YG;
 
@@ -23,11 +24,9 @@ namespace UI
         [SerializeField]
         private PowerupView _speedView;
 
-        [SerializeField]
-        private PowerupView _launchForceView;
-
-        [SerializeField] private AnimationCurve _priceCurve;
-
+        [FormerlySerializedAs("_launchForceView")] [SerializeField]
+        private PowerupView _flyingControlView;
+        
         private List<Button.ButtonClickedEvent> _buttonAnimations;
         private readonly Dictionary<PowerupType, PowerupView> _powerupData = new();
 
@@ -35,7 +34,7 @@ namespace UI
         {
             _powerupData.Add(PowerupType.Health, _healthView);
             _powerupData.Add(PowerupType.MovingSpeed, _speedView);
-            _powerupData.Add(PowerupType.LaunchForce, _launchForceView);
+            _powerupData.Add(PowerupType.FlyingControl, _flyingControlView);
         }
 
         private void OnEnable()
@@ -49,18 +48,18 @@ namespace UI
 
         private void GetPowerupData()
         {
-            _healthView.Level = YG2.saves.health;
-            _speedView.Level = YG2.saves.movingSpeed;
-            _launchForceView.Level = YG2.saves.launchForce;
+            _healthView.Progress = YG2.saves.health;
+            _speedView.Progress = YG2.saves.movingSpeedProgress;
+            _flyingControlView.Progress = YG2.saves.flyingControlProgress;
 
-            _healthView.Price = GetPriceAtStart(_healthView.Level);
-            _speedView.Price = GetPriceAtStart(_speedView.Level);
-            _launchForceView.Price = GetPriceAtStart(_launchForceView.Level);
+            _healthView.Price = _healthView.GetPriceAtStart();
+            _speedView.Price = _speedView.GetPriceAtStart();
+            _flyingControlView.Price = _flyingControlView.GetPriceAtStart();
 
-            foreach (var powerupData in _powerupData.Values)
+            foreach (PowerupView powerupData in _powerupData.Values)
             {
                 powerupData.PriceText.text = powerupData.Price.ToString();
-                powerupData.LevelText.text = powerupData.Level.ToString();
+                powerupData.LevelText.text = powerupData.Progress.ToString();
                 // powerupData.NameText.text = powerupData.Name;
             }
 
@@ -74,7 +73,7 @@ namespace UI
 
             _moneyResourceService.Spend(this, powerupView.Price);
 
-            powerupView.Price += GetPrice(powerupView);
+            powerupView.Price += powerupView.GetPrice();
             IncreaseValue(powerupView);
 
             CheckForPriceOrAdPurchase();
@@ -128,18 +127,18 @@ namespace UI
 
         private void IncreaseValue(PowerupView powerupView)
         {
-            powerupView.Level++;
+            powerupView.Progress++;
 
             switch (powerupView.Id)
             {
                 case PowerupType.Health:
-                    YG2.saves.health = powerupView.Level;
+                    YG2.saves.health = powerupView.Progress;
                     break;
                 case PowerupType.MovingSpeed:
-                    YG2.saves.movingSpeed = powerupView.Level;
+                    YG2.saves.movingSpeed = powerupView.Progress;
                     break;
-                case PowerupType.LaunchForce:
-                    YG2.saves.launchForce = powerupView.Level;
+                case PowerupType.FlyingControl:
+                    YG2.saves.flyingControl = powerupView.Progress;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -148,24 +147,12 @@ namespace UI
             YG2.SaveProgress();
         }
 
-        private int GetPrice(PowerupView powerupView) => (int)_priceCurve.Evaluate(powerupView.Level);
-
         private void GivePowerup(PowerupType id)
         {
             if ((int)id > 2) return;
 
             // Metrica.Instance.WatchedAdForPowerup(id.ToString());
             IncreaseValue(_powerupData[id]);
-        }
-
-        private int GetPriceAtStart(int level)
-        {
-            int price = 0;
-
-            for (var i = 0; i < level; i++)
-                price += (int)_priceCurve.Evaluate(i);
-
-            return price;
         }
     }
 }

@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     {
         _enabled = true;
         _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
-        _movementSpeed = _gameFactory.GetCurrentLevel().FlyingSpeed;
+        _movementSpeed = YG.YG2.saves.flyingControl;
     }
 
     public void SetInitial(FixedJoint joint, Transform capsule)

@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Infrastructure.Services.Localization;
+using _Project.Scripts.Infrastructure.Services.Localization.UI;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
@@ -10,10 +11,10 @@ namespace UI
 {
     internal class PowerupView : MonoBehaviour
     {
-        [Inject] private LocalizationService _localizationService;
-
+        [field: SerializeField] private LocalizedLabel _localizedLabel;
         [field: SerializeField] public string LocalizationName;
         [field: SerializeField] public PowerupType Id { get; private set; }
+        [SerializeField] private AnimationCurve _priceCurve;
 
         public TextMeshProUGUI NameText;
         public TextMeshProUGUI LevelText;
@@ -25,7 +26,7 @@ namespace UI
         public GameObject AdIcon;
         private int _price;
 
-        public int Level
+        public int Progress
         {
             get
             {
@@ -33,7 +34,7 @@ namespace UI
                 {
                     PowerupType.Health => YG2.saves.healthProgress,
                     PowerupType.MovingSpeed => YG2.saves.movingSpeedProgress,
-                    PowerupType.LaunchForce => YG2.saves.launchForceProgress,
+                    PowerupType.FlyingControl => YG2.saves.flyingControlProgress,
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }
@@ -50,8 +51,8 @@ namespace UI
                     case PowerupType.MovingSpeed:
                         YG2.saves.movingSpeedProgress = value;
                         break;
-                    case PowerupType.LaunchForce:
-                        YG2.saves.launchForceProgress = value;
+                    case PowerupType.FlyingControl:
+                        YG2.saves.flyingControlProgress = value;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -75,20 +76,18 @@ namespace UI
             }
         }
 
-        private void OnEnable()
-        {
-            _localizationService.LocaleChanged += ChangeName;
-            _localizationService.Localize(LocalizationName);
-        }
+        private void Start() => _localizedLabel.ChangeKey(LocalizationName);
 
-        private void OnDisable()
+        public int GetPrice() => (int)_priceCurve.Evaluate(Progress);
+        
+        public int GetPriceAtStart()
         {
-            _localizationService.LocaleChanged -= ChangeName;
-        }
+            int price = 0;
 
-        private void ChangeName(LocaleConfig arg1, int arg2)
-        {
-            _localizationService.Localize(LocalizationName);
+            for (var i = 0; i < Progress; i++)
+                price += (int)_priceCurve.Evaluate(i);
+
+            return price;
         }
     }
 
@@ -96,6 +95,6 @@ namespace UI
     {
         Health,
         MovingSpeed,
-        LaunchForce
+        FlyingControl
     }
 }

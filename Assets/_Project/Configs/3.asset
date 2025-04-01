@@ -35,10 +35,10 @@ MonoBehaviour:
     - RingType: 0
       Effect: 1
   <EnemyCount>k__BackingField: 8
-  <TimeDif>k__BackingField: 3
-  <MaxLaunchSpeed>k__BackingField: 60
+  <TimeDif>k__BackingField: 1.5
+  <MaxLaunchSpeed>k__BackingField: 40
   <MovementSpeed>k__BackingField: 0.3
-  <FlyingSpeed>k__BackingField: 80
+  <FlyingSpeed>k__BackingField: 100
   <StopDistance>k__BackingField: 0.2
   <EnemyStopDistance>k__BackingField: 0.2
   <EnemyMoveSpeed>k__BackingField: 3

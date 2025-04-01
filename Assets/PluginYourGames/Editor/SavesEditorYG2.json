@@ -7,14 +7,14 @@
         false,
         false
     ],
-    "idSave": 98,
-    "level": 3,
-    "richestLevel": 0,
-    "money": 0,
-    "health": 1,
-    "healthProgress": 1,
-    "movingSpeed": 7,
-    "movingSpeedProgress": 7,
-    "launchForce": 4,
-    "launchForceProgress": 4
+    "idSave": 36,
+    "level": 1,
+    "richestLevel": -1,
+    "money": 185,
+    "health": 11,
+    "healthProgress": 11,
+    "movingSpeed": 0.25,
+    "movingSpeedProgress": 1,
+    "flyingControl": 50.0,
+    "flyingControlProgress": 1
 }

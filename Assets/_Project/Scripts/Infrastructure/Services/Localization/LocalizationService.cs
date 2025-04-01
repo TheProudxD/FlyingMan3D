@@ -12,7 +12,7 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
         private readonly AssetProvider _assetProvider;
         private LocaleConfig _current;
         private TextCollection _currentCollection;
-        
+
         public Action<LocaleConfig, int> LocaleChanged;
 
         public int UpdateNumber { get; private set; }
@@ -60,7 +60,7 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
 
         private void UpdateLocale(LocaleConfig localeConfig)
         {
-            if (localeConfig == null) 
+            if (localeConfig == null)
                 return;
 
             _current = localeConfig;
@@ -73,8 +73,15 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
 
         public string Localize(string key)
         {
-            if (_currentCollection == null) 
+            if (string.IsNullOrEmpty(key))
+            {
                 return null;
+            }
+
+            if (_currentCollection == null)
+            {
+                return null;
+            }
 
             if (Current == null)
             {
@@ -83,6 +90,10 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
 
             if (_currentCollection == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                UnityEngine.Debug.LogError("Current collection is null");
+#endif
+
                 return "";
             }
 
@@ -91,11 +102,11 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
             if (string.IsNullOrEmpty(text))
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                UnityEngine.Debug.LogError("No value for key " + key);
+                UnityEngine.Debug.LogError("No value for key: " + key);
 #endif
             }
 
-            return Regex.Unescape(text);
+            return Regex.Unescape(text ?? string.Empty);
         }
 
         public string LocalizeUpper(string key)

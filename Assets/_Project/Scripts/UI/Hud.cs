@@ -18,6 +18,7 @@ namespace _Project.Scripts.UI
         [SerializeField] private PauseButton _pauseButton;
         [SerializeField] private TMP_Text _enemiesNumberText;
         [SerializeField] private TMP_Text _playersNumberText;
+        [SerializeField] private GameObject _moneyNumber;
 
         [field: SerializeField] public GameObject TapToThrow { get; private set; }
         [field: SerializeField] public GameObject PowerupShop { get; private set; }
@@ -34,6 +35,9 @@ namespace _Project.Scripts.UI
             _gameFactory.PlayersCounter.ChangedWithOld += PlayersCounterChanged;
             _gameFactory.EnemiesCounter?.Invoke();
             _gameFactory.PlayersCounter?.Invoke();
+            
+            _enemiesNumberText.gameObject.SetActive(false);
+            _playersNumberText.gameObject.SetActive(false);
         }
 
         private void EnemiesCounterChanged(int old, int @new)
@@ -62,6 +66,10 @@ namespace _Project.Scripts.UI
             
             if (PowerupShop.activeInHierarchy)
                 PowerupShop.SetActive(false);
+            
+            _enemiesNumberText.gameObject.SetActive(true);
+            _playersNumberText.gameObject.SetActive(true);
+            _moneyNumber.SetActive(false);
         }
     }
 }

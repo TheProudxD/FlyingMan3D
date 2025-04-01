@@ -35,7 +35,7 @@ MonoBehaviour:
     - RingType: 1
       Effect: 2
   <EnemyCount>k__BackingField: 12
-  <TimeDif>k__BackingField: 3
+  <TimeDif>k__BackingField: 1.25
   <MaxLaunchSpeed>k__BackingField: 70
   <MovementSpeed>k__BackingField: 0.3
   <FlyingSpeed>k__BackingField: 85

@@ -1,5 +1,3 @@
-using UnityEngine.Serialization;
-
 namespace YG
 {
     public partial class SavesYG
@@ -10,9 +8,11 @@ namespace YG
 
         public int health = 1;
         public int healthProgress = 1;
-        public int movingSpeed = 1;
+        
+        public float movingSpeed = 0.25f;
         public int movingSpeedProgress = 1;
-        public int launchForce = 1;
-        public int launchForceProgress = 1;
+        
+        public float flyingControl = 50;
+        public int flyingControlProgress = 1;
     }
 }

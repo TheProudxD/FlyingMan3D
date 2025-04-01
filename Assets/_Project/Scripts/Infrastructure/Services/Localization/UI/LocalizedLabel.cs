@@ -17,7 +17,7 @@ namespace _Project.Scripts.Infrastructure.Services.Localization.UI
         [Inject] private LocalizationService _localizationService;
 
         [SerializeField] private bool _useCaps;
-        [SerializeField] [HideInInspector] private string _localizationKey;
+        [SerializeField] private string _localizationKey;
 
         public delegate void OnTextUpdated(LocalizedLabel sender, string text);
 
@@ -45,12 +45,12 @@ namespace _Project.Scripts.Infrastructure.Services.Localization.UI
 
             _localizationService.LocaleChanged += LocaleManager_LocaleChanged;
 
-            if (_updateNumber != _localizationService.UpdateNumber)
-            {
-                _updateNumber = _localizationService.UpdateNumber;
+            if (_updateNumber == _localizationService.UpdateNumber) 
+                return;
 
-                UpdateLabel();
-            }
+            _updateNumber = _localizationService.UpdateNumber;
+
+            UpdateLabel();
         }
 
         private void OnDisable()
@@ -80,9 +80,14 @@ namespace _Project.Scripts.Infrastructure.Services.Localization.UI
             TextUpdated?.Invoke(this, _label.text);
         }
 
-        public void ClearLabel()
+        public void ClearLabel() => _label.text = null;
+
+        public void ChangeKey(string newKey, bool updateLabel = true)
         {
-            _label.text = null;
+            _localizationKey = newKey;
+
+            if (updateLabel)
+                UpdateLabel();
         }
 
 
