@@ -71,7 +71,7 @@ namespace _Project.Scripts.UI.Windows
             //_adsService.PlayInterstitial();
             Hide();
             _metricService.GameContinuedForAd();
-            _stateMachine.Enter<GameLoopState, GameEnterState>(GameEnterState.Continue);
+            _stateMachine.Enter<ContinueLevelState>();
         }
         
         private void RestartGame()
@@ -79,7 +79,7 @@ namespace _Project.Scripts.UI.Windows
             _restartButton.Remove(RestartGame);
             _adsService.PlayInterstitial();
             AudioService.PlayClickSound();
-            _stateMachine.Enter<GameLoopState, GameEnterState>(GameEnterState.Restart);
+            _stateMachine.Enter<RestartLevelState>();
             Hide();
         }
 

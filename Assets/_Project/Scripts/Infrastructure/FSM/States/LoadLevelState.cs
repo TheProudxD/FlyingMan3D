@@ -4,9 +4,11 @@ using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
+using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools.Coroutine;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Views;
+using Cinemachine;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
@@ -19,14 +21,17 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly UIFactory _uiFactory;
         private readonly HeartTracker _heartTracker;
         private readonly AssetProvider _assetProvider;
+        private readonly StatisticsService _statisticsService;
         private readonly GameFactory _gameFactory;
+        private readonly LevelResourceService _levelResourceService;
 
         private StateMachine _stateMachine;
         private string _sceneName;
 
         public LoadLevelState(SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
             SaveLoadService saveLoadService, UIFactory uiFactory, HeartTracker heartTracker,
-            AssetProvider assetProvider, GameFactory gameFactory)
+            AssetProvider assetProvider, GameFactory gameFactory, StatisticsService statisticsService,
+            LevelResourceService levelResourceService)
         {
             _sceneLoader = sceneLoader;
             _loadingCurtain = loadingCurtain;
@@ -35,9 +40,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _heartTracker = heartTracker;
             _assetProvider = assetProvider;
             _gameFactory = gameFactory;
+            _statisticsService = statisticsService;
+            _levelResourceService = levelResourceService;
         }
 
-        public void Enter(string sceneName)
+        public void Enter(string sceneName = null)
         {
             _loadingCurtain.Show();
 
@@ -51,11 +58,10 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             yield return _uiFactory.Initialize();
             yield return _gameFactory.Initialize();
 
-            Object.FindObjectOfType<Indicator>().Initialize();
-            //Object.FindObjectOfType<PlayerMoveToFinish>().Initialize();
-            _gameFactory.CreatePlayer();
-            _uiFactory.GetHUD().Initialize();
-            // _heartTracker.Initialize();
+            Object.FindObjectOfType<Indicator>().Enable();
+            PlayerController player = _gameFactory.CreatePlayer();
+            Hud hud = _uiFactory.GetHUD();
+            hud.Initialize();
             yield return _gameFactory.GetSpawner().Initialize();
 
             foreach (ScoreBaseView view in Object.FindObjectsByType<ScoreBaseView>(FindObjectsInactive.Include,
@@ -64,6 +70,17 @@ namespace _Project.Scripts.Infrastructure.FSM.States
                 view.Initialize();
             }
 
+            hud.Show();
+
+            CinemachineVirtualCamera camera = _gameFactory.GetFinishCamera();
+            camera.Priority = 5;
+            TryShowTutorial();
+            _gameFactory.GetScore().Reset();
+            _statisticsService.IncreaseGamesPlayedNumberCounter();
+            _levelResourceService.Current.Value = _levelResourceService.ObservableValue.Value;
+            _gameFactory.CreateLevel(_levelResourceService.Current.Value);
+            player.Initialize();
+            _loadingCurtain.Hide();
             _sceneLoader.Load(_sceneName, OnLoaded);
         }
 
@@ -71,10 +88,20 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             _saveLoadService.InformAll();
 
-            _stateMachine.Enter<GameLoopState, GameEnterState>(GameEnterState.LoadNext);
+            _stateMachine.Enter<GameLoopState>();
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
+
+        private void TryShowTutorial()
+        {
+            /*
+            if (_levelResourceService.ObservableValue.Value == 1)
+            {
+                _windowService.Show(WindowId.Tutorial);
+            }*/
+        }
+
 
         public void Exit()
         {

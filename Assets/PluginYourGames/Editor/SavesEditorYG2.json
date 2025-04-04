@@ -1,20 +1,12 @@
 {
-    "intExample": 5,
-    "strExample": "Hello!",
-    "boolExample": [
-        false,
-        false,
-        false,
-        false
-    ],
-    "idSave": 36,
-    "level": 1,
-    "richestLevel": -1,
-    "money": 185,
-    "health": 11,
-    "healthProgress": 11,
-    "movingSpeed": 0.25,
-    "movingSpeedProgress": 1,
-    "flyingControl": 50.0,
-    "flyingControlProgress": 1
+    "idSave": 690,
+    "level": 6,
+    "richestLevel": 0,
+    "money": 375914610,
+    "health": 19,
+    "healthProgress": 19,
+    "movingSpeed": 0.9500001668930054,
+    "movingSpeedProgress": 15,
+    "flyingControl": 335.0,
+    "flyingControlProgress": 8
 }

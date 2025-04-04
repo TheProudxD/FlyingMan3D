@@ -21,10 +21,9 @@ public class Indicator : MonoBehaviour
     private bool _up;
     private bool _enabled;
 
-    public void Initialize()
-    {
-        _enabled = true;
-    }
+    public void Enable() => _enabled = true;
+    
+    public void Disable() => _enabled = false;
 
     private void Update()
     {
@@ -34,12 +33,9 @@ public class Indicator : MonoBehaviour
         if (Utils.IsPointerOverUI() == false && Input.GetMouseButtonDown(0))
         {
             float launchFactor = CreateLaunchForce();
-            // if (launchFactor)
-            //     StartCoroutine(GameOverCo());
-
             StartCoroutine(_gameFactory.GetPlayer().ApplyLaunchForce(launchFactor));
 
-            enabled = false;
+            Disable();
             _uiFactory.GetHUD().DeactivateStartText();
         }
         else
@@ -73,13 +69,5 @@ public class Indicator : MonoBehaviour
             > 10 => 0.85f,
             _ => 1.0f
         };
-    }
-
-    private IEnumerator GameOverCo()
-    {
-        yield return new WaitForSeconds(3);
-
-        //UIManager.Instance.Invoke(nameof(UIManager.BadShot), 0.5f);
-        _stateMachine.Enter<LoseLevelState>();
     }
 }

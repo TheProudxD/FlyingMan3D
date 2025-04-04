@@ -29,7 +29,6 @@ MonoBehaviour:
   - statistics
   - Loading
   - removeSmallFruits
-  - fruitOrder
   - moreGames
   - free
   - timeOut
@@ -37,6 +36,11 @@ MonoBehaviour:
   - LevelPassed
   - Level
   - LevelFail
+  - flyingControl
+  - moveSpeed
+  - health
+  - forAd
+  - tapToThrow
   _values:
   - Ajustes
   - "Se acab\xF3 el juego"
@@ -54,7 +58,6 @@ MonoBehaviour:
   - "Estad\xEDsticas"
   - Cargando..
   - "Saca los frutos peque\xF1os"
-  - Orden de frutas
   - Otros juegos
   - Gratis
   - "se acab\xF3 el tiempo"
@@ -62,3 +65,8 @@ MonoBehaviour:
   - Nivel superado
   - Nivel
   - "Int\xE9ntalo de nuevo"
+  - Orden de frutas
+  - 
+  - 
+  - 
+  - 

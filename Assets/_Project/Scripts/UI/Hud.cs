@@ -35,9 +35,6 @@ namespace _Project.Scripts.UI
             _gameFactory.PlayersCounter.ChangedWithOld += PlayersCounterChanged;
             _gameFactory.EnemiesCounter?.Invoke();
             _gameFactory.PlayersCounter?.Invoke();
-            
-            _enemiesNumberText.gameObject.SetActive(false);
-            _playersNumberText.gameObject.SetActive(false);
         }
 
         private void EnemiesCounterChanged(int old, int @new)
@@ -54,6 +51,8 @@ namespace _Project.Scripts.UI
 
         public void Hide()
         {
+            _enemiesNumberText.transform.parent.gameObject.SetActive(false);
+            _playersNumberText.transform.parent.gameObject.SetActive(false);
             _pauseButton.Deactivate();
             _gameFactory.EnemiesCounter.ChangedWithOld -= EnemiesCounterChanged;
             _gameFactory.PlayersCounter.ChangedWithOld -= PlayersCounterChanged;
@@ -67,8 +66,8 @@ namespace _Project.Scripts.UI
             if (PowerupShop.activeInHierarchy)
                 PowerupShop.SetActive(false);
             
-            _enemiesNumberText.gameObject.SetActive(true);
-            _playersNumberText.gameObject.SetActive(true);
+            _enemiesNumberText.transform.parent.gameObject.SetActive(true);
+            _playersNumberText.transform.parent.gameObject.SetActive(true);
             _moneyNumber.SetActive(false);
         }
     }

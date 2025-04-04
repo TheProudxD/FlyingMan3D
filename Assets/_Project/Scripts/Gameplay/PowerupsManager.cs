@@ -26,20 +26,21 @@ namespace UI
 
         [FormerlySerializedAs("_launchForceView")] [SerializeField]
         private PowerupView _flyingControlView;
-        
+
         private List<Button.ButtonClickedEvent> _buttonAnimations;
-        private readonly Dictionary<PowerupType, PowerupView> _powerupData = new();
+        private readonly List<PowerupView> _powerupData = new();
 
         private void Awake()
         {
-            _powerupData.Add(PowerupType.Health, _healthView);
-            _powerupData.Add(PowerupType.MovingSpeed, _speedView);
-            _powerupData.Add(PowerupType.FlyingControl, _flyingControlView);
+            _powerupData.Add(_healthView);
+            _powerupData.Add(_speedView);
+            _powerupData.Add(_flyingControlView);
         }
 
         private void OnEnable()
         {
             YG2.onGetSDKData += GetPowerupData;
+
             if (YG2.isSDKEnabled)
                 GetPowerupData();
         }
@@ -48,19 +49,11 @@ namespace UI
 
         private void GetPowerupData()
         {
-            _healthView.Progress = YG2.saves.health;
-            _speedView.Progress = YG2.saves.movingSpeedProgress;
-            _flyingControlView.Progress = YG2.saves.flyingControlProgress;
-
-            _healthView.Price = _healthView.GetPriceAtStart();
-            _speedView.Price = _speedView.GetPriceAtStart();
-            _flyingControlView.Price = _flyingControlView.GetPriceAtStart();
-
-            foreach (PowerupView powerupData in _powerupData.Values)
+            foreach (PowerupView powerupData in _powerupData)
             {
+                powerupData.Initialize();
                 powerupData.PriceText.text = powerupData.Price.ToString();
                 powerupData.LevelText.text = powerupData.Progress.ToString();
-                // powerupData.NameText.text = powerupData.Name;
             }
 
             CheckForPriceOrAdPurchase();
@@ -73,8 +66,7 @@ namespace UI
 
             _moneyResourceService.Spend(this, powerupView.Price);
 
-            powerupView.Price += powerupView.GetPrice();
-            IncreaseValue(powerupView);
+            powerupView.IncreaseValue();
 
             CheckForPriceOrAdPurchase();
         }
@@ -83,7 +75,7 @@ namespace UI
         {
             int currentMoneyAmount = _moneyResourceService.ObservableValue.Value;
 
-            foreach (PowerupView powerup in _powerupData.Values)
+            foreach (PowerupView powerup in _powerupData)
             {
                 powerup.BuyButton.onClick.RemoveAllListeners();
 
@@ -125,34 +117,12 @@ namespace UI
             });
         }
 
-        private void IncreaseValue(PowerupView powerupView)
-        {
-            powerupView.Progress++;
-
-            switch (powerupView.Id)
-            {
-                case PowerupType.Health:
-                    YG2.saves.health = powerupView.Progress;
-                    break;
-                case PowerupType.MovingSpeed:
-                    YG2.saves.movingSpeed = powerupView.Progress;
-                    break;
-                case PowerupType.FlyingControl:
-                    YG2.saves.flyingControl = powerupView.Progress;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            YG2.SaveProgress();
-        }
-
         private void GivePowerup(PowerupType id)
         {
             if ((int)id > 2) return;
 
             // Metrica.Instance.WatchedAdForPowerup(id.ToString());
-            IncreaseValue(_powerupData[id]);
+            _powerupData.Find(p => p.Id == id).IncreaseValue();
         }
     }
 }

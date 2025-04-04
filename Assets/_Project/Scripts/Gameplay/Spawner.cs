@@ -58,7 +58,7 @@ public class Spawner : MonoBehaviour, IInitializable
 
         float finishTime = _averageTime * 2;
         float finishZPos = _playerTransform.position.z + (_velZ + Random.Range(2, 5)) * finishTime;
-        Finish finishGo = _assetProvider.GetFinish(new Vector3(0, -0.5f, finishZPos), Quaternion.identity);
+        Finish finishGo = _gameFactory.GetFinish(new Vector3(0, -0.5f, finishZPos), Quaternion.identity);
 
         Level level = _gameFactory.GetCurrentLevel();
         int enemyCount = level.EnemyCount;
@@ -81,7 +81,7 @@ public class Spawner : MonoBehaviour, IInitializable
 
         for (int i = 0; i < ringCount; i++)
         {
-            RingHolder currentRingHolder = _assetProvider.GetRing(CalculateRingPosition(t, i), _colorArray, _index);
+            RingHolder currentRingHolder = _gameFactory.GetRing(CalculateRingPosition(t, i), _colorArray, _index);
 
             for (int j = 0; j < currentRingHolder.transform.childCount; j++)
             {

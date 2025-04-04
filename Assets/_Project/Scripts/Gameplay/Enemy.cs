@@ -8,7 +8,6 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
-    [Inject] private AssetProvider _assetProvider;
 
     private static readonly int CanAttack = Animator.StringToHash("CanAttack");
 
@@ -104,7 +103,7 @@ public class Enemy : MonoBehaviour
     {
         IsDie = true;
         _gameFactory.RemoveEnemy(this);
-        _assetProvider.GetEnemyRagdoll(transform.position, Quaternion.identity);
+        _gameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 }

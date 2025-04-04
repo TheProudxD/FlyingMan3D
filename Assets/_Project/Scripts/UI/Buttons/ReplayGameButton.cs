@@ -13,7 +13,7 @@ namespace _Project.Scripts.UI.Buttons
         protected override void OnClick()
         {
             _adsService.PlayInterstitial();
-            _stateMachine.Enter<GameLoopState, GameEnterState>(GameEnterState.Replay);
+            _stateMachine.Enter<ReplayLevelState>();
         }
     }
 }

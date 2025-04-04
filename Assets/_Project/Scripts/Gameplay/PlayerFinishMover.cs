@@ -7,7 +7,6 @@ using YG;
 public class PlayerFinishMover : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
-    [Inject] private AssetProvider _assetProvider;
 
     private static readonly int IsGround = Animator.StringToHash("IsGround");
     [SerializeField] private PlayerController _playerController;
@@ -89,7 +88,7 @@ public class PlayerFinishMover : MonoBehaviour
             if (_canSmoke)
             {
                 _canSmoke = false;
-                _assetProvider.GetSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
+                _gameFactory.GetSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
             }
 
             enemy.Die();

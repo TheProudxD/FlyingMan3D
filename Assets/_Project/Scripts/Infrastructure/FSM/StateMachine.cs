@@ -14,7 +14,9 @@ namespace _Project.Scripts.Infrastructure.FSM
         private IExitableState _currentState;
 
         public StateMachine(BootstrapState bootstrapState, LoadLevelState loadLevelState,
-            LoadProgressState loadProgressState, GameLoopState gameLoopState, WinLevelState winLevelState, LoseLevelState loseLevelState)
+            LoadProgressState loadProgressState, GameLoopState gameLoopState, WinLevelState winLevelState,
+            LoseLevelState loseLevelState, RestartLevelState restartLevelState, ReplayLevelState replayLevelState,
+            ContinueLevelState continueLevelState)
         {
             /*IExitableState[] states = { bootstrapState, loadLevelState, loadProgressState, gameLoopState, gameOverState };
             foreach (IExitableState state in states)
@@ -22,7 +24,7 @@ namespace _Project.Scripts.Infrastructure.FSM
                 state.SetStateMachine(this);
                 _states.Add(state.GetType(), state);
             }*/
-            
+
             bootstrapState.SetStateMachine(this);
             _states.Add(bootstrapState.GetType(), bootstrapState);
             loadLevelState.SetStateMachine(this);
@@ -32,9 +34,15 @@ namespace _Project.Scripts.Infrastructure.FSM
             gameLoopState.SetStateMachine(this);
             _states.Add(gameLoopState.GetType(), gameLoopState);
             winLevelState.SetStateMachine(this);
-            _states.Add(winLevelState.GetType(), winLevelState);           
+            _states.Add(winLevelState.GetType(), winLevelState);
             loseLevelState.SetStateMachine(this);
             _states.Add(loseLevelState.GetType(), loseLevelState);
+            restartLevelState.SetStateMachine(this);
+            _states.Add(restartLevelState.GetType(), restartLevelState);
+            replayLevelState.SetStateMachine(this);
+            _states.Add(replayLevelState.GetType(), replayLevelState);
+            continueLevelState.SetStateMachine(this);
+            _states.Add(continueLevelState.GetType(), continueLevelState);
         }
 
         public void Enter<TState>() where TState : class, IState

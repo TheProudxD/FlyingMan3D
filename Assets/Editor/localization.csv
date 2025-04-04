@@ -15,7 +15,6 @@ richestScore,"Highest number of points","Наибольшее количеств
 statistics,"Statistics","Статистика","Estadísticas"
 Loading,"Loading..","Загрузка..","Cargando.."
 removeSmallFruits,"Remove the small fruits","Убрать маленькие фрукты","Saca los frutos pequeños"
-fruitOrder,"Fruit order","Порядок фруктов","Orden de frutas"
 moreGames,"More Games","Другие игры","Otros juegos"
 free,"Free","Даром","Gratis"
 timeOut,Times is out!,Время вышло!,se acabó el tiempo
@@ -23,4 +22,8 @@ gift,Gift,Подарок,Un regalo
 LevelPassed,Level Passed,Уровень пройден!,Nivel superado
 Level,Lvl.,Ур.,Nivel
 LevelFail,Try again,Попробуйте снова,Inténtalo de nuevo
-,,,
+flyingControl,Fruit order,Порядок фруктов,Orden de frutas
+moveSpeed,Move Speed,Скорость бега,
+health,Health,Здоровье,
+forAd,Watch Ad,Просмотреть рекламу,
+tapToThrow,Tap To Throw,Нажми чтобы запустить,

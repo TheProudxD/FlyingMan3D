@@ -1,5 +1,6 @@
 using System.Collections;
 using _Project.Scripts.Gameplay;
+using _Project.Scripts.Infrastructure;
 using _Project.Scripts.Infrastructure.FSM;
 using _Project.Scripts.Infrastructure.FSM.States;
 using _Project.Scripts.Infrastructure.Services;
@@ -90,7 +91,7 @@ namespace _Project.Scripts.UI.Windows
             _nextLevelButton.Deactivate();
             AudioService.PlayClickSound();
             _adsService.PlayInterstitial();
-            _stateMachine.Enter<GameLoopState, GameEnterState>(GameEnterState.LoadNext);
+            _stateMachine.Enter<LoadLevelState, string>(SceneNames.MAIN_SCENE);
             Hide();
         }
 

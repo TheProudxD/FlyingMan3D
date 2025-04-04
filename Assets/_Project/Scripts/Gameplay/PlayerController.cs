@@ -8,7 +8,6 @@ using Reflex.Attributes;
 public class PlayerController : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
-    [Inject] private AssetProvider _assetProvider;
 
     [field: SerializeField] public Rigidbody SelfHips { get; private set; }
 
@@ -131,7 +130,7 @@ public class PlayerController : MonoBehaviour
     {
         IsDie = true;
         _gameFactory.RemovePlayer(this);
-        _assetProvider.GetPlayerRagdoll(transform.position, Quaternion.identity);
+        _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 }

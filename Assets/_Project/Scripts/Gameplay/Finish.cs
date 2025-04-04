@@ -10,8 +10,6 @@ public class Finish : MonoBehaviour
 {
     [Inject] private StateMachine _stateMachine;
     [Inject] private GameFactory _gameFactory;
-
-    private static readonly int Win = Animator.StringToHash("Win");
     
     private CinemachineVirtualCamera _finishCamera;
     private bool _attack;
@@ -20,38 +18,10 @@ public class Finish : MonoBehaviour
 
     private void Start()
     {
-        _finishCamera = GameObject.Find("FinishCamera").GetComponent<CinemachineVirtualCamera>();
+        _finishCamera = _gameFactory.GetFinishCamera();
         _waiter = new WaitForSeconds(2.5f);
     }
-
-    private void Update()
-    {
-        if (_isGameOver)
-            return;
-
-        if (_gameFactory.Players.Count == 0 && _gameFactory.Enemies.Count >= 0)
-        {
-            foreach (Enemy item in _gameFactory.Enemies)
-            {
-                item.Animator.SetBool(Win, true);
-                Destroy(item.GetComponent<Rigidbody>());
-            }
-
-            _isGameOver = true;
-            _stateMachine.Enter<LoseLevelState>();
-        }
-        else if (_gameFactory.Enemies.Count == 0 && _gameFactory.Players.Count > 0)
-        {
-            foreach (PlayerController item in _gameFactory.Players)
-            {
-                item.Animator.SetBool(Win, true);
-                Destroy(item.GetComponent<Rigidbody>());
-            }
-
-            StartCoroutine(WinCoroutine());
-        }
-    }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.transform.root.CompareTag("Player") == false)
@@ -65,22 +35,11 @@ public class Finish : MonoBehaviour
         _attack = true;
         _finishCamera.Priority = 15;
         _finishCamera.transform.position = new Vector3(0, 20, transform.position.z - 26f);
-        
+
         foreach (Enemy e in _gameFactory.Enemies)
         {
             e.SetAttackState();
         }
-    }
-
-    private IEnumerator WinCoroutine()
-    {
-        _isGameOver = true;
-        ParticleSystem winParticle = _gameFactory.GetSpawner().WinParticle;
-        winParticle.transform.position = transform.position;
-        winParticle.Play();
-        yield return new WaitForSeconds(2);
-
-        _stateMachine.Enter<WinLevelState>();
     }
 
     private IEnumerator SetAttackState(Collider other)
@@ -109,9 +68,14 @@ public class Finish : MonoBehaviour
         Destroy(hips.GetComponent<TrailRenderer>());
         yield return _waiter;
 
+        if (root == null || root.gameObject == null)
+            yield break;
+
         var rg = root.gameObject.AddComponent<Rigidbody>();
         rg.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        root.GetComponent<PlayerFinishMover>().enabled = true;
+        PlayerFinishMover playerFinishMover = root.GetComponent<PlayerFinishMover>();
+        playerFinishMover.enabled = true;
+        playerFinishMover.Initialize();
 
         root.GetComponent<CapsuleCollider>().enabled = true;
 

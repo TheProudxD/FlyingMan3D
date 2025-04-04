@@ -94,7 +94,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
+  m_fontSize: 72
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -2
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -474,7 +474,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -794,7 +794,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 62
   m_fontSizeBase: 72
   m_fontWeight: 400
   m_enableAutoSizing: 0
@@ -1157,8 +1157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_text
-      value: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C
-        \u0440\u0435\u043A\u043B\u0430\u043C\u0443"
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_Maskable
@@ -1166,7 +1165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_fontSize
-      value: 29.4
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_fontAsset
@@ -1253,8 +1252,30 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7228934903620197399, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       insertIndex: 0
       addedObject: {fileID: 621976905099892132}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1861207393332344372, guid: e81f6a2b307e66a459002d8818018266, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9090925285980036797}
   m_SourcePrefab: {fileID: 100100000, guid: e81f6a2b307e66a459002d8818018266, type: 3}
+--- !u!1 &3131081901077799240 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1861207393332344372, guid: e81f6a2b307e66a459002d8818018266, type: 3}
+  m_PrefabInstance: {fileID: 3650026919417747324}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9090925285980036797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3131081901077799240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c92248f6d7d7a74e8d308ccca7ac6bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useCaps: 0
+  _localizationKey: forAd
 --- !u!1 &5288482929508291021 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8918243341364954801, guid: e81f6a2b307e66a459002d8818018266, type: 3}

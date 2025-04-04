@@ -29,7 +29,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private HeartTracker _heartTracker;
         private Level _gameLevel;
         private PlayerController _player;
-        private List<PlayerController> _players1 = new();
+        private List<GameObject> _levelHolder;
 
         public GameFactory(SaveLoadService saveLoadService,
             LeaderboardService leaderboardService, AssetProvider assetProvider,
@@ -49,6 +49,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _score = new Score();
             EnemiesCounter = new ObservableVariable<int>(Enemies.Count);
             PlayersCounter = new ObservableVariable<int>(Players.Count);
+            _levelHolder = new List<GameObject>();
             yield break;
         }
 
@@ -118,6 +119,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             enemy.transform.Rotate(0, rotation, 0);
             enemy.transform.Translate(new Vector3(0, 0, -16f));
             _enemies.Add(enemy);
+            _levelHolder.Add(enemy.gameObject);
             EnemiesCounter.Value = _enemies.Count;
         }
 
@@ -146,10 +148,11 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
             //player.transform.Rotate(player.transform.right, rot, Space.Self);
             AddPlayer(player);
+            _levelHolder.Add(player.gameObject);
             return player;
         }
 
-        public void CreatePlayer()
+        public PlayerController CreatePlayer()
         {
             var startPosition = new Vector3(0, 1.75f, -1);
             _player = _assetProvider.CreatePlayer(startPosition);
@@ -160,6 +163,43 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             AddPlayer(_player);
             var camera = GameObject.Find("Cinemachine").GetComponent<CinemachineVirtualCamera>();
             camera.Follow = _player.SelfHips.transform;
+            _levelHolder.Add(_player.gameObject);
+            return _player;
+        }
+
+        public CinemachineVirtualCamera GetFinishCamera() =>
+            GameObject.Find("FinishCamera").GetComponent<CinemachineVirtualCamera>();
+
+        public Finish GetFinish(Vector3 vector3, Quaternion identity)
+        {
+            var finish = _assetProvider.GetFinish(vector3, identity);
+            _levelHolder.Add(finish.gameObject);
+            return finish;
+        }
+
+        public void GetEnemyRagdoll(Vector3 transformPosition, Quaternion identity)
+        {
+            var a = _assetProvider.GetEnemyRagdoll(transformPosition, identity);
+            _levelHolder.Add(a);
+        }
+
+        public void GetPlayerRagdoll(Vector3 transformPosition, Quaternion identity)
+        {
+            var a = _assetProvider.GetPlayerRagdoll(transformPosition, identity);
+            _levelHolder.Add(a);
+        }
+
+        public void GetSmoke(Vector3 vector3, Quaternion euler)
+        {
+            var s =_assetProvider.GetSmoke(vector3, euler);
+            _levelHolder.Add(s);
+        }
+
+        public RingHolder GetRing(Vector3 calculateRingPosition, Spawner.Colors[] colorArray, int index)
+        {
+            RingHolder ringHolder = _assetProvider.GetRing(calculateRingPosition, colorArray, index);
+            _levelHolder.Add(ringHolder.gameObject);
+            return ringHolder;
         }
     }
 }

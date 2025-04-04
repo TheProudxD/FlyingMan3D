@@ -47,8 +47,6 @@ namespace TS.LocalizationSystem
         
         public const string removeSmallFruits = "removeSmallFruits";
         
-        public const string fruitOrder = "fruitOrder";
-        
         public const string moreGames = "moreGames";
         
         public const string free = "free";
@@ -62,5 +60,15 @@ namespace TS.LocalizationSystem
         public const string Level = "Level";
         
         public const string LevelFail = "LevelFail";
+        
+        public const string flyingControl = "flyingControl";
+        
+        public const string moveSpeed = "moveSpeed";
+        
+        public const string health = "health";
+        
+        public const string forAd = "forAd";
+        
+        public const string tapToThrow = "tapToThrow";
     }
 }

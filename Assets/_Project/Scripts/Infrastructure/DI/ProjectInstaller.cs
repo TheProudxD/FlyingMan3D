@@ -99,11 +99,12 @@ namespace _Project.Scripts.Infrastructure.DI
                 c.Resolve<LoadLevelState>(),
                 c.Resolve<LoadProgressState>(),
                 c.Resolve<GameLoopState>(),
-                c.Resolve<WinLevelState>(), c.Resolve<LoseLevelState>()));
+                c.Resolve<WinLevelState>(), c.Resolve<LoseLevelState>(), c.Resolve<RestartLevelState>(),
+                c.Resolve<ReplayLevelState>(), c.Resolve<ContinueLevelState>()));
         }
 
         private void BindAudio(ContainerBuilder builder) => builder.AddSingleton(typeof(AudioService));
-        
+
         private void BindFactories(ContainerBuilder builder)
         {
             builder.AddSingleton(typeof(UIFactory));
@@ -118,6 +119,9 @@ namespace _Project.Scripts.Infrastructure.DI
             builder.AddSingleton(typeof(GameLoopState));
             builder.AddSingleton(typeof(WinLevelState));
             builder.AddSingleton(typeof(LoseLevelState));
+            builder.AddSingleton(typeof(ContinueLevelState));
+            builder.AddSingleton(typeof(RestartLevelState));
+            builder.AddSingleton(typeof(ReplayLevelState));
         }
 
         private void BindAssets(ContainerBuilder builder) => builder.AddSingleton(typeof(AssetProvider));
