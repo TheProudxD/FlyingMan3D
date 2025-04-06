@@ -10,7 +10,7 @@ public class Finish : MonoBehaviour
 {
     [Inject] private StateMachine _stateMachine;
     [Inject] private GameFactory _gameFactory;
-    
+
     private CinemachineVirtualCamera _finishCamera;
     private bool _attack;
     private bool _isGameOver;
@@ -21,7 +21,7 @@ public class Finish : MonoBehaviour
         _finishCamera = _gameFactory.GetFinishCamera();
         _waiter = new WaitForSeconds(2.5f);
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.transform.root.CompareTag("Player") == false)
@@ -65,6 +65,7 @@ public class Finish : MonoBehaviour
         }
 
         Rigidbody hips = playerController.SelfHips;
+        playerController.enabled = false;
         Destroy(hips.GetComponent<TrailRenderer>());
         yield return _waiter;
 

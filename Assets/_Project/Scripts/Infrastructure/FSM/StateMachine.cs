@@ -14,7 +14,7 @@ namespace _Project.Scripts.Infrastructure.FSM
         private IExitableState _currentState;
 
         public StateMachine(BootstrapState bootstrapState, LoadLevelState loadLevelState,
-            LoadProgressState loadProgressState, GameLoopState gameLoopState, WinLevelState winLevelState,
+            LoadGameState loadGameState, GameLoopState gameLoopState, WinLevelState winLevelState,
             LoseLevelState loseLevelState, RestartLevelState restartLevelState, ReplayLevelState replayLevelState,
             ContinueLevelState continueLevelState)
         {
@@ -29,8 +29,8 @@ namespace _Project.Scripts.Infrastructure.FSM
             _states.Add(bootstrapState.GetType(), bootstrapState);
             loadLevelState.SetStateMachine(this);
             _states.Add(loadLevelState.GetType(), loadLevelState);
-            loadProgressState.SetStateMachine(this);
-            _states.Add(loadProgressState.GetType(), loadProgressState);
+            loadGameState.SetStateMachine(this);
+            _states.Add(loadGameState.GetType(), loadGameState);
             gameLoopState.SetStateMachine(this);
             _states.Add(gameLoopState.GetType(), gameLoopState);
             winLevelState.SetStateMachine(this);

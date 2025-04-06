@@ -5,6 +5,7 @@ using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.UI.Windows;
+using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {
@@ -38,17 +39,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _timer.Stop();
             SetRecordInLeaderboard();
             _windowService.Show(WindowId.Win);
+            IExitableState state = _gameLoopState.FromState;
 
-            switch (_gameLoopState.GameEnterState)
+            if (state is RestartLevelState or ContinueLevelState or LoadLevelState)
             {
-                case GameEnterState.LoadNext or GameEnterState.Restart or GameEnterState.Continue:
-                    _levelResourceService.Increase(this);
-                    break;
-                case GameEnterState.Replay:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(_gameLoopState.GameEnterState),
-                        _gameLoopState.GameEnterState, null);
+                _levelResourceService.Increase(this);
             }
         }
 

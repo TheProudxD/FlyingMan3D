@@ -29,6 +29,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         {
             _uiRoot = _assetProvider.CreateUIRoot();
             _hud = _assetProvider.CreateHUD();
+            _hud.Initialize();
             yield break;
         }
 

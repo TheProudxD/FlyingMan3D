@@ -54,7 +54,7 @@ namespace AttentionLab.Editor
                     ProcessLocalizationFile(_localeFilePath);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // die silently
             }
@@ -116,7 +116,8 @@ namespace AttentionLab.Editor
 
         private void ProcessLocalizationFile(string filePath)
         {
-            List<Dictionary<string, object>> data = _Project.Scripts.Infrastructure.Services.Localization.CSVReader.Read(filePath);
+            List<Dictionary<string, object>> data =
+                _Project.Scripts.Infrastructure.Services.Localization.CSVReader.Read(filePath);
 
             if (data.IsNullOrEmpty())
             {

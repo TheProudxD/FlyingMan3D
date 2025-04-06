@@ -86,7 +86,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public Finish GetFinish(Vector3 position, Quaternion rotation) =>
             Instantiate<Finish>(AssetPath.FINISH, position, rotation);
 
-        public RingHolder GetRing(Vector3 position, Spawner.Colors[] colors, int level)
+        public RingHolder CreateRing(Vector3 position, Spawner.Colors[] colors, int level)
         {
             var ringPrefab = Instantiate<RingHolder>(AssetPath.RING, position);
 
@@ -98,21 +98,69 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             return ringPrefab;
         }
 
-        public GameObject GetSmoke(Vector3 position, Quaternion rotation) =>
+        public GameObject CreateSmoke(Vector3 position, Quaternion rotation) =>
             Instantiate(AssetPath.SMOKE, position, rotation);
 
-        public GameObject GetEnemyRagdoll(Vector3 position, Quaternion rotation)
+        public GameObject CreateEnemyRagdoll(Vector3 position, Quaternion rotation)
         {
             GameObject enemy = Instantiate(AssetPath.ENEMY_RAGDOLL, position, rotation);
             enemy.layer = 8;
             return enemy;
         }
 
-        public GameObject GetPlayerRagdoll(Vector3 position, Quaternion rotation)
+        public GameObject CreatePlayerRagdoll(Vector3 position, Quaternion rotation)
         {
             GameObject player = Instantiate(AssetPath.PLAYER_RAGDOLL, position, rotation);
             player.layer = 8;
             return player;
+        }
+
+        public PlayerController CreatePlayer(GameObject root, Vector3 position, Quaternion rotation) =>
+            Instantiate<PlayerController>(root, position, rotation);
+
+        public GameObject CreateSlingshot(Vector3 position) =>
+            Instantiate(AssetPath.SLINGSHOT, position);
+
+        public PlayerController CreatePlayer(Vector3 position) =>
+            Instantiate<PlayerController>(AssetPath.PLAYER, position);
+
+        public Level CreateLevel(int levelId)
+        {
+            var levelContainer = _configService.Get<LevelContainer>();
+            return levelContainer[levelId];
+        }
+
+        public void GetRingByType(RingData ringData, GameObject currentChildGo)
+        {
+            switch (ringData.RingType)
+            {
+                case RingType.Additive:
+                    var a = currentChildGo.AddComponent<AdditiveRing>();
+                    a.Effect = ringData.Effect;
+                    a.Text.SetText("+" + ringData.Effect);
+                    _container.Inject(a);
+                    break;
+                case RingType.Multiplier:
+                    var m = currentChildGo.AddComponent<MultiplierRing>();
+                    m.Effect = ringData.Effect;
+                    m.Text.SetText("x" + ringData.Effect);
+                    _container.Inject(m);
+                    break;
+                case RingType.Reducer:
+                    var r = currentChildGo.AddComponent<ReducerRing>();
+                    r.Effect = ringData.Effect;
+                    r.Text.SetText("-" + ringData.Effect);
+                    _container.Inject(r);
+                    break;
+                case RingType.Divider:
+                    var d = currentChildGo.AddComponent<DividerRing>();
+                    d.Effect = ringData.Effect;
+                    d.Text.SetText("/" + ringData.Effect);
+                    _container.Inject(d);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private GameObject Instantiate(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
@@ -180,50 +228,5 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         }
 
         public void Dispose() { }
-
-        public PlayerController CreatePlayer(GameObject root, Vector3 position, Quaternion rotation) =>
-            Instantiate<PlayerController>(root, position, rotation);
-
-        public PlayerController CreatePlayer(Vector3 position) =>
-            Instantiate<PlayerController>(AssetPath.PLAYER, position);
-
-        public Level CreateLevel(int levelId)
-        {
-            var levelContainer = _configService.Get<LevelContainer>();
-            return levelContainer[levelId];
-        }
-
-        public void GetRingByType(RingData ringData, GameObject currentChildGo)
-        {
-            switch (ringData.RingType)
-            {
-                case RingType.Additive:
-                    var a = currentChildGo.AddComponent<AdditiveRing>();
-                    a.Effect = ringData.Effect;
-                    a.Text.SetText("+" + ringData.Effect);
-                    _container.Inject(a);
-                    break;
-                case RingType.Multiplier:
-                    var m = currentChildGo.AddComponent<MultiplierRing>();
-                    m.Effect = ringData.Effect;
-                    m.Text.SetText("x" + ringData.Effect);
-                    _container.Inject(m);
-                    break;
-                case RingType.Reducer:
-                    var r = currentChildGo.AddComponent<ReducerRing>();
-                    r.Effect = ringData.Effect;
-                    r.Text.SetText("-" + ringData.Effect);
-                    _container.Inject(r);
-                    break;
-                case RingType.Divider:
-                    var d = currentChildGo.AddComponent<DividerRing>();
-                    d.Effect = ringData.Effect;
-                    d.Text.SetText("/" + ringData.Effect);
-                    _container.Inject(d);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
     }
 }

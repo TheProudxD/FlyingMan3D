@@ -91,7 +91,7 @@ namespace _Project.Scripts.UI.Windows
             _nextLevelButton.Deactivate();
             AudioService.PlayClickSound();
             _adsService.PlayInterstitial();
-            _stateMachine.Enter<LoadLevelState, string>(SceneNames.MAIN_SCENE);
+            _stateMachine.Enter<LoadLevelState>();
             Hide();
         }
 

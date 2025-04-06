@@ -62,6 +62,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         private void LoadGame() => _sceneLoader.Load(SceneNames.MAIN_SCENE, OnEnterLoadLevel);
 
-        private void OnEnterLoadLevel() => _stateMachine.Enter<LoadProgressState>();
+        private void OnEnterLoadLevel() => _stateMachine.Enter<LoadGameState>();
     }
 }

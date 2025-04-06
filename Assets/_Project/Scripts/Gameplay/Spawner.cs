@@ -9,7 +9,7 @@ using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using Reflex.Attributes;
 
-public class Spawner : MonoBehaviour, IInitializable
+public class Spawner : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private AssetProvider _assetProvider;
@@ -36,7 +36,7 @@ public class Spawner : MonoBehaviour, IInitializable
     private float _zPos;
     private int _index;
 
-    public IEnumerator Initialize()
+    public void Initialize()
     {
         int level = _levelResourceService.Current.Value;
         _index = level % _colorArray.Length;
@@ -44,8 +44,6 @@ public class Spawner : MonoBehaviour, IInitializable
         _gameFactory.GetPlatform().GetComponent<Renderer>().sharedMaterial.color = _colorArray[_index].PlatformColor;
 
         _playerTransform = _gameFactory.GetPlayer().transform;
-
-        yield break;
     }
 
     public void SpawnObjects(Vector3 velocity)
@@ -58,7 +56,7 @@ public class Spawner : MonoBehaviour, IInitializable
 
         float finishTime = _averageTime * 2;
         float finishZPos = _playerTransform.position.z + (_velZ + Random.Range(2, 5)) * finishTime;
-        Finish finishGo = _gameFactory.GetFinish(new Vector3(0, -0.5f, finishZPos), Quaternion.identity);
+        Finish finishGo = _gameFactory.CreateFinish(new Vector3(0, -0.5f, finishZPos), Quaternion.identity);
 
         Level level = _gameFactory.GetCurrentLevel();
         int enemyCount = level.EnemyCount;

@@ -23,7 +23,6 @@ namespace _Project.Scripts.UI.Windows
         [Inject] private MetricService _metricService;
 
         [SerializeField] private Transform _popup;
-        [SerializeField] private ContinueButton _continueGameButton;
         [SerializeField] private Button _restartButton;
         [SerializeField] private Button _skipButton;
         [SerializeField] private TextMeshProUGUI _descriptionText;
@@ -55,15 +54,8 @@ namespace _Project.Scripts.UI.Windows
             /*_descriptionText.SetText(
                 $"Получи дополнительные <color=#{_rewardMoneyColor}>{_moreTimeData.AdditionalTime.ToString()}</color> секунд");
             */
-            _continueGameButton.Add(ContinueGameWithAd);
-            _continueGameButton.SetADsState();
 
             _metricService.LevelLost();
-        }
-
-        private void ContinueGameWithAd()
-        {
-            _adsService.PlayRewardedVideo("continueGameWithAd", ContinueGame);
         }
 
         private void ContinueGame()
@@ -85,7 +77,6 @@ namespace _Project.Scripts.UI.Windows
 
         public override void Hide()
         {
-            _continueGameButton.RemoveAll();
             _skipButton.Deactivate();
             _restartButton.Remove(RestartGame);
             _skipButton.Remove(ContinueGame);

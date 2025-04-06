@@ -55,8 +55,8 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public Score GetScore() => _score;
 
-        public Level CreateLevel(int level) =>
-            _gameLevel = _assetProvider.CreateLevel(level);
+        public Level CreateLevel() =>
+            _gameLevel = _assetProvider.CreateLevel(_levelResourceService.Current.Value);
 
         public Level GetCurrentLevel() => _gameLevel;
 
@@ -156,7 +156,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         {
             var startPosition = new Vector3(0, 1.75f, -1);
             _player = _assetProvider.CreatePlayer(startPosition);
-            var capsule = GameObject.Find("Capsule").GetComponent<Rigidbody>();
+            var capsule = Object.FindObjectOfType<Slingshot>().Capsule;
             var fixedJoint = _player.SelfHips.gameObject.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = capsule;
             _player.SetInitial(fixedJoint, capsule.transform);
@@ -170,7 +170,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         public CinemachineVirtualCamera GetFinishCamera() =>
             GameObject.Find("FinishCamera").GetComponent<CinemachineVirtualCamera>();
 
-        public Finish GetFinish(Vector3 vector3, Quaternion identity)
+        public Finish CreateFinish(Vector3 vector3, Quaternion identity)
         {
             var finish = _assetProvider.GetFinish(vector3, identity);
             _levelHolder.Add(finish.gameObject);
@@ -179,27 +179,48 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public void GetEnemyRagdoll(Vector3 transformPosition, Quaternion identity)
         {
-            var a = _assetProvider.GetEnemyRagdoll(transformPosition, identity);
+            var a = _assetProvider.CreateEnemyRagdoll(transformPosition, identity);
             _levelHolder.Add(a);
         }
 
         public void GetPlayerRagdoll(Vector3 transformPosition, Quaternion identity)
         {
-            var a = _assetProvider.GetPlayerRagdoll(transformPosition, identity);
+            var a = _assetProvider.CreatePlayerRagdoll(transformPosition, identity);
             _levelHolder.Add(a);
         }
 
         public void GetSmoke(Vector3 vector3, Quaternion euler)
         {
-            var s =_assetProvider.GetSmoke(vector3, euler);
+            var s = _assetProvider.CreateSmoke(vector3, euler);
             _levelHolder.Add(s);
         }
 
         public RingHolder GetRing(Vector3 calculateRingPosition, Spawner.Colors[] colorArray, int index)
         {
-            RingHolder ringHolder = _assetProvider.GetRing(calculateRingPosition, colorArray, index);
+            RingHolder ringHolder = _assetProvider.CreateRing(calculateRingPosition, colorArray, index);
             _levelHolder.Add(ringHolder.gameObject);
             return ringHolder;
+        }
+
+        public void CreateSlingshot(Vector3 position)
+        {
+            GameObject slingshot = _assetProvider.CreateSlingshot(position);
+            _levelHolder.Add(slingshot.gameObject);
+        }
+
+        public Indicator GetIndicator() => Object.FindObjectOfType<Indicator>();
+
+        public void ClearLevelHolder()
+        {
+            if (_levelHolder == null || _levelHolder.Count == 0)
+                return;
+
+            foreach (GameObject gameObject in _levelHolder)
+            {
+                Object.Destroy(gameObject);
+            }
+
+            _levelHolder.Clear();
         }
     }
 }

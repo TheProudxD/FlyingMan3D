@@ -13,9 +13,8 @@ using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {
-    public class LoadLevelState : IPayLoadState<string>, IInitializable
+    public class LoadLevelState : IState
     {
-        private readonly SceneLoader _sceneLoader;
         private readonly LoadingCurtain _loadingCurtain;
         private readonly SaveLoadService _saveLoadService;
         private readonly UIFactory _uiFactory;
@@ -28,12 +27,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private StateMachine _stateMachine;
         private string _sceneName;
 
-        public LoadLevelState(SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
+        public LoadLevelState(LoadingCurtain loadingCurtain,
             SaveLoadService saveLoadService, UIFactory uiFactory, HeartTracker heartTracker,
             AssetProvider assetProvider, GameFactory gameFactory, StatisticsService statisticsService,
             LevelResourceService levelResourceService)
         {
-            _sceneLoader = sceneLoader;
             _loadingCurtain = loadingCurtain;
             _saveLoadService = saveLoadService;
             _uiFactory = uiFactory;
@@ -44,54 +42,42 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _levelResourceService = levelResourceService;
         }
 
-        public void Enter(string sceneName = null)
+        public void Enter()
         {
             _loadingCurtain.Show();
 
-            _sceneName = sceneName;
-
-            Coroutines.StartRoutine(Initialize());
+            Initialize();
         }
 
-        public IEnumerator Initialize()
+        public void Initialize()
         {
-            yield return _uiFactory.Initialize();
-            yield return _gameFactory.Initialize();
-
-            Object.FindObjectOfType<Indicator>().Enable();
+            _gameFactory.ClearLevelHolder();
+            _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
             PlayerController player = _gameFactory.CreatePlayer();
-            Hud hud = _uiFactory.GetHUD();
-            hud.Initialize();
-            yield return _gameFactory.GetSpawner().Initialize();
-
-            foreach (ScoreBaseView view in Object.FindObjectsByType<ScoreBaseView>(FindObjectsInactive.Include,
-                         FindObjectsSortMode.None))
-            {
-                view.Initialize();
-            }
-
-            hud.Show();
-
-            CinemachineVirtualCamera camera = _gameFactory.GetFinishCamera();
-            camera.Priority = 5;
+            _gameFactory.GetSpawner().Initialize();
+            _uiFactory.GetHUD().Show();
             TryShowTutorial();
             _gameFactory.GetScore().Reset();
             _statisticsService.IncreaseGamesPlayedNumberCounter();
             _levelResourceService.Current.Value = _levelResourceService.ObservableValue.Value;
-            _gameFactory.CreateLevel(_levelResourceService.Current.Value);
+            _gameFactory.CreateLevel();
             player.Initialize();
+            _gameFactory.GetIndicator().Enable();
+            MoveCamera();
             _loadingCurtain.Hide();
-            _sceneLoader.Load(_sceneName, OnLoaded);
-        }
 
-        private void OnLoaded()
-        {
             _saveLoadService.InformAll();
 
-            _stateMachine.Enter<GameLoopState>();
+            _stateMachine.Enter<GameLoopState, IExitableState>(this);
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
+
+        private void MoveCamera()
+        {
+            CinemachineVirtualCamera camera = _gameFactory.GetFinishCamera();
+            camera.Priority = 5;
+        }
 
         private void TryShowTutorial()
         {

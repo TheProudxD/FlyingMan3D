@@ -97,7 +97,7 @@ namespace _Project.Scripts.Infrastructure.DI
             builder.AddSingleton(c => new StateMachine(
                 c.Resolve<BootstrapState>(),
                 c.Resolve<LoadLevelState>(),
-                c.Resolve<LoadProgressState>(),
+                c.Resolve<LoadGameState>(),
                 c.Resolve<GameLoopState>(),
                 c.Resolve<WinLevelState>(), c.Resolve<LoseLevelState>(), c.Resolve<RestartLevelState>(),
                 c.Resolve<ReplayLevelState>(), c.Resolve<ContinueLevelState>()));
@@ -115,7 +115,7 @@ namespace _Project.Scripts.Infrastructure.DI
         {
             builder.AddSingleton(typeof(BootstrapState));
             builder.AddSingleton(typeof(LoadLevelState));
-            builder.AddSingleton(typeof(LoadProgressState));
+            builder.AddSingleton(typeof(LoadGameState));
             builder.AddSingleton(typeof(GameLoopState));
             builder.AddSingleton(typeof(WinLevelState));
             builder.AddSingleton(typeof(LoseLevelState));
