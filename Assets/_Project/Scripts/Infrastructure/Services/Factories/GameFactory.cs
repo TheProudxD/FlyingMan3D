@@ -9,6 +9,7 @@ using _Project.Scripts.Infrastructure.Services.Resources;
 using BhorGames.Mechanics;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace _Project.Scripts.Infrastructure.Services.Factories
 {
@@ -28,7 +29,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private Score _score;
         private HeartTracker _heartTracker;
         private Level _gameLevel;
-        private PlayerController _player;
+        private PlayerController _mainPlayer;
         private List<GameObject> _levelHolder;
 
         public GameFactory(SaveLoadService saveLoadService,
@@ -85,7 +86,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public Platform GetPlatform() => Object.FindObjectOfType<Platform>();
 
-        public PlayerController GetPlayer() => _player;
+        public PlayerController GetMainPlayer() => _mainPlayer;
 
         public Spawner GetSpawner() => Object.FindObjectOfType<Spawner>();
 
@@ -104,10 +105,10 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public void DestroyLastPlayer()
         {
-            PlayerController playerController = Players[^1];
+            int playersCount = _players.Count - 1;
+            PlayerController playerController = _players[playersCount];
             Object.Destroy(playerController.gameObject);
             RemovePlayer(playerController);
-            // _players.RemoveAt(Players.Count - 1);
         }
 
         public void RemoveEnemy(Enemy enemy)
@@ -129,7 +130,9 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         public void RemovePlayer(PlayerController player)
         {
             _players.Remove(player);
+            player.Disable();
             PlayersCounter.Value = _players.Count;
+            Object.Destroy(player.gameObject);
         }
 
         public void AddPlayer(PlayerController player)
@@ -138,36 +141,35 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             PlayersCounter.Value = _players.Count;
         }
 
-        public PlayerController GetNewPlayer(GameObject root)
+        public PlayerController GetNewPlayer()
         {
             float spawnGap = Random.Range(2f, 5f);
             Vector3 randomPos = Random.onUnitSphere * spawnGap;
+
+            GameObject root = GetMainPlayer().gameObject;
 
             PlayerController player =
                 _assetProvider.CreatePlayer(root, root.transform.position + randomPos, root.transform.rotation);
 
             player.Initialize();
             CopyTransformData(root.transform, player.transform);
-
-            //player.transform.Rotate(player.transform.right, rot, Space.Self);
             AddPlayer(player);
-            _levelHolder.Add(player.gameObject);
             return player;
         }
 
-        public PlayerController CreatePlayer()
+        public PlayerController CreateMainPlayer()
         {
             var startPosition = new Vector3(0, 1.75f, -1);
-            _player = _assetProvider.CreatePlayer(startPosition);
+            _mainPlayer = _assetProvider.CreatePlayer(startPosition);
             var capsule = Object.FindObjectOfType<Slingshot>().Capsule;
-            var fixedJoint = _player.SelfHips.gameObject.AddComponent<FixedJoint>();
+            var fixedJoint = _mainPlayer.SelfHips.gameObject.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = capsule;
-            _player.SetInitial(fixedJoint, capsule.transform);
-            AddPlayer(_player);
+            _mainPlayer.SetInitial(fixedJoint, capsule.transform);
+            AddPlayer(_mainPlayer);
             var camera = GameObject.Find("Cinemachine").GetComponent<CinemachineVirtualCamera>();
-            camera.Follow = _player.SelfHips.transform;
-            _levelHolder.Add(_player.gameObject);
-            return _player;
+            camera.Follow = _mainPlayer.SelfHips.transform;
+            _levelHolder.Add(_mainPlayer.gameObject);
+            return _mainPlayer;
         }
 
         public CinemachineVirtualCamera GetFinishCamera() =>

@@ -53,7 +53,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             _gameFactory.ClearLevelHolder();
             _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
-            PlayerController player = _gameFactory.CreatePlayer();
+            PlayerController player = _gameFactory.CreateMainPlayer();
             _gameFactory.GetSpawner().Initialize();
 
             Hud hud = _uiFactory.GetHUD();

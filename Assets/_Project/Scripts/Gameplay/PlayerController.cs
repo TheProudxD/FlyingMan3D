@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
 
     public Animator Animator { get; private set; }
     public bool IsPassed { get; set; }
+    public bool IsTarget { get; set; }
     public bool IsDie { get; private set; }
 
     private void Start()
@@ -131,8 +132,8 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         IsDie = true;
-        _gameFactory.RemovePlayer(this);
+        IsTarget = false;
         _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        _gameFactory.RemovePlayer(this);
     }
 }

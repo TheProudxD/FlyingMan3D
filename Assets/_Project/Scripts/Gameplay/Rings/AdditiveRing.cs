@@ -27,7 +27,7 @@ public class AdditiveRing : RingBase
             return;
 
         for (int i = 0; i < Effect; i++)
-            GameFactory.GetNewPlayer(root);
+            GameFactory.GetNewPlayer();
 
         _additionHappened = true;
     }

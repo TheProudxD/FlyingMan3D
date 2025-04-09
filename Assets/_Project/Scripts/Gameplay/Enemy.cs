@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
         _index = 0;
         _minDistance = float.MaxValue;
 
-        if (_gameFactory.Players == null || 
+        if (_gameFactory.Players == null ||
             _gameFactory.Players.Any(p => p?.Animator?.enabled == false) ||
             _gameFactory.Players.Count == 0)
         {
@@ -55,7 +55,12 @@ public class Enemy : MonoBehaviour
 
         for (int i = 1; i < _gameFactory.Players.Count; i++)
         {
-            float distance = Distance(_gameFactory.Players[i].transform.position, transform.position);
+            PlayerController player = _gameFactory.Players[i];
+
+            if (player.IsTarget)
+                continue;
+
+            float distance = Distance(player.transform.position, transform.position);
 
             if (_minDistance <= distance)
                 continue;
@@ -64,8 +69,9 @@ public class Enemy : MonoBehaviour
             _index = i;
         }
 
-        _target = _gameFactory.Players[_index].gameObject;
-
+        PlayerController p = _gameFactory.Players[_index];
+        _target = p.gameObject;
+        p.IsTarget = true;
         return _target;
     }
 
@@ -103,7 +109,7 @@ public class Enemy : MonoBehaviour
         IsDie = true;
         _gameFactory.RemoveEnemy(this);
         var ragdoll = _gameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
-        ragdoll.GetComponentInChildren<Rigidbody>().AddForce(-Vector3.forward * 300, ForceMode.Impulse);
+        ragdoll.GetComponentInChildren<Rigidbody>().AddForce(-Vector3.forward * 800, ForceMode.Impulse);
         Destroy(gameObject);
     }
 }

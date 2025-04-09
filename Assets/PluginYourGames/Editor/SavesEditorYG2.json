@@ -1,12 +1,12 @@
 {
-    "idSave": 239,
-    "level": 18,
+    "idSave": 426,
+    "level": 25,
     "richestLevel": 0,
-    "money": 50,
-    "health": 1,
-    "healthProgress": 1,
-    "movingSpeed": 6.0,
-    "movingSpeedProgress": 4,
-    "flyingControl": 20.0,
-    "flyingControlProgress": 2
+    "money": 266,
+    "health": 3,
+    "healthProgress": 3,
+    "movingSpeed": 9.0,
+    "movingSpeedProgress": 5,
+    "flyingControl": 25.0,
+    "flyingControlProgress": 3
 }

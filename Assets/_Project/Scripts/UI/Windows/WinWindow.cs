@@ -30,17 +30,25 @@ namespace _Project.Scripts.UI.Windows
         [Inject] private ReviewShowService _reviewShowService;
         [Inject] private HeartTracker _heartTracker;
         [Inject] private LevelResourceService _levelResourceService;
+        [Inject] private MoneyResourceService _moneyResourceService;
+        [Inject] private GameFactory _gameFactory;
 
         [SerializeField] private Transform _popup;
         [SerializeField] private ParticleSystem _confetti;
         [SerializeField] private TextMeshProUGUI _titleText;
+        [SerializeField] private TextMeshProUGUI _moneyRewardText;
         [SerializeField] private Button _nextLevelButton;
         [SerializeField] private ReplayGameButton _replayLevelButton;
         [SerializeField] private SendReviewButton _sendReviewButton;
         [SerializeField] private MoreGamesButton _moreGamesButton;
-
+        [SerializeField] private MultiplierButton _multiplierButton;
+        // [SerializeField] private CoinRewardAnimation _coinRewardAnimation;
+        
+        private readonly CompositeMotionHandle _compositeMotionHandle = new();
         private WinWindowAnimationsConfig _animationsConfig;
         private WaitForSecondsRealtime _showRestartButtonCoroutine;
+        private int _rewardAmount;
+        private int _multiplier;
 
         protected override void OnAwake()
         {
@@ -59,24 +67,63 @@ namespace _Project.Scripts.UI.Windows
 
             _animationService.FadeOut(_popup.gameObject, _animationsConfig.ShowDuration, Ease.OutBounce);
 
+            _rewardAmount = _gameFactory.GetCurrentLevel().MoneyReward;
+            _multiplier = _gameFactory.GetCurrentLevel().MoneyMultiplier;
+            _multiplierButton.Activate();
+            _multiplierButton.MakeInteractive();
+            _multiplierButton.SetMultiplier(_multiplier);
+            _multiplierButton.SetAmount(_rewardAmount);
+            _multiplierButton.Add(MultiplyMoney);
+            UpdateMoneyRewardText();
+
             _nextLevelButton.Add(LoadNextLevel);
             _nextLevelButton.Activate();
+            // _coinRewardAnimation.OnAnimationFinished += LoadNextLevel;
 
             _replayLevelButton.Activate();
             //StartCoroutine(ShowRestartButtonCoroutine());
             _replayLevelButton.Add(Restart);
 
+            _moneyResourceService.Add(this, _rewardAmount);
             _metricService.LevelPassed();
             UpdateTitleText();
-
             TryShowSendReviewButton();
+        }
 
-            //_coinRewardAnimation.OnAnimationFinished += LoadNextLevel;
+        private void PlayMoneyFX()
+        {
+            _nextLevelButton.Remove(PlayMoneyFX);
+            _nextLevelButton.Deactivate();
+            // _coinRewardAnimation.CountCoins();
         }
 
         private void UpdateTitleText()
         {
             //_titleText.SetText($"Уровень {_levelResourceService.ObservableValue} пройден!");
+        }
+
+        private void MultiplyMoney() => _adsService.PlayRewardedVideo("multiplyMoney", () =>
+        {
+            _multiplierButton.Deactivate();
+            _multiplierButton.Remove(MultiplyMoney);
+            // StopCoroutine(_showContinueButtonCoroutine);
+            // _metricService.ScoreMultiplierUsed();
+            _moneyResourceService.Spend(this, _rewardAmount);
+            _rewardAmount *= _multiplier;
+            _moneyResourceService.Add(this, _rewardAmount);
+            UpdateMoneyRewardText();
+            ShowContinueButton();
+        });
+        
+        private void UpdateMoneyRewardText() => _moneyRewardText.SetText($"+ {_rewardAmount}");
+        
+        private void ShowContinueButton()
+        {
+            _nextLevelButton.Activate();
+
+            _animationService.ShakingScale(_multiplierButton.transform, _animationsConfig.FromScale,
+                _animationsConfig.ToScale, _animationsConfig.Duration, -1, Ease.OutSine,
+                compositeMotionHandle: _compositeMotionHandle);
         }
 
         private IEnumerator ShowRestartButtonCoroutine()

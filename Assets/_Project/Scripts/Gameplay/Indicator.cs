@@ -33,7 +33,7 @@ public class Indicator : MonoBehaviour
         if (Utils.IsPointerOverUI() == false && Input.GetMouseButtonDown(0))
         {
             float launchFactor = CreateLaunchForce();
-            StartCoroutine(_gameFactory.GetPlayer().ApplyLaunchForce(launchFactor));
+            StartCoroutine(_gameFactory.GetMainPlayer().ApplyLaunchForce(launchFactor));
 
             Disable();
             _uiFactory.GetHUD().DeactivateStartText();

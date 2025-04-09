@@ -43,7 +43,7 @@ public class Spawner : MonoBehaviour
 
         _gameFactory.GetPlatform().GetComponent<Renderer>().sharedMaterial.color = _colorArray[_index].PlatformColor;
 
-        _playerTransform = _gameFactory.GetPlayer().transform;
+        _playerTransform = _gameFactory.GetMainPlayer().transform;
     }
 
     public void SpawnObjects(Vector3 velocity)

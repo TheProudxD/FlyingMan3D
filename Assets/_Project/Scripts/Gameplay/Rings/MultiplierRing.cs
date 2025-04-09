@@ -56,7 +56,7 @@ public class MultiplierRing : RingBase
 
         for (int i = 0; i < Effect - 1; i++)
         {
-            GameFactory.GetNewPlayer(root);
+            GameFactory.GetNewPlayer();
         }
         _playerCount--;
     }
