@@ -433,6 +433,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+    - target: {fileID: 5866666021909216657, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
@@ -440,6 +444,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: d7191c3b5d814f545959e34ae6747407, type: 2}
+    - target: {fileID: 5866666021909216657, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_CullingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5907854602648608400, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
       propertyPath: m_Layer
       value: 7

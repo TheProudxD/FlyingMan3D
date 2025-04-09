@@ -93,6 +93,9 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         {
             foreach (PlayerController player in Players)
             {
+                if (player == null)
+                    continue;
+
                 Object.Destroy(player.gameObject);
             }
 
@@ -137,7 +140,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public PlayerController GetNewPlayer(GameObject root)
         {
-            float spawnGap = Random.Range(1.3f, 3f);
+            float spawnGap = Random.Range(2f, 5f);
             Vector3 randomPos = Random.onUnitSphere * spawnGap;
 
             PlayerController player =
@@ -177,10 +180,11 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             return finish;
         }
 
-        public void GetEnemyRagdoll(Vector3 transformPosition, Quaternion identity)
+        public GameObject GetEnemyRagdoll(Vector3 transformPosition, Quaternion identity)
         {
             var a = _assetProvider.CreateEnemyRagdoll(transformPosition, identity);
             _levelHolder.Add(a);
+            return a;
         }
 
         public void GetPlayerRagdoll(Vector3 transformPosition, Quaternion identity)
@@ -220,7 +224,19 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
                 Object.Destroy(gameObject);
             }
 
+            foreach (PlayerController player in _players)
+            {
+                Object.Destroy(player?.gameObject);
+            }
+
+            foreach (Enemy enemy in _enemies)
+            {
+                Object.Destroy(enemy?.gameObject);
+            }
+
             _levelHolder.Clear();
+            _players.Clear();
+            _enemies.Clear();
         }
     }
 }

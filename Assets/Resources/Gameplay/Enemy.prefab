@@ -405,10 +405,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.5
   m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 1.5, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!95 &4351956796378835874
 Animator:
   serializedVersion: 5
@@ -418,7 +418,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2951018807824845166}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 3bf626041b0e848e8917535734a4e638, type: 3}
+  m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8a384e13ea96e024d95b7549249fa615, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -438,7 +438,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2951018807824845166}
   serializedVersion: 4
-  m_Mass: 100
+  m_Mass: 300
   m_Drag: 0.1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -469,6 +469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fc79e50c1f14eb48b0276ff80162e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Animator>k__BackingField: {fileID: 4351956796378835874}
 --- !u!1 &3112117862970714677
 GameObject:
   m_ObjectHideFlags: 0

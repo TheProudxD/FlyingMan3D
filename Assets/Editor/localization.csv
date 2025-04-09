@@ -1,29 +1,26 @@
-Key,en,ru,es
-settingsTitle,"Settings","Настройки","Ajustes"
-gameOver,"Game over","Игра окончена","Se acabó el juego"
-about,"After watching the ads, you can continue the level with 60 seconds!",После просмотра рекламы Вы можете продолжить уровень с 60 секундами!,"Después de ver el anuncio, ¡puedes continuar el nivel con 60 segundos!"
-continue,"Continue","Продолжить","Continuación"
-review,"Leave a review","Оставить отзыв","Deja un comentario"
-restart,"Restart","Заново","De nuevo"
-leaderboard,"Leaderboard","Таблица рекордов","Clasificación"
-feedback,"Feedback\n<i><size=75%>platypusGames@yandex.ru</i>","Обратная связь\n<i><size=75%>platypusGames@yandex.ru</i>","Comentarios\n<i><size=75%>platypusGames@yandex.ru</i>"
-sound,"Sound","Звук","Suena"
-fruitsMerged,"Total fruit merged","Собрано фруктов","Total de frutas fusionadas"
-watermelons,"Merged watermelons","Собрано арбузов","Sandías fusionadas"
-gamesPlayed,"Games played","Игр сыграно","Partidas jugadas"
-richestScore,"Highest number of points","Наибольшее количество очков","Mayor número de puntos"
-statistics,"Statistics","Статистика","Estadísticas"
-Loading,"Loading..","Загрузка..","Cargando.."
-removeSmallFruits,"Remove the small fruits","Убрать маленькие фрукты","Saca los frutos pequeños"
-moreGames,"More Games","Другие игры","Otros juegos"
-free,"Free","Даром","Gratis"
-timeOut,Times is out!,Время вышло!,se acabó el tiempo
-gift,Gift,Подарок,Un regalo
-LevelPassed,Level Passed,Уровень пройден!,Nivel superado
-Level,Lvl.,Ур.,Nivel
-LevelFail,Try again,Попробуйте снова,Inténtalo de nuevo
-flyingControl,Fruit order,Порядок фруктов,Orden de frutas
-moveSpeed,Move Speed,Скорость бега,
-health,Health,Здоровье,
-forAd,Watch Ad,Просмотреть рекламу,
-tapToThrow,Tap To Throw,Нажми чтобы запустить,
+Key,ru,en,es,de
+settingsTitle,Настройки,Settings,Configuración,Einstellungen
+gameOver,Игра окончена,Game Over,Juego Terminado,Spiel vorbei
+about,После просмотра рекламы Вы можете продолжить уровень с 60 секундами!,After watching an ad you can continue the level with 60 seconds!,¡Después de ver un anuncio puedes continuar el nivel con 60 segundos!,Nach dem Ansehen einer Werbung können Sie das Level mit 60 Sekunden fortsetzen!
+continue,Продолжить,Continue,Continuar,Weiter
+review,Оставить отзыв,Leave a Review,Dejar una Reseña,Bewertung schreiben
+restart,Заново,Restart,Reiniciar,Neustart
+leaderboard,Таблица рекордов,Leaderboard,Clasificación,Bestenliste
+feedback,Обратная связь\n<i><size=75%>platypusGames@yandex.ru</i>,Feedback\n<i><size=75%>platypusGames@yandex.ru</i>,Comentarios\n<i><size=75%>platypusGames@yandex.ru</i>,Feedback\n<i><size=75%>platypusGames@yandex.ru</i>
+sound,Звук,Sound,Sonido,Ton
+gamesPlayed,Игр сыграно,Games Played,Partidas Jugadas,Gespielte Spiele
+richestScore,Наибольшее количество очков,Highest Score,Puntuación Más Alta,Höchste Punktzahl
+statistics,Статистика,Statistics,Estadísticas,Statistiken
+Loading,Загрузка...,Loading...,Cargando...,Laden...
+moreGames,Другие игры,More Games,Más Juegos,Weitere Spiele
+free,Даром,Free,Gratis,Kostenlos
+timeOut,Время вышло!,Time's Up!,¡Se Acabó el Tiempo!,Die Zeit ist um!
+gift,Подарок,Gift,Regalo,Geschenk
+LevelPassed,Уровень пройден!,Level Passed!,¡Nivel Completado!,Level bestanden!
+Level,Ур.,Level,Nivel,Level
+LevelFail,Попробуйте снова,Try Again,Inténtalo de Nuevo,Versuchen Sie es erneut
+flyingControl,Управление в полете,Flight Control,Control de vuelo,Flugsteuerung
+moveSpeed,Скорость бега,Move Speed,Velocidad de Movimiento,Bewegungsgeschwindigkeit
+health,Здоровье,Health,Salud,Gesundheit
+forAd,Просмотреть рекламу,Watch Ad,Ver Anuncio,Werbung ansehen
+tapToThrow,Нажми чтобы запустить,Tap to Throw,Toca para Lanzar,Zum Werfen tippen

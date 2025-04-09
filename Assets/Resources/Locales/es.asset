@@ -22,13 +22,10 @@ MonoBehaviour:
   - leaderboard
   - feedback
   - sound
-  - fruitsMerged
-  - watermelons
   - gamesPlayed
   - richestScore
   - statistics
   - Loading
-  - removeSmallFruits
   - moreGames
   - free
   - timeOut
@@ -42,31 +39,28 @@ MonoBehaviour:
   - forAd
   - tapToThrow
   _values:
-  - Ajustes
-  - "Se acab\xF3 el juego"
-  - "Despu\xE9s de ver el anuncio, \xA1puedes continuar el nivel con 60 segundos!"
-  - "Continuaci\xF3n"
-  - Deja un comentario
-  - De nuevo
+  - "Configuraci\xF3n"
+  - Juego Terminado
+  - "\xA1Despu\xE9s de ver un anuncio puedes continuar el nivel con 60 segundos!"
+  - Continuar
+  - "Dejar una Rese\xF1a"
+  - Reiniciar
   - "Clasificaci\xF3n"
   - Comentarios\n<i><size=75%>platypusGames@yandex.ru</i>
-  - Suena
-  - Total de frutas fusionadas
-  - "Sand\xEDas fusionadas"
-  - Partidas jugadas
-  - "Mayor n\xFAmero de puntos"
+  - Sonido
+  - Partidas Jugadas
+  - "Puntuaci\xF3n M\xE1s Alta"
   - "Estad\xEDsticas"
-  - Cargando..
-  - "Saca los frutos peque\xF1os"
-  - Otros juegos
+  - Cargando...
+  - "M\xE1s Juegos"
   - Gratis
-  - "se acab\xF3 el tiempo"
-  - Un regalo
-  - Nivel superado
+  - "\xA1Se Acab\xF3 el Tiempo!"
+  - Regalo
+  - "\xA1Nivel Completado!"
   - Nivel
-  - "Int\xE9ntalo de nuevo"
-  - Orden de frutas
-  - 
-  - 
-  - 
-  - 
+  - "Int\xE9ntalo de Nuevo"
+  - Control de vuelo
+  - Velocidad de Movimiento
+  - Salud
+  - Ver Anuncio
+  - Toca para Lanzar

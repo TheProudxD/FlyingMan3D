@@ -22,13 +22,10 @@ MonoBehaviour:
   - leaderboard
   - feedback
   - sound
-  - fruitsMerged
-  - watermelons
   - gamesPlayed
   - richestScore
   - statistics
   - Loading
-  - removeSmallFruits
   - moreGames
   - free
   - timeOut
@@ -43,30 +40,27 @@ MonoBehaviour:
   - tapToThrow
   _values:
   - Settings
-  - Game over
-  - After watching the ads, you can continue the level with 60 seconds!
+  - Game Over
+  - After watching an ad you can continue the level with 60 seconds!
   - Continue
-  - Leave a review
+  - Leave a Review
   - Restart
   - Leaderboard
   - Feedback\n<i><size=75%>platypusGames@yandex.ru</i>
   - Sound
-  - Total fruit merged
-  - Merged watermelons
-  - Games played
-  - Highest number of points
+  - Games Played
+  - Highest Score
   - Statistics
-  - Loading..
-  - Remove the small fruits
+  - Loading...
   - More Games
   - Free
-  - Times is out!
+  - Time's Up!
   - Gift
-  - Level Passed
-  - Lvl.
-  - Try again
-  - Fruit order
+  - Level Passed!
+  - Level
+  - Try Again
+  - Flight Control
   - Move Speed
   - Health
   - Watch Ad
-  - Tap To Throw
+  - Tap to Throw

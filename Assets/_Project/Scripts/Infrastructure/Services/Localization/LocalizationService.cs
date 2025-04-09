@@ -27,18 +27,9 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
 
         private void SwitchLanguage(string lang)
         {
-            switch (lang)
-            {
-                case "ru":
-                    SetLocale(Locale.ru);
-                    break;
-                case "es":
-                    SetLocale(Locale.es);
-                    break;
-                default:
-                    SetLocale(Locale.en);
-                    break;
-            }
+            bool tryParse = Enum.TryParse(lang, out Locale @case);
+
+            SetLocale(tryParse ? @case : Locale.en);
         }
 
         public LocaleConfig Current

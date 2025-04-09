@@ -57,13 +57,16 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             // _gameFactory.GetInputService().Enable();
         }
 
-        private void CheckEntitiesCount(int _)
+        private void CheckEntitiesCount(int count)
         {
             if (_gameFactory.Players.Count == 0 && _gameFactory.Enemies.Count >= 0)
             {
                 foreach (Enemy item in _gameFactory.Enemies)
                 {
-                    item.Animator.SetBool(Win, true);
+                    if (item == null)
+                        continue;
+
+                    item.Animator?.SetBool(Win, true);
                     Object.Destroy(item.GetComponent<Rigidbody>());
                 }
 
@@ -73,7 +76,10 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             {
                 foreach (PlayerController item in _gameFactory.Players)
                 {
-                    item.Animator.SetBool(Win, true);
+                    if (item == null)
+                        continue;
+                    
+                    item.Animator?.SetBool(Win, true);
                     Object.Destroy(item.GetComponent<Rigidbody>());
                 }
 

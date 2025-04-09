@@ -14,7 +14,8 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
         NotDefined,
         en,
         ru,
-        es
+        es,
+        de
     }
 
     public class LocaleConfig

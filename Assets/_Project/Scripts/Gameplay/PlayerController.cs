@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
 
+    private const float DIE_HEIGHT = -5;
+
     [field: SerializeField] public Rigidbody SelfHips { get; private set; }
 
     public Rigidbody[] Bodies { get; private set; }
@@ -37,6 +39,8 @@ public class PlayerController : MonoBehaviour
         _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
         _movementSpeed = YG.YG2.saves.flyingControl;
     }
+
+    public void Disable() => _enabled = false;
 
     public void SetInitial(FixedJoint joint, Transform capsule)
     {
@@ -80,13 +84,11 @@ public class PlayerController : MonoBehaviour
         SelfHips.velocity = new Vector3(newX, SelfHips.velocity.y, SelfHips.velocity.z);
     }
 
-    private void CheckForHeight()
+    public void CheckForHeight()
     {
         float yPos = SelfHips.transform.position.y;
 
-        float dieHeight = -5;
-
-        if (yPos < dieHeight)
+        if (yPos < DIE_HEIGHT)
             Die();
     }
 

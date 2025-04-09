@@ -41,8 +41,8 @@ namespace _Project.Scripts.UI
         {
             _animationService.ResourceChanged(transform, old, @new, 0.5f,
                 x => _enemiesNumberText.SetText(x.ToString()));
-        } 
-        
+        }
+
         private void PlayersCounterChanged(int old, int @new)
         {
             _animationService.ResourceChanged(transform, old, @new, 0.5f,
@@ -58,14 +58,27 @@ namespace _Project.Scripts.UI
             _gameFactory.PlayersCounter.ChangedWithOld -= PlayersCounterChanged;
         }
 
+        public void ActivateStartText()
+        {
+            if (TapToThrow.activeInHierarchy == false)
+                TapToThrow.SetActive(true);
+
+            if (PowerupShop.activeInHierarchy == false)
+                PowerupShop.SetActive(true);
+
+            _enemiesNumberText.transform.parent.gameObject.SetActive(false);
+            _playersNumberText.transform.parent.gameObject.SetActive(false);
+            _moneyNumber.SetActive(true);
+        }
+
         public void DeactivateStartText()
         {
             if (TapToThrow.activeInHierarchy)
                 TapToThrow.SetActive(false);
-            
+
             if (PowerupShop.activeInHierarchy)
                 PowerupShop.SetActive(false);
-            
+
             _enemiesNumberText.transform.parent.gameObject.SetActive(true);
             _playersNumberText.transform.parent.gameObject.SetActive(true);
             _moneyNumber.SetActive(false);

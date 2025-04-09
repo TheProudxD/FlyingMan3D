@@ -52,6 +52,21 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
                     DateEndianness = LocaleConfig.EndiannessType.Little,
                     ReadingDirection = LanguageReadingDirection.LeftToRight
                 }
+            },
+            {
+                Locale.de, new LocaleConfig()
+                {
+                    Name = "German",
+                    Code = Locale.de,
+                    SystemLanguages = new[]
+                    {
+                        SystemLanguage.German
+                    },
+                    DateFormat = "dd-MM-yyyy",
+                    DateSeparator = "/",
+                    DateEndianness = LocaleConfig.EndiannessType.Little,
+                    ReadingDirection = LanguageReadingDirection.LeftToRight
+                }
             }
         };
 

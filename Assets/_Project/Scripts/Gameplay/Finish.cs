@@ -34,11 +34,12 @@ public class Finish : MonoBehaviour
 
         _attack = true;
         _finishCamera.Priority = 15;
-        _finishCamera.transform.position = new Vector3(0, 20, transform.position.z - 26f);
+        _finishCamera.transform.position = new Vector3(0, 16, transform.position.z - 30f);
 
         foreach (Enemy e in _gameFactory.Enemies)
         {
-            e.SetAttackState();
+            if (e.gameObject.activeInHierarchy)
+                e.SetAttackState();
         }
     }
 
@@ -65,7 +66,8 @@ public class Finish : MonoBehaviour
         }
 
         Rigidbody hips = playerController.SelfHips;
-        playerController.enabled = false;
+        // playerController.enabled = false;
+        playerController.Disable();
         Destroy(hips.GetComponent<TrailRenderer>());
         yield return _waiter;
 

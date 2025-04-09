@@ -3,6 +3,8 @@ using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.UI;
+using Cinemachine;
+using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {
@@ -34,14 +36,29 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public void Enter()
         {
-            // _gameFactory.GetPlayer().Initialize();
-            // _uiFactory.GetHUD().Show();
-            // _loadingCurtain.Hide();
+            _levelResourceService.Current.Value = _levelResourceService.ObservableValue.Value - 1;
 
+
+            _gameFactory.ClearLevelHolder();
+            _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
+            PlayerController player = _gameFactory.CreatePlayer();
+            _gameFactory.GetSpawner().Initialize();
+
+            Hud hud = _uiFactory.GetHUD();
+            hud.Show();
+            hud.ActivateStartText();
+
+            CinemachineVirtualCamera camera = _gameFactory.GetFinishCamera();
+            camera.Priority = 5;
             _gameFactory.GetScore().Reset();
             _statisticsService.IncreaseGamesPlayedNumberCounter();
-            _levelResourceService.Current.Value = _levelResourceService.ObservableValue.Value - 1;
             _gameFactory.CreateLevel();
+            player.Initialize();
+            _gameFactory.GetIndicator().Enable();
+            _uiFactory.GetHUD().Show();
+            _loadingCurtain.Hide();
+
+            _stateMachine.Enter<GameLoopState, IExitableState>(this);
         }
 
         public void Exit() { }

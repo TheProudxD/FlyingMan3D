@@ -55,7 +55,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
             PlayerController player = _gameFactory.CreatePlayer();
             _gameFactory.GetSpawner().Initialize();
-            _uiFactory.GetHUD().Show();
+
+            Hud hud = _uiFactory.GetHUD();
+            hud.Show();
+            hud.ActivateStartText();
+
             TryShowTutorial();
             _gameFactory.GetScore().Reset();
             _statisticsService.IncreaseGamesPlayedNumberCounter();

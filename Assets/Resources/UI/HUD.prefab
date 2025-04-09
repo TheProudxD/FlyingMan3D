@@ -1543,16 +1543,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 5632969708968516982}
     m_Modifications:
     - target: {fileID: 169175159624533210, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
+      propertyPath: m_EffectColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 169175159624533210, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: m_EffectColor.b
-      value: 0.764151
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 169175159624533210, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: m_EffectColor.g
-      value: 0.38027492
+      value: 0.3672956
       objectReference: {fileID: 0}
     - target: {fileID: 169175159624533210, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: m_EffectColor.r
-      value: 0
+      value: 0.6415094
       objectReference: {fileID: 0}
     - target: {fileID: 2204209968042932193, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: m_IsActive
@@ -2033,6 +2037,14 @@ PrefabInstance:
     - target: {fileID: 4183326923326241706, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: m_Color.g
       value: 0.5905471
+      objectReference: {fileID: 0}
+    - target: {fileID: 4183326923397632452, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4183326923397632452, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
+      propertyPath: m_fontSize
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 4183326924068718909, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: m_fontSizeBase

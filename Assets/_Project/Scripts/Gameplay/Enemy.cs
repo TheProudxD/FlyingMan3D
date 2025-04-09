@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     private static readonly int CanAttack = Animator.StringToHash("CanAttack");
 
     public bool IsDie { get; private set; }
-    public Animator Animator { get; private set; }
+    [field: SerializeField] public Animator Animator { get; private set; }
 
     private GameObject _target;
     private float _minDistance;
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
         _moveSpeed = _gameFactory.GetCurrentLevel().EnemyMoveSpeed;
     }
 
-    private void Start()
+    private void Awake()
     {
         _colliders = GetComponentsInChildren<Collider>();
 
@@ -39,8 +39,6 @@ public class Enemy : MonoBehaviour
         {
             Destroy(_colliders[i]);
         }
-
-        Animator = GetComponent<Animator>();
     }
 
     private GameObject NearestTarget()
@@ -48,7 +46,8 @@ public class Enemy : MonoBehaviour
         _index = 0;
         _minDistance = float.MaxValue;
 
-        if (_gameFactory.Players.Any(p => p.Animator.enabled == false) || _gameFactory.Players == null ||
+        if (_gameFactory.Players == null || 
+            _gameFactory.Players.Any(p => p?.Animator?.enabled == false) ||
             _gameFactory.Players.Count == 0)
         {
             return null;
@@ -103,7 +102,8 @@ public class Enemy : MonoBehaviour
     {
         IsDie = true;
         _gameFactory.RemoveEnemy(this);
-        _gameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
+        var ragdoll = _gameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
+        ragdoll.GetComponentInChildren<Rigidbody>().AddForce(-Vector3.forward * 300, ForceMode.Impulse);
         Destroy(gameObject);
     }
 }

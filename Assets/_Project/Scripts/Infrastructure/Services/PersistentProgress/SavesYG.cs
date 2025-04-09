@@ -12,9 +12,9 @@ namespace YG
         public int healthProgress = 1;
         [NonSerialized] public int healthDelta = 1;
 
-        public float movingSpeed = 0.25f;
+        public float movingSpeed = 3.5f;
         public int movingSpeedProgress = 1;
-        [NonSerialized] public float movingSpeedDelta = 0.05f;
+        [NonSerialized] public float movingSpeedDelta = 3f;
 
         public float flyingControl = 15;
         public int flyingControlProgress = 1;

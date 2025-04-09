@@ -33,10 +33,6 @@ namespace TS.LocalizationSystem
         
         public const string sound = "sound";
         
-        public const string fruitsMerged = "fruitsMerged";
-        
-        public const string watermelons = "watermelons";
-        
         public const string gamesPlayed = "gamesPlayed";
         
         public const string richestScore = "richestScore";
@@ -44,8 +40,6 @@ namespace TS.LocalizationSystem
         public const string statistics = "statistics";
         
         public const string Loading = "Loading";
-        
-        public const string removeSmallFruits = "removeSmallFruits";
         
         public const string moreGames = "moreGames";
         

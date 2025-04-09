@@ -40,6 +40,8 @@ public class PlayerFinishMover : MonoBehaviour
         if (!_canMove)
             return;
 
+        _playerController.CheckForHeight();
+
         if (_target == null)
         {
             _target = NearestTarget();
