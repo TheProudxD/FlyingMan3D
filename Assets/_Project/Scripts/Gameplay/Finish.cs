@@ -1,6 +1,5 @@
 using System.Collections;
 using _Project.Scripts.Infrastructure.FSM;
-using _Project.Scripts.Infrastructure.FSM.States;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using UnityEngine;
 using Cinemachine;
@@ -19,7 +18,7 @@ public class Finish : MonoBehaviour
     private void Start()
     {
         _finishCamera = _gameFactory.GetFinishCamera();
-        _waiter = new WaitForSeconds(2.5f);
+        _waiter = new WaitForSeconds(1.5f);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -66,10 +65,12 @@ public class Finish : MonoBehaviour
         }
 
         Rigidbody hips = playerController.SelfHips;
-        // playerController.enabled = false;
         playerController.Disable();
-        Destroy(hips.GetComponent<TrailRenderer>());
+        Destroy(playerController.TrailRenderer);
+        Time.timeScale = 0.5f;
         yield return _waiter;
+
+        Time.timeScale = 1;
 
         if (root == null || root.gameObject == null)
             yield break;

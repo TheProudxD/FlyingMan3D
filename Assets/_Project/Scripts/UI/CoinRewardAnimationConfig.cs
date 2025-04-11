@@ -13,5 +13,7 @@ namespace _Project.Scripts.UI
         [field: SerializeField] public float ScaleDownDuration { get; private set; } = 0.3f;
         [field: SerializeField] public float DelayStep { get; private set; } = 0.1f;
         [field: SerializeField] public float StartDelay { get; private set; } = 0f;
+        [field: SerializeField] public float Radius { get; private set; } = 0f;
+        [field: SerializeField] public float Angle { get; private set; } = 0f;
     }
 }

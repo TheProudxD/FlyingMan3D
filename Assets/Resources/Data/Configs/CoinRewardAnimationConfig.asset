@@ -18,3 +18,5 @@ MonoBehaviour:
   <ScaleDownDuration>k__BackingField: 0.3
   <DelayStep>k__BackingField: 0.1
   <StartDelay>k__BackingField: 0
+  <Radius>k__BackingField: 0.03
+  <Angle>k__BackingField: 30

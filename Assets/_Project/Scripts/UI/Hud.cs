@@ -19,6 +19,7 @@ namespace _Project.Scripts.UI
         [SerializeField] private TMP_Text _enemiesNumberText;
         [SerializeField] private TMP_Text _playersNumberText;
         [SerializeField] private GameObject _moneyNumber;
+        [SerializeField] private MoreGamesButton _moreGamesButton;
 
         [field: SerializeField] public GameObject TapToThrow { get; private set; }
         [field: SerializeField] public GameObject PowerupShop { get; private set; }
@@ -69,6 +70,7 @@ namespace _Project.Scripts.UI
             _enemiesNumberText.transform.parent.gameObject.SetActive(false);
             _playersNumberText.transform.parent.gameObject.SetActive(false);
             _moneyNumber.SetActive(true);
+            _moreGamesButton.Activate();
         }
 
         public void DeactivateStartText()
@@ -82,6 +84,7 @@ namespace _Project.Scripts.UI
             _enemiesNumberText.transform.parent.gameObject.SetActive(true);
             _playersNumberText.transform.parent.gameObject.SetActive(true);
             _moneyNumber.SetActive(false);
+            _moreGamesButton.Deactivate();
         }
     }
 }

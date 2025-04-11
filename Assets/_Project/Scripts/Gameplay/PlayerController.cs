@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private const float DIE_HEIGHT = -5;
 
     [field: SerializeField] public Rigidbody SelfHips { get; private set; }
+    [field: SerializeField] public TrailRenderer TrailRenderer { get; private set; }
 
     public Rigidbody[] Bodies { get; private set; }
     private Vector3 _initialPos;

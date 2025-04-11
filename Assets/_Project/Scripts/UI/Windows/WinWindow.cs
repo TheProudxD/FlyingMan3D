@@ -27,7 +27,6 @@ namespace _Project.Scripts.UI.Windows
         [Inject] private MetricService _metricService;
         [Inject] private ConfigService _configService;
         [Inject] private UIFactory _uiFactory;
-        [Inject] private ReviewShowService _reviewShowService;
         [Inject] private HeartTracker _heartTracker;
         [Inject] private LevelResourceService _levelResourceService;
         [Inject] private MoneyResourceService _moneyResourceService;
@@ -39,21 +38,21 @@ namespace _Project.Scripts.UI.Windows
         [SerializeField] private TextMeshProUGUI _moneyRewardText;
         [SerializeField] private Button _nextLevelButton;
         [SerializeField] private ReplayGameButton _replayLevelButton;
-        [SerializeField] private SendReviewButton _sendReviewButton;
-        [SerializeField] private MoreGamesButton _moreGamesButton;
-        [SerializeField] private MultiplierButton _multiplierButton;
-        // [SerializeField] private CoinRewardAnimation _coinRewardAnimation;
-        
+        [SerializeField] private WheelMultiplierButton _multiplierButton;
+        [SerializeField] private CoinRewardAnimation _coinRewardAnimation;
+        [SerializeField] private Image _emojiImage;
+
         private readonly CompositeMotionHandle _compositeMotionHandle = new();
         private WinWindowAnimationsConfig _animationsConfig;
         private WaitForSecondsRealtime _showRestartButtonCoroutine;
+        private WinImagesConfig _winImagesConfig;
         private int _rewardAmount;
-        private int _multiplier;
 
         protected override void OnAwake()
         {
             base.OnAwake();
             _animationsConfig = _configService.Get<WinWindowAnimationsConfig>();
+            _winImagesConfig = _configService.Get<WinImagesConfig>();
             _showRestartButtonCoroutine = new WaitForSecondsRealtime(_animationsConfig.TimeBeforeShowRestartButton);
         }
 
@@ -61,40 +60,38 @@ namespace _Project.Scripts.UI.Windows
         {
             base.Show();
 
+            _emojiImage.sprite = _winImagesConfig.Sprites.RandomElement();
             Time.timeScale = 0;
-
-            //_uiFactory.GetHUD().Hide();
 
             _animationService.FadeOut(_popup.gameObject, _animationsConfig.ShowDuration, Ease.OutBounce);
 
             _rewardAmount = _gameFactory.GetCurrentLevel().MoneyReward;
-            _multiplier = _gameFactory.GetCurrentLevel().MoneyMultiplier;
             _multiplierButton.Activate();
             _multiplierButton.MakeInteractive();
-            _multiplierButton.SetMultiplier(_multiplier);
-            _multiplierButton.SetAmount(_rewardAmount);
+            _multiplierButton.SetInitReward(_rewardAmount);
             _multiplierButton.Add(MultiplyMoney);
             UpdateMoneyRewardText();
 
-            _nextLevelButton.Add(LoadNextLevel);
+            _nextLevelButton.Add(PlayMoneyFX);
             _nextLevelButton.Activate();
-            // _coinRewardAnimation.OnAnimationFinished += LoadNextLevel;
+            _coinRewardAnimation.OnAnimationFinished += LoadNextLevel;
 
-            _replayLevelButton.Activate();
-            //StartCoroutine(ShowRestartButtonCoroutine());
-            _replayLevelButton.Add(Restart);
+            StartCoroutine(ShowRestartButtonCoroutine());
 
             _moneyResourceService.Add(this, _rewardAmount);
             _metricService.LevelPassed();
             UpdateTitleText();
-            TryShowSendReviewButton();
+            AnimateEmoji();
         }
+
+        private void AnimateEmoji() => 
+            _animationService.RotateZ(_emojiImage.transform, 10f, 1.05f, ease: Ease.Linear, loopType: LoopType.Yoyo);
 
         private void PlayMoneyFX()
         {
             _nextLevelButton.Remove(PlayMoneyFX);
             _nextLevelButton.Deactivate();
-            // _coinRewardAnimation.CountCoins();
+            _coinRewardAnimation.CountCoins();
         }
 
         private void UpdateTitleText()
@@ -109,14 +106,14 @@ namespace _Project.Scripts.UI.Windows
             // StopCoroutine(_showContinueButtonCoroutine);
             // _metricService.ScoreMultiplierUsed();
             _moneyResourceService.Spend(this, _rewardAmount);
-            _rewardAmount *= _multiplier;
+            _rewardAmount *= _multiplierButton.Multiplier;
             _moneyResourceService.Add(this, _rewardAmount);
             UpdateMoneyRewardText();
             ShowContinueButton();
         });
-        
+
         private void UpdateMoneyRewardText() => _moneyRewardText.SetText($"+ {_rewardAmount}");
-        
+
         private void ShowContinueButton()
         {
             _nextLevelButton.Activate();
@@ -128,6 +125,7 @@ namespace _Project.Scripts.UI.Windows
 
         private IEnumerator ShowRestartButtonCoroutine()
         {
+            _replayLevelButton.Deactivate();
             yield return _showRestartButtonCoroutine;
 
             ShowRestartButton();
@@ -144,25 +142,12 @@ namespace _Project.Scripts.UI.Windows
 
         private void ShowRestartButton()
         {
+            _replayLevelButton.Add(Restart);
             _replayLevelButton.Activate();
 
-            /*_animationService.ShakingScale(_multiplierButton.transform, _animationsConfig.FromScale,
+            _animationService.ShakingScale(_multiplierButton.transform, _animationsConfig.FromScale,
                 _animationsConfig.ToScale, _animationsConfig.Duration, -1, Ease.OutSine,
-                compositeMotionHandle: _compositeMotionHandle);*/
-        }
-
-        private void TryShowSendReviewButton()
-        {
-            if (_reviewShowService.CanShow())
-            {
-                _sendReviewButton.Activate();
-                _moreGamesButton.Deactivate();
-            }
-            else
-            {
-                _moreGamesButton.Activate();
-                _sendReviewButton.Deactivate();
-            }
+                compositeMotionHandle: _compositeMotionHandle);
         }
 
         private void Restart()
@@ -175,9 +160,9 @@ namespace _Project.Scripts.UI.Windows
         {
             _nextLevelButton.Remove(LoadNextLevel);
             _replayLevelButton.Remove(Restart);
-            //_coinRewardAnimation.OnAnimationFinished -= LoadNextLevel;
-            //_sendReviewButton.Deactivate();
-            //_moreGamesButton.Deactivate();
+            _coinRewardAnimation.OnAnimationFinished -= LoadNextLevel;
+            // _sendReviewButton.Deactivate();
+            // _moreGamesButton.Deactivate();
 
             _animationService.FadeIn(_popup.gameObject, _animationsConfig.HideDuration, callback: () =>
             {

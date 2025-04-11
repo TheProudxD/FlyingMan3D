@@ -87,14 +87,15 @@ namespace _Project.Scripts.Infrastructure.Services
         }
 
         public void Rotate(Transform modifierTransform, Vector3 from, Vector3 to, float duration,
-            int loops = 1, Ease ease = Ease.Linear, float delay = 0, Action callback = null,
+            int loops = 1, Ease ease = Ease.Linear, LoopType loopType = LoopType.Restart, float delay = 0, Action callback = null,
             CompositeMotionHandle compositeMotionHandle = null)
         {
-            MotionHandle mh = LMotion.Create(from, to, duration)
+            MotionHandle mh = LMotion
+                .Create(from, to, duration)
                 .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
                 .WithDelay(delay)
                 .WithEase(ease)
-                .WithLoops(loops)
+                .WithLoops(loops, loopType)
                 .WithOnComplete(callback)
                 .Bind(x => modifierTransform.localRotation = Quaternion.Euler(x));
 
@@ -102,14 +103,16 @@ namespace _Project.Scripts.Infrastructure.Services
         }
 
         public void RotateZ(Transform modifierTransform, float shakeAngle, float duration,
-            int loops = -1, Ease ease = Ease.OutSine, Action callback = null,
+            int loops = -1, Ease ease = Ease.OutSine, LoopType loopType = LoopType.Restart, Action callback = null, float delay = 0,
             CompositeMotionHandle compositeMotionHandle = null)
         {
             Vector3 defaultPosition = modifierTransform.localRotation.eulerAngles;
 
             MotionHandle mh = LMotion
                 .Create(defaultPosition.WithZ(-shakeAngle), defaultPosition.WithZ(shakeAngle), duration)
-                .WithLoops(loops, LoopType.Yoyo)
+                .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .WithDelay(delay)
+                .WithLoops(loops, loopType)
                 .WithEase(ease)
                 .WithOnCancel(() => modifierTransform.localRotation = Quaternion.Euler(defaultPosition))
                 .WithOnComplete(callback)
@@ -119,13 +122,15 @@ namespace _Project.Scripts.Infrastructure.Services
         }
 
         public void Color(TMP_Text text, Color from, Color to, float duration,
-            int loops = 1, Ease ease = Ease.Linear, Action callback = null,
+            int loops = 1, Ease ease = Ease.Linear, LoopType loopType = LoopType.Restart, float delay = 0, Action callback = null,
             CompositeMotionHandle compositeMotionHandle = null)
         {
-            MotionHandle mh = LMotion.Create(from, to, duration)
+            MotionHandle mh = LMotion
+                .Create(from, to, duration)
                 .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .WithDelay(delay)
                 .WithEase(ease)
-                .WithLoops(loops)
+                .WithLoops(loops, loopType)
                 .WithOnComplete(callback)
                 .Bind(c => text.color = c);
 
@@ -133,11 +138,13 @@ namespace _Project.Scripts.Infrastructure.Services
         }
 
         public void Color(SpriteRenderer sprite, Color from, Color to, float duration,
-            int loops = 1, Ease ease = Ease.Linear, Action callback = null,
+            int loops = 1, Ease ease = Ease.Linear, Action callback = null, float delay = 0,
             CompositeMotionHandle compositeMotionHandle = null)
         {
-            MotionHandle mh = LMotion.Create(from, to, duration)
+            MotionHandle mh = LMotion
+                .Create(from, to, duration)
                 .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .WithDelay(delay)
                 .WithEase(ease)
                 .WithLoops(loops)
                 .WithOnComplete(callback)
@@ -150,7 +157,7 @@ namespace _Project.Scripts.Infrastructure.Services
             Action<int> onChanging, int loops = -1, Ease ease = Ease.OutSine,
             CompositeMotionHandle compositeMotionHandle = null)
         {
-            var mh = LMotion.Create(oldValue, currentValue, duration)
+            MotionHandle mh = LMotion.Create(oldValue, currentValue, duration)
                 .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
                 .WithEase(ease)
                 .Bind(x => onChanging?.Invoke(x))

@@ -2,6 +2,7 @@ using _Project.Scripts.Infrastructure.Services.Audio;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Scripts.UI.Buttons
 {

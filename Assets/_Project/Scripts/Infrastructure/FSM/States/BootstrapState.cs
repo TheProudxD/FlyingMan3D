@@ -7,7 +7,6 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Localization;
 using _Project.Scripts.Tools.Coroutine;
 using _Project.Scripts.UI;
-using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {

@@ -1,7 +1,6 @@
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Review;
 using _Project.Scripts.Tools.Extensions;
-using _Project.Scripts.UI.Windows;
 using Reflex.Attributes;
 
 namespace _Project.Scripts.UI.Buttons

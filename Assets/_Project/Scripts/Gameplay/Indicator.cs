@@ -19,17 +19,17 @@ public class Indicator : MonoBehaviour
     private float _desiredPos;
     private float _speed;
     private bool _up;
-    private bool _enabled;
+    public bool Enabled { get; private set; }
 
-    public void Enable() => _enabled = true;
-    
-    public void Disable() => _enabled = false;
+    public void Enable() => Enabled = true;
+
+    public void Disable() => Enabled = false;
 
     private void Update()
     {
-        if (_enabled == false)
+        if (Enabled == false)
             return;
-        
+
         if (Utils.IsPointerOverUI() == false && Input.GetMouseButtonDown(0))
         {
             float launchFactor = CreateLaunchForce();

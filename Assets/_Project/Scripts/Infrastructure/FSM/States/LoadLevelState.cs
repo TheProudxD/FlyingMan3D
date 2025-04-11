@@ -1,13 +1,10 @@
-using System.Collections;
 using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
-using _Project.Scripts.Tools.Coroutine;
 using _Project.Scripts.UI;
-using _Project.Scripts.UI.Views;
 using Cinemachine;
 using UnityEngine;
 

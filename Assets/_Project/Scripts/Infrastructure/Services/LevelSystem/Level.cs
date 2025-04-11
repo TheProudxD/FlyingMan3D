@@ -18,7 +18,6 @@ namespace _Project.Scripts.Infrastructure.Services.LevelSystem
         [field: SerializeField] public float StopDistance { get; private set; }
         [field: SerializeField] public float EnemyStopDistance { get; private set; }
         [field: SerializeField] public float EnemyMoveSpeed { get; private set; }
-        [field: SerializeField] public int MoneyMultiplier { get; private set; }
         [field: SerializeField] public int MoneyReward { get; private set; }
 
         public Score Score { get; private set; } = new();

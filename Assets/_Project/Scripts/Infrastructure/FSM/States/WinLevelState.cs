@@ -1,11 +1,14 @@
-using System;
+using System.Collections;
 using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Resources;
+using _Project.Scripts.Infrastructure.Services.Review;
+using _Project.Scripts.Tools.Coroutine;
 using _Project.Scripts.UI.Windows;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {
@@ -18,10 +21,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly LevelResourceService _levelResourceService;
         private readonly AudioService _audioService;
         private readonly GameLoopState _gameLoopState;
+        private readonly ReviewShowService _reviewShowService;
 
         public WinLevelState(WindowService windowService, Timer timer, GameFactory gameFactory,
             LeaderboardService leaderboardService, LevelResourceService levelResourceService, AudioService audioService,
-            GameLoopState gameLoopState)
+            GameLoopState gameLoopState, ReviewShowService reviewShowService)
         {
             _windowService = windowService;
             _timer = timer;
@@ -30,10 +34,19 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _levelResourceService = levelResourceService;
             _audioService = audioService;
             _gameLoopState = gameLoopState;
+            _reviewShowService = reviewShowService;
         }
 
-        public void Enter()
+        public void Enter() =>
+            Coroutines.StartRoutine(WinCoroutine());
+
+        private IEnumerator WinCoroutine()
         {
+            ParticleSystem winParticle = _gameFactory.GetSpawner().WinParticle;
+            winParticle.transform.position = Object.FindObjectOfType<Finish>().transform.position;
+            winParticle.Play();
+            yield return new WaitForSeconds(2);
+
             _gameFactory.DestroyPlayers();
             _audioService.PlayWinSound();
             _timer.Stop();
@@ -44,6 +57,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             if (state is RestartLevelState or ContinueLevelState or LoadLevelState)
             {
                 _levelResourceService.Increase(this);
+            }
+
+            if (_levelResourceService.Current.Value > 3)
+            {
+                _reviewShowService.Show();
             }
         }
 

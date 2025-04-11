@@ -15,13 +15,13 @@ namespace _Project.Scripts.UI.Buttons
 
         private void Awake() => _button = GetComponent<Button>();
         
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             _button.onClick.AddListener(OnClick);
             _button.onClick.AddListener(AudioService.PlayClickSound);
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             _button.onClick.RemoveListener(OnClick);
             _button.onClick.RemoveListener(AudioService.PlayClickSound);

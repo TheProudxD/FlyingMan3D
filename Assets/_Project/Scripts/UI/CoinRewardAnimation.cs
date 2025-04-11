@@ -17,7 +17,6 @@ namespace _Project.Scripts.UI
         [SerializeField] private Transform _container;
         [SerializeField] private Transform _targetPos;
         [SerializeField] private int _coinsAmount;
-        [SerializeField] private float _radius;
 
         private int _finishedCounter;
         private CoinRewardAnimationConfig _animationConfig;
@@ -30,8 +29,8 @@ namespace _Project.Scripts.UI
 
             for (int i = 0; i < _coinsAmount; i++)
             {
-                Vector3 randomPosition = _container.position + (Vector3)Random.insideUnitCircle * _radius;
-                Instantiate(_coinPrefab, randomPosition, Quaternion.Euler(new Vector3(90, 0, 0)), _container);
+                Vector3 randomPosition = _container.position + (Vector3)Random.insideUnitCircle * _animationConfig.Radius;
+                Instantiate(_coinPrefab, randomPosition, Quaternion.Euler(new Vector3(_animationConfig.Angle, 0, 0)), _container);
             }
         }
 

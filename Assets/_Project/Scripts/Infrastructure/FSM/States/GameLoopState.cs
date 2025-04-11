@@ -1,14 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using _Project.Scripts.Gameplay;
-using _Project.Scripts.Infrastructure.Observable;
-using _Project.Scripts.Infrastructure.Services;
-using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
-using _Project.Scripts.Infrastructure.Services.Resources;
-using _Project.Scripts.Tools.Coroutine;
 using _Project.Scripts.UI;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -21,26 +12,15 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         private readonly GameFactory _gameFactory;
         private readonly UIFactory _uiFactory;
-        private readonly AudioService _audioService;
-        private readonly StatisticsService _statisticsService;
-        private readonly LoadingCurtain _loadingCurtain;
-        private readonly LevelResourceService _levelResourceService;
 
         private StateMachine _stateMachine;
         private Hud _hud;
         private Level _level;
 
-        public GameLoopState(GameFactory gameFactory,
-            AudioService audioService, UIFactory uiFactory, StatisticsService statisticsService,
-            LoadingCurtain loadingCurtain,
-            LevelResourceService levelResourceService)
+        public GameLoopState(GameFactory gameFactory, UIFactory uiFactory)
         {
             _gameFactory = gameFactory;
-            _audioService = audioService;
             _uiFactory = uiFactory;
-            _statisticsService = statisticsService;
-            _loadingCurtain = loadingCurtain;
-            _levelResourceService = levelResourceService;
         }
 
         public IExitableState FromState { get; set; }
@@ -49,11 +29,10 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             Resources.UnloadUnusedAssets();
             FromState = fromState;
-
+            _hud = _uiFactory.GetHUD();
             _gameFactory.EnemiesCounter.Changed += CheckEntitiesCount;
             _gameFactory.PlayersCounter.Changed += CheckEntitiesCount;
-
-            //EnableHud();
+            EnableHud();
             // _gameFactory.GetInputService().Enable();
         }
 
@@ -72,18 +51,20 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
                 _stateMachine.Enter<LoseLevelState>();
             }
-            else if (_gameFactory.Enemies.Count == 0 && _gameFactory.Players.Count > 0)
+            else if (_gameFactory.Enemies.Count == 0 && 
+                     _gameFactory.Players.Count > 0 &&
+                     _gameFactory.GetIndicator().Enabled == false)
             {
                 foreach (PlayerController item in _gameFactory.Players)
                 {
                     if (item == null)
                         continue;
-                    
+
                     item.Animator?.SetBool(Win, true);
                     Object.Destroy(item.GetComponent<Rigidbody>());
                 }
 
-                Coroutines.StartRoutine(WinCoroutine());
+                _stateMachine.Enter<WinLevelState>();
             }
         }
 
@@ -91,18 +72,8 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             _gameFactory.EnemiesCounter.Changed -= CheckEntitiesCount;
             _gameFactory.PlayersCounter.Changed -= CheckEntitiesCount;
+            DisableHud();
             // _gameFactory.GetInputService().Disable();
-            //DisableHud();
-        }
-
-        private IEnumerator WinCoroutine()
-        {
-            ParticleSystem winParticle = _gameFactory.GetSpawner().WinParticle;
-            winParticle.transform.position = Object.FindObjectOfType<Finish>().transform.position;
-            winParticle.Play();
-            yield return new WaitForSeconds(2);
-
-            _stateMachine.Enter<WinLevelState>();
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;

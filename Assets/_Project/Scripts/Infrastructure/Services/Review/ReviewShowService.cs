@@ -13,7 +13,7 @@ namespace _Project.Scripts.Infrastructure.Services.Review
 
         private void OnReviewSent(bool obj) => _onReviewSentAction?.Invoke(obj);
 
-        public void Show(Action<bool> onReviewSent)
+        public void Show(Action<bool> onReviewSent = null)
         {
             _onReviewSentAction = onReviewSent;
             YG2.ReviewShow();
