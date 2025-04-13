@@ -10,14 +10,12 @@ public class Finish : MonoBehaviour
     [Inject] private StateMachine _stateMachine;
     [Inject] private GameFactory _gameFactory;
 
-    private CinemachineVirtualCamera _finishCamera;
     private bool _attack;
     private bool _isGameOver;
     private WaitForSeconds _waiter;
 
     private void Start()
     {
-        _finishCamera = _gameFactory.GetFinishCamera();
         _waiter = new WaitForSeconds(1.5f);
     }
 
@@ -32,8 +30,7 @@ public class Finish : MonoBehaviour
             return;
 
         _attack = true;
-        _finishCamera.Priority = 15;
-        _finishCamera.transform.position = new Vector3(0, 16, transform.position.z - 30f);
+        _gameFactory.SetFinishCamera(transform.position.z);
 
         foreach (Enemy e in _gameFactory.Enemies)
         {
@@ -78,7 +75,6 @@ public class Finish : MonoBehaviour
         var rg = root.gameObject.AddComponent<Rigidbody>();
         rg.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         PlayerFinishMover playerFinishMover = root.GetComponent<PlayerFinishMover>();
-        playerFinishMover.enabled = true;
         playerFinishMover.Initialize();
 
         root.GetComponent<CapsuleCollider>().enabled = true;

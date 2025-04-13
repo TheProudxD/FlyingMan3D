@@ -64,5 +64,7 @@ namespace TS.LocalizationSystem
         public const string forAd = "forAd";
         
         public const string tapToThrow = "tapToThrow";
+        
+        public const string skipLevel = "skipLevel";
     }
 }

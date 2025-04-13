@@ -15,7 +15,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
     public class WinLevelState : IState
     {
         private readonly WindowService _windowService;
-        private readonly Timer _timer;
         private readonly GameFactory _gameFactory;
         private readonly LeaderboardService _leaderboardService;
         private readonly LevelResourceService _levelResourceService;
@@ -23,12 +22,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly GameLoopState _gameLoopState;
         private readonly ReviewShowService _reviewShowService;
 
-        public WinLevelState(WindowService windowService, Timer timer, GameFactory gameFactory,
+        public WinLevelState(WindowService windowService, GameFactory gameFactory,
             LeaderboardService leaderboardService, LevelResourceService levelResourceService, AudioService audioService,
             GameLoopState gameLoopState, ReviewShowService reviewShowService)
         {
             _windowService = windowService;
-            _timer = timer;
             _gameFactory = gameFactory;
             _leaderboardService = leaderboardService;
             _levelResourceService = levelResourceService;
@@ -49,7 +47,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
             _gameFactory.DestroyPlayers();
             _audioService.PlayWinSound();
-            _timer.Stop();
             SetRecordInLeaderboard();
             _windowService.Show(WindowId.Win);
             IExitableState state = _gameLoopState.FromState;

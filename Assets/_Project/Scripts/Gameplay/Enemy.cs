@@ -109,7 +109,7 @@ public class Enemy : MonoBehaviour
         IsDie = true;
         _gameFactory.RemoveEnemy(this);
         var ragdoll = _gameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
-        ragdoll.GetComponentInChildren<Rigidbody>().AddForce(-Vector3.forward * 800, ForceMode.Impulse);
+        ragdoll.GetComponentInChildren<Rigidbody>().AddForce(-transform.forward * 800, ForceMode.Impulse);
         Destroy(gameObject);
     }
 }

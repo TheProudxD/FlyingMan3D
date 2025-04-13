@@ -7,6 +7,7 @@ using _Project.Scripts.Infrastructure.Services.Localization;
 using _Project.Scripts.Infrastructure.Services.Localization.SO;
 using _Project.Scripts.Tools;
 using _Project.Scripts.Tools.Camera;
+using _Project.Scripts.Tools.Extensions;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows;
 using Reflex.Core;
@@ -90,10 +91,8 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         {
             var ringPrefab = Instantiate<RingHolder>(AssetPath.RING, position);
 
-            ringPrefab.LeftRenderer.sharedMaterial.color = colors[level].RingColor;
-            ringPrefab.LeftTransRenderer.sharedMaterial.color = colors[level].RingTransColor;
-            ringPrefab.RightRenderer.sharedMaterial.color = colors[level].RingColor;
-            ringPrefab.RightTransRenderer.sharedMaterial.color = colors[level].RingTransColor;
+            ringPrefab.Renderers.ForEach(r => r.sharedMaterial.color = colors[level].RingColor);
+            ringPrefab.TransRenderers.ForEach(r => r.sharedMaterial.color = colors[level].RingTransColor);
 
             return ringPrefab;
         }
@@ -132,35 +131,24 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public void GetRingByType(RingData ringData, GameObject currentChildGo)
         {
-            switch (ringData.RingType)
+            RingBase ring = ringData.RingType switch
             {
-                case RingType.Additive:
-                    var a = currentChildGo.AddComponent<AdditiveRing>();
-                    a.Effect = ringData.Effect;
-                    a.Text.SetText("+" + ringData.Effect);
-                    _container.Inject(a);
-                    break;
-                case RingType.Multiplier:
-                    var m = currentChildGo.AddComponent<MultiplierRing>();
-                    m.Effect = ringData.Effect;
-                    m.Text.SetText("x" + ringData.Effect);
-                    _container.Inject(m);
-                    break;
-                case RingType.Reducer:
-                    var r = currentChildGo.AddComponent<ReducerRing>();
-                    r.Effect = ringData.Effect;
-                    r.Text.SetText("-" + ringData.Effect);
-                    _container.Inject(r);
-                    break;
-                case RingType.Divider:
-                    var d = currentChildGo.AddComponent<DividerRing>();
-                    d.Effect = ringData.Effect;
-                    d.Text.SetText("/" + ringData.Effect);
-                    _container.Inject(d);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                RingType.Additive => currentChildGo.AddComponent<AdditiveRing>(),
+                RingType.Multiplier => currentChildGo.AddComponent<MultiplierRing>(),
+                RingType.Reducer => currentChildGo.AddComponent<ReducerRing>(),
+                RingType.Divider => currentChildGo.AddComponent<DividerRing>(),
+                _ => null
+            };
+
+            InitializeRing(ring, ringData);
+        }
+
+        private void InitializeRing(RingBase ring, RingData ringData)
+        {
+            ring.Effect = ringData.Effect;
+            ring.Speed = ringData.Speed;
+            ring.MovementAxis = ringData.MovementAxis;
+            _container.Inject(ring);
         }
 
         private GameObject Instantiate(GameObject prefab, Vector3 position = default, Quaternion rotation = default,

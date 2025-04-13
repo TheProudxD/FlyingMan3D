@@ -8,31 +8,7 @@ public class MultiplierRing : RingBase
     private bool _firstPlayer;
     private int _playerCount;
     
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     GameObject root = other.transform.root.gameObject;
-    //
-    //     if (!root.CompareTag("Player"))
-    //         return;
-    //
-    //     if (!_firstPlayer)
-    //     {
-    //         _playerCount = GameFactory.PlayersCounter.Value;
-    //         _firstPlayer = true;
-    //     }
-    //
-    //     if (player.IsPassed || _playerCount <= 0)
-    //         return;
-    //
-    //     player.IsPassed = true;
-    //
-    //     for (int i = 0; i < Effect - 1; i++)
-    //     {
-    //         GameFactory.GetNewPlayer(root);
-    //     }
-    //
-    //     _playerCount--;
-    // }
+    protected override string Key => "*";
     
     private void OnTriggerEnter(Collider other)
     {

@@ -73,29 +73,34 @@ public class Spawner : MonoBehaviour
         int ringCount = level.Rings.Length;
         float timeDif = level.TimeDif;
 
-        float t = ringCount % 2 == 0
+        float time = ringCount % 2 == 0
             ? _averageTime - timeDif / 2 - timeDif * (ringCount - 2) / 2
             : _averageTime - timeDif * (ringCount / 2f);
 
         for (int i = 0; i < ringCount; i++)
         {
-            RingHolder currentRingHolder = _gameFactory.GetRing(CalculateRingPosition(t, i), _colorArray, _index);
-
-            for (int j = 0; j < currentRingHolder.transform.childCount; j++)
+            for (int j = 0; j < level.Rings[i].InsideRings.Length; j++)
             {
-                RingData ringData = level.Rings[i].InsideRings[j];
-                GameObject currentGo = currentRingHolder.transform.GetChild(j).gameObject;
+                RingHolder ring = _gameFactory.GetRing(CalculateRingPosition(time, i, j), _colorArray, _index);
 
-                _assetProvider.GetRingByType(ringData, currentGo);
+                RingData ringData = level.Rings[i].InsideRings[j];
+                _assetProvider.GetRingByType(ringData, ring.transform.GetChild(0).gameObject);
             }
 
-            t += timeDif;
+            time += timeDif;
         }
     }
 
-    private Vector3 CalculateRingPosition(float t, int i)
+    private Vector3 CalculateRingPosition(float t, int i, int j)
     {
-        _xPos = i == 0 ? Random.Range(-10f, 10f) : Mathf.Clamp(_xPos + 2f, -20f, 20f);
+        float range = 20;
+        float ringDistance = 12f;
+
+        if (j == 0)
+            _xPos = Random.Range(-range, range);
+        else
+            _xPos += ringDistance;
+
         _yPos = _playerTransform.position.y + _velY * t - 0.5f * _g * t * t;
         _zPos = _playerTransform.position.z + _velZ * t;
 

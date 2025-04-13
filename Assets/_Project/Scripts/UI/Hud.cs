@@ -1,5 +1,6 @@
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Tools.Extensions;
 using _Project.Scripts.UI.Buttons;
 using _Project.Scripts.UI.Windows;
@@ -20,6 +21,8 @@ namespace _Project.Scripts.UI
         [SerializeField] private TMP_Text _playersNumberText;
         [SerializeField] private GameObject _moneyNumber;
         [SerializeField] private MoreGamesButton _moreGamesButton;
+        [SerializeField] private SkipLevelButton _skipLevelButton;
+        private bool _showSkipLevelButton;
 
         [field: SerializeField] public GameObject TapToThrow { get; private set; }
         [field: SerializeField] public GameObject PowerupShop { get; private set; }
@@ -32,11 +35,14 @@ namespace _Project.Scripts.UI
         public void Show()
         {
             _pauseButton.Activate();
+            _skipLevelButton.Deactivate();
             _gameFactory.EnemiesCounter.ChangedWithOld += EnemiesCounterChanged;
             _gameFactory.PlayersCounter.ChangedWithOld += PlayersCounterChanged;
             _gameFactory.EnemiesCounter?.Invoke();
             _gameFactory.PlayersCounter?.Invoke();
         }
+
+        public void ShowSkipLevelButton() => _showSkipLevelButton = true;
 
         private void EnemiesCounterChanged(int old, int @new)
         {
@@ -85,6 +91,13 @@ namespace _Project.Scripts.UI
             _playersNumberText.transform.parent.gameObject.SetActive(true);
             _moneyNumber.SetActive(false);
             _moreGamesButton.Deactivate();
+
+            if (_showSkipLevelButton)
+            {
+                _skipLevelButton.Activate();
+            }
+
+            _showSkipLevelButton = false;
         }
     }
 }

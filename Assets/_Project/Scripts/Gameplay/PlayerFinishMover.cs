@@ -1,6 +1,7 @@
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
+using TMPro;
 using UnityEngine;
 using YG;
 
@@ -10,6 +11,8 @@ public class PlayerFinishMover : MonoBehaviour
 
     private static readonly int IsGround = Animator.StringToHash("IsGround");
     [SerializeField] private PlayerController _playerController;
+    [SerializeField] private TextMeshProUGUI _healthText;
+    [SerializeField] private Canvas _healthCanvas;
 
     private float _moveSpeed;
     private float _stopDistance;
@@ -20,11 +23,23 @@ public class PlayerFinishMover : MonoBehaviour
     private float _rotationSpeed = 100;
     private int _health;
 
+    public int Health
+    {
+        get => _health;
+        set
+        {
+            _health = value;
+            _healthText.SetText(_health.ToString());
+        }
+    }
+
     public void Initialize()
     {
+        enabled = true;
         _stopDistance = _gameFactory.GetCurrentLevel().StopDistance;
         _moveSpeed = YG2.saves.movingSpeed;
-        _health = YG2.saves.health;
+        Health = YG2.saves.health;
+        _healthCanvas.gameObject.SetActive(true);
     }
 
     private void Start()
@@ -94,9 +109,9 @@ public class PlayerFinishMover : MonoBehaviour
             }
 
             enemy.Die();
-            _health--;
+            Health--;
 
-            if (_health <= 0)
+            if (Health <= 0)
             {
                 _playerController.Die();
             }

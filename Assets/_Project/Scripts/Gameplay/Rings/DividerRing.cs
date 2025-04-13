@@ -4,6 +4,8 @@ public class DividerRing : RingBase
 {
     private bool _reductionHappened;
 
+    protected override string Key => "/";
+
     private void OnTriggerEnter(Collider other)
     {
         GameObject root = other.transform.root.gameObject;

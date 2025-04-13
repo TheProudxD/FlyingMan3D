@@ -1,20 +1,11 @@
-using _Project.Scripts.Infrastructure.Services.Factories;
-using Reflex.Attributes;
-using TMPro;
+using System;
 using UnityEngine;
-
-public class RingBase : MonoBehaviour
-{
-    [Inject] protected GameFactory GameFactory;
-    [field: SerializeField] public TMP_Text Text { get; private set; }
-    public int Effect { get; set; }
-
-    private void Awake() => Text = GetComponentInChildren<TMP_Text>();
-}
 
 public class AdditiveRing : RingBase
 {
     private bool _additionHappened;
+
+    protected override string Key => "+";
 
     private void OnTriggerEnter(Collider other)
     {

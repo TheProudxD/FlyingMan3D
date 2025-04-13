@@ -18,13 +18,10 @@ namespace _Project.Scripts.Infrastructure.Services
 
         public void TutorialPassed() => YG2.MetricaSend("tutorialPassed");
 
-        public void LevelLost()
-        {
-            
-        }
+        public void LevelLost() { }
 
-        public void HintUsed()
-        {
-        }
+        public void HintUsed() { }
+
+        public void LevelSkippedForAd() { }
     }
 }

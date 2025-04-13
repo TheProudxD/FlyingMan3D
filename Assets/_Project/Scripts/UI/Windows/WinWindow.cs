@@ -60,10 +60,11 @@ namespace _Project.Scripts.UI.Windows
         {
             base.Show();
 
-            _emojiImage.sprite = _winImagesConfig.Sprites.RandomElement();
+            _animationService.FadeOut(_popup.gameObject, _animationsConfig.ShowDuration, Ease.OutBounce);
+
             Time.timeScale = 0;
 
-            _animationService.FadeOut(_popup.gameObject, _animationsConfig.ShowDuration, Ease.OutBounce);
+            _emojiImage.sprite = _winImagesConfig.Sprites.RandomElement();
 
             _rewardAmount = _gameFactory.GetCurrentLevel().MoneyReward;
             _multiplierButton.Activate();
@@ -72,11 +73,12 @@ namespace _Project.Scripts.UI.Windows
             _multiplierButton.Add(MultiplyMoney);
             UpdateMoneyRewardText();
 
-            _nextLevelButton.Add(PlayMoneyFX);
-            _nextLevelButton.Activate();
+            _replayLevelButton.Add(Restart);
+            _replayLevelButton.Activate();
+
             _coinRewardAnimation.OnAnimationFinished += LoadNextLevel;
 
-            StartCoroutine(ShowRestartButtonCoroutine());
+            StartCoroutine(ShowNextLevelButtonCoroutine());
 
             _moneyResourceService.Add(this, _rewardAmount);
             _metricService.LevelPassed();
@@ -84,13 +86,15 @@ namespace _Project.Scripts.UI.Windows
             AnimateEmoji();
         }
 
-        private void AnimateEmoji() => 
+        private void AnimateEmoji() =>
             _animationService.RotateZ(_emojiImage.transform, 10f, 1.05f, ease: Ease.Linear, loopType: LoopType.Yoyo);
 
         private void PlayMoneyFX()
         {
             _nextLevelButton.Remove(PlayMoneyFX);
             _nextLevelButton.Deactivate();
+            _multiplierButton.Deactivate();
+
             _coinRewardAnimation.CountCoins();
         }
 
@@ -109,13 +113,14 @@ namespace _Project.Scripts.UI.Windows
             _rewardAmount *= _multiplierButton.Multiplier;
             _moneyResourceService.Add(this, _rewardAmount);
             UpdateMoneyRewardText();
-            ShowContinueButton();
+            ShowNextLevelButton();
         });
 
         private void UpdateMoneyRewardText() => _moneyRewardText.SetText($"+ {_rewardAmount}");
 
-        private void ShowContinueButton()
+        private void ShowNextLevelButton()
         {
+            _nextLevelButton.Add(PlayMoneyFX);
             _nextLevelButton.Activate();
 
             _animationService.ShakingScale(_multiplierButton.transform, _animationsConfig.FromScale,
@@ -123,12 +128,12 @@ namespace _Project.Scripts.UI.Windows
                 compositeMotionHandle: _compositeMotionHandle);
         }
 
-        private IEnumerator ShowRestartButtonCoroutine()
+        private IEnumerator ShowNextLevelButtonCoroutine()
         {
-            _replayLevelButton.Deactivate();
+            _nextLevelButton.Deactivate();
             yield return _showRestartButtonCoroutine;
 
-            ShowRestartButton();
+            ShowNextLevelButton();
         }
 
         private void LoadNextLevel()
@@ -138,16 +143,6 @@ namespace _Project.Scripts.UI.Windows
             _adsService.PlayInterstitial();
             _stateMachine.Enter<LoadLevelState>();
             Hide();
-        }
-
-        private void ShowRestartButton()
-        {
-            _replayLevelButton.Add(Restart);
-            _replayLevelButton.Activate();
-
-            _animationService.ShakingScale(_multiplierButton.transform, _animationsConfig.FromScale,
-                _animationsConfig.ToScale, _animationsConfig.Duration, -1, Ease.OutSine,
-                compositeMotionHandle: _compositeMotionHandle);
         }
 
         private void Restart()

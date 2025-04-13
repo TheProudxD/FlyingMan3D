@@ -64,7 +64,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _gameFactory.CreateLevel();
             player.Initialize();
             _gameFactory.GetIndicator().Enable();
-            MoveCamera();
+            _gameFactory.SetPlayerCamera();
             _loadingCurtain.Hide();
 
             _saveLoadService.InformAll();
@@ -73,12 +73,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
-
-        private void MoveCamera()
-        {
-            CinemachineVirtualCamera camera = _gameFactory.GetFinishCamera();
-            camera.Priority = 5;
-        }
 
         private void TryShowTutorial()
         {

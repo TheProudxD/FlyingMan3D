@@ -38,6 +38,7 @@ MonoBehaviour:
   - health
   - forAd
   - tapToThrow
+  - skipLevel
   _values:
   - "Configuraci\xF3n"
   - Juego Terminado
@@ -56,7 +57,7 @@ MonoBehaviour:
   - Gratis
   - "\xA1Se Acab\xF3 el Tiempo!"
   - Regalo
-  - "\xA1Nivel Completado!"
+  - "\xA1Incre\xEDble!"
   - Nivel
   - "Int\xE9ntalo de Nuevo"
   - Control de vuelo
@@ -64,3 +65,4 @@ MonoBehaviour:
   - Salud
   - Ver Anuncio
   - Toca para Lanzar
+  - Saltar Nivel

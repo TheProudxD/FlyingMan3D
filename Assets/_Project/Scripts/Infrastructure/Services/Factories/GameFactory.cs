@@ -240,5 +240,18 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _players.Clear();
             _enemies.Clear();
         }
+
+        public void SetPlayerCamera()
+        {
+            CinemachineVirtualCamera camera = GetFinishCamera();
+            camera.Priority = 5;
+        }
+
+        public void SetFinishCamera(float finishZPosition)
+        {
+            CinemachineVirtualCamera camera = GetFinishCamera();
+            camera.Priority = 15;
+            camera.transform.position = new Vector3(0, 20, finishZPosition - 27f);
+        }
     }
 }

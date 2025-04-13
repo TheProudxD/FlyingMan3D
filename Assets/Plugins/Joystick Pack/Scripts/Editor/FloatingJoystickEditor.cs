@@ -13,8 +13,8 @@ public class FloatingJoystickEditor : JoystickEditor
         if (background != null)
         {
             RectTransform backgroundRect = (RectTransform)background.objectReferenceValue;
-            backgroundRect.anchorMax = Vector2.zero;
-            backgroundRect.anchorMin = Vector2.zero;
+            backgroundRect.anchorMax = Vector2.one / 2;
+            backgroundRect.anchorMin = Vector2.one / 2;
             backgroundRect.pivot = center;
         }
     }

@@ -38,6 +38,7 @@ MonoBehaviour:
   - health
   - forAd
   - tapToThrow
+  - skipLevel
   _values:
   - Settings
   - Game Over
@@ -56,7 +57,7 @@ MonoBehaviour:
   - Free
   - Time's Up!
   - Gift
-  - Level Passed!
+  - Awesome!
   - Level
   - Try Again
   - Flight Control
@@ -64,3 +65,4 @@ MonoBehaviour:
   - Health
   - Watch Ad
   - Tap to Throw
+  - Skip Level

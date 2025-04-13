@@ -44,6 +44,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             Hud hud = _uiFactory.GetHUD();
             hud.Show();
             hud.ActivateStartText();
+            hud.ShowSkipLevelButton();
             
             CinemachineVirtualCamera camera = _gameFactory.GetFinishCamera();
             camera.Priority = 5;
