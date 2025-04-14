@@ -17,13 +17,13 @@ MonoBehaviour:
   - InsideRings:
     - RingType: 0
       Effect: 8
-      MovementAxis: {x: 4, y: 0, z: 0}
-      Speed: 1
+      MovementAxis: {x: 10, y: 0, z: 0}
+      Speed: 5
   - InsideRings:
     - RingType: 2
       Effect: 3
-      MovementAxis: {x: 0, y: 0, z: 0}
-      Speed: 0
+      MovementAxis: {x: 0, y: 0, z: 5}
+      Speed: 3
     - RingType: 2
       Effect: 5
       MovementAxis: {x: 0, y: 0, z: 0}

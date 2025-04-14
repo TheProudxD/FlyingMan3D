@@ -1,4 +1,5 @@
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
+using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 using TMPro;
@@ -8,6 +9,7 @@ using YG;
 public class PlayerFinishMover : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
+    [Inject] private AudioService _audioService;
 
     private static readonly int IsGround = Animator.StringToHash("IsGround");
     [SerializeField] private PlayerController _playerController;
@@ -102,6 +104,7 @@ public class PlayerFinishMover : MonoBehaviour
     {
         if (collision.transform.root.TryGetComponent(out Enemy enemy) && !enemy.IsDie && !_playerController.IsDie)
         {
+            _audioService.PlayHitSound();
             if (_canSmoke)
             {
                 _canSmoke = false;
@@ -113,6 +116,7 @@ public class PlayerFinishMover : MonoBehaviour
 
             if (Health <= 0)
             {
+                _audioService.PlayDieSound();
                 _playerController.Die();
             }
         }

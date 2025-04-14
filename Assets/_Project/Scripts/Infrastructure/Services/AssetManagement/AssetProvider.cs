@@ -91,8 +91,8 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         {
             var ringPrefab = Instantiate<RingHolder>(AssetPath.RING, position);
 
-            ringPrefab.Renderers.ForEach(r => r.sharedMaterial.color = colors[level].RingColor);
-            ringPrefab.TransRenderers.ForEach(r => r.sharedMaterial.color = colors[level].RingTransColor);
+            ringPrefab.Renderers.sharedMaterial.color = colors[level].RingColor;
+            ringPrefab.TransRenderers.sharedMaterial.color = colors[level].RingTransColor;
 
             return ringPrefab;
         }

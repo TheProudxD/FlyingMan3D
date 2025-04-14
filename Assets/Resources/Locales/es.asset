@@ -39,6 +39,7 @@ MonoBehaviour:
   - forAd
   - tapToThrow
   - skipLevel
+  - claim
   _values:
   - "Configuraci\xF3n"
   - Juego Terminado
@@ -66,3 +67,4 @@ MonoBehaviour:
   - Ver Anuncio
   - Toca para Lanzar
   - Saltar Nivel
+  - Reclamar

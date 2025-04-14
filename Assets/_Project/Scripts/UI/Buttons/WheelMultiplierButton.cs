@@ -1,10 +1,16 @@
-﻿using TMPro;
+﻿using _Project.Scripts.Infrastructure.Services.Audio;
+using _Project.Scripts.Infrastructure.Services.Localization;
+using Reflex.Attributes;
+using TMPro;
+using TS.LocalizationSystem;
 using UnityEngine;
 
 namespace _Project.Scripts.UI.Buttons
 {
     public class WheelMultiplierButton : ButtonBase
     {
+        [Inject] private LocalizationService _localizationService;
+        
         private readonly int[] _modifiers = { 2, 4, 6, 4, 2 };
 
         [SerializeField] private TargetArrowAnimation _arrowAnimation;
@@ -58,6 +64,6 @@ namespace _Project.Scripts.UI.Buttons
             _arrowAnimation.Disable();
         }
 
-        private void SetAmount(int amount) => _buttonText.SetText($"Получить + {amount}");
+        private void SetAmount(int amount) => _buttonText.SetText($"{_localizationService.Localize(LocalizationKeys.claim)} + {amount}");
     }
 }

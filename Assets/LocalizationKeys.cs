@@ -66,5 +66,7 @@ namespace TS.LocalizationSystem
         public const string tapToThrow = "tapToThrow";
         
         public const string skipLevel = "skipLevel";
+        
+        public const string claim = "claim";
     }
 }

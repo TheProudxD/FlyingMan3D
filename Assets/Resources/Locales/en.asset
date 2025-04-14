@@ -39,6 +39,7 @@ MonoBehaviour:
   - forAd
   - tapToThrow
   - skipLevel
+  - claim
   _values:
   - Settings
   - Game Over
@@ -66,3 +67,4 @@ MonoBehaviour:
   - Watch Ad
   - Tap to Throw
   - Skip Level
+  - Claim

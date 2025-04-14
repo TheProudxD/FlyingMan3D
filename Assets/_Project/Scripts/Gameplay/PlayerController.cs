@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
+using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Tools;
 using Reflex.Attributes;
@@ -8,6 +9,7 @@ using Reflex.Attributes;
 public class PlayerController : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
+    [Inject] private AudioService _audioService;
 
     private const float DIE_HEIGHT = -5;
 
@@ -96,6 +98,7 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator ApplyLaunchForce(float factor)
     {
+        _audioService.PlayLaunchSound();
         Vector3 targetPos = _initialPos + new Vector3(0f, -1f, -4f) * factor;
 
         while (_time <= 0.8f)

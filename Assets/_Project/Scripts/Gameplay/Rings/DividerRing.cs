@@ -22,5 +22,6 @@ public class DividerRing : RingBase
         }
 
         _reductionHappened = true;
+        AudioService.PlayRingCollideSound();
     }
 }

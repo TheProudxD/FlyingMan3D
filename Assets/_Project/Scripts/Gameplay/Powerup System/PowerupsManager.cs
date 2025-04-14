@@ -112,7 +112,7 @@ namespace UI
 
             powerup.BuyButton.Add(() =>
             {
-                _audioService.PlayClickSound();
+                _audioService.PlayMoneySound();
                 BuyPowerup(powerup);
             });
         }

@@ -406,7 +406,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6ba8d1b4684994595044804a1498a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Renderers>k__BackingField:
-  - {fileID: 1345445106750482839}
-  <TransRenderers>k__BackingField:
-  - {fileID: 6107252936753624068}
+  <Renderers>k__BackingField: {fileID: 1345445106750482839}
+  <TransRenderers>k__BackingField: {fileID: 6107252936753624068}

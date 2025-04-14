@@ -19,7 +19,8 @@ namespace _Project.Scripts.Tools.Camera
 
         private void Awake()
         {
-            DontDestroyOnLoad(this);
+            if (Application.isPlaying)
+                DontDestroyOnLoad(this);
         }
 
         private void Update()
@@ -71,7 +72,7 @@ namespace _Project.Scripts.Tools.Camera
             {
                 _postProccessingCamera.transform.position =
                     TransformPointIgnoringScale(new Vector3(0f, y1, startZ - x1));
-                
+
                 _mainCamera.transform.position =
                     TransformPointIgnoringScale(new Vector3(0f, y1, startZ - x1));
 
@@ -82,6 +83,7 @@ namespace _Project.Scripts.Tools.Camera
 
                     _postProccessingCamera.transform.localEulerAngles =
                         new Vector3(180f - _postProccessingCamera.transform.localEulerAngles.x, 0f, 0f);
+
                     _mainCamera.transform.localEulerAngles =
                         new Vector3(180f - _mainCamera.transform.localEulerAngles.x, 0f, 0f);
                 }
@@ -96,7 +98,7 @@ namespace _Project.Scripts.Tools.Camera
 
                 _postProccessingCamera.transform.position =
                     TransformPointIgnoringScale(new Vector3(0f, y2, startZ - x2));
-                
+
                 _mainCamera.transform.position =
                     TransformPointIgnoringScale(new Vector3(0f, y2, startZ - x2));
 
@@ -107,7 +109,7 @@ namespace _Project.Scripts.Tools.Camera
 
                     _postProccessingCamera.transform.localEulerAngles =
                         new Vector3(180f - _postProccessingCamera.transform.localEulerAngles.x, 0f, 0f);
-                    
+
                     _mainCamera.transform.localEulerAngles =
                         new Vector3(180f - _mainCamera.transform.localEulerAngles.x, 0f, 0f);
 
@@ -116,7 +118,7 @@ namespace _Project.Scripts.Tools.Camera
 
                 _postProccessingCamera.transform.position +=
                     (r2 - r1) * _offset * direction * _postProccessingCamera.transform.up;
-                
+
                 _mainCamera.transform.position +=
                     (r2 - r1) * _offset * direction * _mainCamera.transform.up;
             }

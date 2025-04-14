@@ -3,7 +3,7 @@ using UnityEngine;
 public class ReducerRing : RingBase
 {
     private bool _reductionHappened;
-    
+
     protected override string Key => "-";
 
     private void OnTriggerEnter(Collider other)
@@ -20,5 +20,7 @@ public class ReducerRing : RingBase
         }
 
         _reductionHappened = true;
+
+        AudioService.PlayRingCollideSound();
     }
 }

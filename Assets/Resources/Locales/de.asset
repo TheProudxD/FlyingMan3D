@@ -39,6 +39,7 @@ MonoBehaviour:
   - forAd
   - tapToThrow
   - skipLevel
+  - claim
   _values:
   - Einstellungen
   - Spiel vorbei
@@ -66,3 +67,4 @@ MonoBehaviour:
   - Werbung ansehen
   - Zum Werfen tippen
   - "Level \xFCberspringen"
+  - Abholen

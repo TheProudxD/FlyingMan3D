@@ -1,5 +1,6 @@
 using System.Collections;
 using _Project.Scripts.Infrastructure.FSM;
+using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using UnityEngine;
 using Cinemachine;
@@ -9,6 +10,7 @@ public class Finish : MonoBehaviour
 {
     [Inject] private StateMachine _stateMachine;
     [Inject] private GameFactory _gameFactory;
+    [Inject] private AudioService _audioService;
 
     private bool _attack;
     private bool _isGameOver;
@@ -28,6 +30,8 @@ public class Finish : MonoBehaviour
 
         if (_attack)
             return;
+        
+        _audioService.PlayHitSound();
 
         _attack = true;
         _gameFactory.SetFinishCamera(transform.position.z);

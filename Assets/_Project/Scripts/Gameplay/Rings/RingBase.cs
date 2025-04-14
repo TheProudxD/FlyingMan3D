@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Infrastructure.Services.Factories;
+﻿using _Project.Scripts.Infrastructure.Services.Audio;
+using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine;
 public abstract class RingBase : MonoBehaviour
 {
     [Inject] protected GameFactory GameFactory;
+    [Inject] protected AudioService AudioService;
 
     protected abstract string Key { get; }
     public int Effect { get; set; }

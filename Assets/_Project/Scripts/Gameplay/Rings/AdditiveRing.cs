@@ -21,5 +21,7 @@ public class AdditiveRing : RingBase
             GameFactory.GetNewPlayer();
 
         _additionHappened = true;
+        
+        AudioService.PlayRingCollideSound();
     }
 }

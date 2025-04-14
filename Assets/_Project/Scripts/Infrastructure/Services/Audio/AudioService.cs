@@ -52,12 +52,16 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
         public void PlayLoseSound() => _audioServiceView.PlaySound(_audioConfig.Lose);
 
         public void PlayWindowShowSound() => _audioServiceView.PlaySound(_audioConfig.WindowShowSound);
-
-        public void PlayHitStarSound() => _audioServiceView.PlaySound(_audioConfig.HitStar);
-
-        public void PlayCorrectSound() => _audioServiceView.PlaySound(_audioConfig.Correct);
         
-        public void PlayFailSound() => _audioServiceView.PlaySound(_audioConfig.Correct);
+        public void PlayMoneySound() => _audioServiceView.PlaySound(_audioConfig.Money);
+        
+        public void PlayLaunchSound() => _audioServiceView.PlaySound(_audioConfig.Launch);
+        
+        public void PlayHitSound() => _audioServiceView.PlaySound(_audioConfig.Hit);
+        
+        public void PlayDieSound() => _audioServiceView.PlaySound(_audioConfig.Die);
+        
+        public void PlayRingCollideSound() => _audioServiceView.PlaySound(_audioConfig.RingCollide);
         
         //public void PlayMusic() => _audioServiceView.PlaySound(_audioConfig.Music);
 
