@@ -1,5 +1,4 @@
 using System.Collections;
-using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
@@ -35,8 +34,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _reviewShowService = reviewShowService;
         }
 
-        public void Enter() =>
-            Coroutines.StartRoutine(WinCoroutine());
+        public void Enter() => Coroutines.StartRoutine(WinCoroutine());
 
         private IEnumerator WinCoroutine()
         {

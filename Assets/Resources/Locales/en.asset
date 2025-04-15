@@ -40,6 +40,7 @@ MonoBehaviour:
   - tapToThrow
   - skipLevel
   - claim
+  - holdAndDrag
   _values:
   - Settings
   - Game Over
@@ -68,3 +69,4 @@ MonoBehaviour:
   - Tap to Throw
   - Skip Level
   - Claim
+  - Hold and drag

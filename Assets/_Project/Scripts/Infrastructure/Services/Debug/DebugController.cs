@@ -11,7 +11,7 @@ namespace _Project.Scripts.Infrastructure.Services.Debug
     public class DebugController : MonoBehaviour, IService
     {
         [Inject] private UIFactory _uiFactory;
-
+        
         private readonly Dictionary<string, DebugCommandBase> _commands = new();
 
         private bool _showConsole;

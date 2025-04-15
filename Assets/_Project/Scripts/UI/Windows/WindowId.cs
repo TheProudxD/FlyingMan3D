@@ -4,9 +4,10 @@ namespace _Project.Scripts.UI.Windows
     {
         Unknown,
         Pause,
-        //Tutorial,
         Leaderboard,
         Lose,
         Win,
+        Tutorial,
+        HUD
     }
 }

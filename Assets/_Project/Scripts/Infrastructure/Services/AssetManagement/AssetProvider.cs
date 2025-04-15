@@ -28,9 +28,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             _configService = _container.Resolve<ConfigService>();
             yield break;
         }
-
-        public Hud CreateHUD() => Instantiate<Hud>(UIAssetsPath.HUD);
-
+        
         public AudioServiceView CreateAudioServiceView() => Instantiate<AudioServiceView>(AssetPath.AUDIO_SERVICE_VIEW);
 
         public Transform CreateUIRoot() => Instantiate<UIRoot>(UIAssetsPath.UI_ROOT_PATH).transform;
@@ -38,13 +36,13 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public LoadingCurtain CreateLoadingCurtain() => Instantiate<LoadingCurtain>(UIAssetsPath.LOADING_CURTAIN);
 
         public CameraSetup CreateCameraSetup() =>
-            Instantiate<CameraSetup>(UIAssetsPath.CameraSetup, overrideTransform: false);
+            Instantiate<CameraSetup>(UIAssetsPath.CAMERA_SETUP, overrideTransform: false);
 
-        public WindowBase Instantiate(WindowId windowId, Transform uiRoot)
+        public UIContainer Instantiate(WindowId windowId, Transform uiRoot)
         {
             WindowConfig windowConfig = _configService.ForWindow(windowId);
             windowConfig.Prefab.gameObject.SetActive(false);
-            WindowBase component = Object.Instantiate(windowConfig.Prefab, uiRoot);
+            UIContainer component = Object.Instantiate(windowConfig.Prefab, uiRoot);
             _container.Inject(component);
             component.gameObject.SetActive(true);
             windowConfig.Prefab.gameObject.SetActive(true);

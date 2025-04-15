@@ -40,6 +40,7 @@ MonoBehaviour:
   - tapToThrow
   - skipLevel
   - claim
+  - holdAndDrag
   _values:
   - Einstellungen
   - Spiel vorbei
@@ -68,3 +69,4 @@ MonoBehaviour:
   - Zum Werfen tippen
   - "Level \xFCberspringen"
   - Abholen
+  - Halten und ziehen

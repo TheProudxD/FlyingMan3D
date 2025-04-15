@@ -1,6 +1,8 @@
+using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.UI;
+using _Project.Scripts.UI.Windows;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -32,7 +34,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _hud = _uiFactory.GetHUD();
             _gameFactory.EnemiesCounter.Changed += CheckEntitiesCount;
             _gameFactory.PlayersCounter.Changed += CheckEntitiesCount;
-            EnableHud();
             // _gameFactory.GetInputService().Enable();
         }
 
@@ -51,7 +52,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
                 _stateMachine.Enter<LoseLevelState>();
             }
-            else if (_gameFactory.Enemies.Count == 0 && 
+            else if (_gameFactory.Enemies.Count == 0 &&
                      _gameFactory.Players.Count > 0 &&
                      _gameFactory.GetIndicator().Enabled == false)
             {
@@ -72,14 +73,10 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             _gameFactory.EnemiesCounter.Changed -= CheckEntitiesCount;
             _gameFactory.PlayersCounter.Changed -= CheckEntitiesCount;
-            DisableHud();
+            _hud.Hide();
             // _gameFactory.GetInputService().Disable();
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
-
-        private void EnableHud() => _hud.Show();
-
-        private void DisableHud() => _hud.Hide();
     }
 }

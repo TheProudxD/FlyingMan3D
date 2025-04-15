@@ -9,22 +9,23 @@ namespace _Project.Scripts.Infrastructure.Services
     public class WindowService : IService
     {
         private readonly UIFactory _uiFactory;
-        private readonly Dictionary<WindowId, WindowBase> _openedWindows = new();
+        private readonly Dictionary<WindowId, UIContainer> _openedWindows = new();
 
         public WindowService(UIFactory uiFactory) => _uiFactory = uiFactory;
 
-        public void Show(WindowId windowId)
+        public UIContainer Show(WindowId windowId)
         {
             if (_openedWindows.ContainsKey(windowId) == false)
             {
-                WindowBase window = windowId switch
+                UIContainer window = windowId switch
                 {
                     WindowId.Unknown => throw new ArgumentOutOfRangeException(nameof(windowId), windowId, null),
                     WindowId.Pause => _uiFactory.CreatePauseWindow(),
                     WindowId.Lose => _uiFactory.CreateLoseWindow(),
-                    //WindowId.Tutorial => _uiFactory.CreateTutorialWindow(),
+                    WindowId.Tutorial => _uiFactory.CreateTutorialWindow(),
                     WindowId.Leaderboard => _uiFactory.CreateLeaderboardWindow(),
                     WindowId.Win => _uiFactory.CreateWinWindow(),
+                    WindowId.HUD => _uiFactory.CreateHUD(),
                     _ => throw new ArgumentOutOfRangeException(nameof(windowId), windowId, null)
                 };
 
@@ -36,12 +37,14 @@ namespace _Project.Scripts.Infrastructure.Services
                 _openedWindows[windowId] = window;
             }
 
-            _openedWindows[windowId].Show();
+            UIContainer windowBase = _openedWindows[windowId];
+            windowBase.Show();
+            return windowBase;
         }
 
         public void Hide(WindowId windowId)
         {
-            if (_openedWindows.TryGetValue(windowId, out WindowBase window))
+            if (_openedWindows.TryGetValue(windowId, out UIContainer window))
             {
                 //Object.Destroy(window.gameObject);
                 window.Hide();

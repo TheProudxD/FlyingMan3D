@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace _Project.Scripts.UI.Windows
 {
     [RequireComponent(typeof(CameraBinder))]
-    public abstract class WindowBase : MonoBehaviour, IUIContainer
+    public abstract class WindowBase : UIContainer
     {
         [Inject] protected WindowService WindowService;
         [Inject] protected AudioService AudioService;
@@ -24,13 +24,13 @@ namespace _Project.Scripts.UI.Windows
 
         private void OnDestroy() => Cleanup();
 
-        public virtual void Show()
+        public override void Show()
         {
             AudioService.PlayWindowShowSound();
             gameObject.SetActive(true);
         }
 
-        public virtual void Hide() => gameObject.SetActive(false);
+        public override void Hide() => gameObject.SetActive(false);
 
         protected virtual void OnAwake()
         {

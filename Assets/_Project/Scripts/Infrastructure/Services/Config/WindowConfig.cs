@@ -7,6 +7,6 @@ namespace _Project.Scripts.Infrastructure.Services.Config
     public class WindowConfig
     {
         public WindowId Id;
-        public WindowBase Prefab;
+        public UIContainer Prefab;
     }
 }

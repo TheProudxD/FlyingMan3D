@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI
 {
-    public class Hud : MonoBehaviour, IUIContainer
+    public class Hud : UIContainer
     {
         [Inject] private GameFactory _gameFactory;
         [Inject] private AnimationService _animationService;
@@ -32,14 +32,26 @@ namespace _Project.Scripts.UI
             Hide();
         }
 
-        public void Show()
+        public override void Show()
         {
+            gameObject.SetActive(true);
+
             _pauseButton.Activate();
             _skipLevelButton.Deactivate();
             _gameFactory.EnemiesCounter.ChangedWithOld += EnemiesCounterChanged;
             _gameFactory.PlayersCounter.ChangedWithOld += PlayersCounterChanged;
             _gameFactory.EnemiesCounter?.Invoke();
             _gameFactory.PlayersCounter?.Invoke();
+        }
+
+        public override void Hide()
+        {
+            gameObject.SetActive(false);
+            _enemiesNumberText.transform.parent.gameObject.SetActive(false);
+            _playersNumberText.transform.parent.gameObject.SetActive(false);
+            _pauseButton.Deactivate();
+            _gameFactory.EnemiesCounter.ChangedWithOld -= EnemiesCounterChanged;
+            _gameFactory.PlayersCounter.ChangedWithOld -= PlayersCounterChanged;
         }
 
         public void ShowSkipLevelButton() => _showSkipLevelButton = true;
@@ -54,15 +66,6 @@ namespace _Project.Scripts.UI
         {
             _animationService.ResourceChanged(transform, old, @new, 0.5f,
                 x => _playersNumberText.SetText(x.ToString()));
-        }
-
-        public void Hide()
-        {
-            _enemiesNumberText.transform.parent.gameObject.SetActive(false);
-            _playersNumberText.transform.parent.gameObject.SetActive(false);
-            _pauseButton.Deactivate();
-            _gameFactory.EnemiesCounter.ChangedWithOld -= EnemiesCounterChanged;
-            _gameFactory.PlayersCounter.ChangedWithOld -= PlayersCounterChanged;
         }
 
         public void ActivateStartText()

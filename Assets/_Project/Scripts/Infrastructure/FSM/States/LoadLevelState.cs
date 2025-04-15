@@ -1,11 +1,9 @@
-using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services;
-using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.UI;
-using Cinemachine;
+using _Project.Scripts.UI.Windows;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
@@ -15,28 +13,25 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly LoadingCurtain _loadingCurtain;
         private readonly SaveLoadService _saveLoadService;
         private readonly UIFactory _uiFactory;
-        private readonly HeartTracker _heartTracker;
-        private readonly AssetProvider _assetProvider;
         private readonly StatisticsService _statisticsService;
         private readonly GameFactory _gameFactory;
         private readonly LevelResourceService _levelResourceService;
+        private readonly WindowService _windowService;
 
         private StateMachine _stateMachine;
         private string _sceneName;
 
         public LoadLevelState(LoadingCurtain loadingCurtain,
-            SaveLoadService saveLoadService, UIFactory uiFactory, HeartTracker heartTracker,
-            AssetProvider assetProvider, GameFactory gameFactory, StatisticsService statisticsService,
-            LevelResourceService levelResourceService)
+            SaveLoadService saveLoadService, GameFactory gameFactory, StatisticsService statisticsService,
+            LevelResourceService levelResourceService, WindowService windowService, UIFactory uiFactory)
         {
             _loadingCurtain = loadingCurtain;
             _saveLoadService = saveLoadService;
-            _uiFactory = uiFactory;
-            _heartTracker = heartTracker;
-            _assetProvider = assetProvider;
             _gameFactory = gameFactory;
             _statisticsService = statisticsService;
             _levelResourceService = levelResourceService;
+            _windowService = windowService;
+            _uiFactory = uiFactory;
         }
 
         public void Enter()
@@ -65,8 +60,8 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             player.Initialize();
             _gameFactory.GetIndicator().Enable();
             _gameFactory.SetPlayerCamera();
-            _loadingCurtain.Hide();
 
+            _loadingCurtain.Hide();
             _saveLoadService.InformAll();
 
             _stateMachine.Enter<GameLoopState, IExitableState>(this);
@@ -76,11 +71,10 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         private void TryShowTutorial()
         {
-            /*
             if (_levelResourceService.ObservableValue.Value == 1)
             {
                 _windowService.Show(WindowId.Tutorial);
-            }*/
+            }
         }
 
 

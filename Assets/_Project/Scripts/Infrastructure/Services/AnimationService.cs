@@ -87,7 +87,8 @@ namespace _Project.Scripts.Infrastructure.Services
         }
 
         public void Rotate(Transform modifierTransform, Vector3 from, Vector3 to, float duration,
-            int loops = 1, Ease ease = Ease.Linear, LoopType loopType = LoopType.Restart, float delay = 0, Action callback = null,
+            int loops = 1, Ease ease = Ease.Linear, LoopType loopType = LoopType.Restart, float delay = 0,
+            Action callback = null,
             CompositeMotionHandle compositeMotionHandle = null)
         {
             MotionHandle mh = LMotion
@@ -103,7 +104,8 @@ namespace _Project.Scripts.Infrastructure.Services
         }
 
         public void RotateZ(Transform modifierTransform, float shakeAngle, float duration,
-            int loops = -1, Ease ease = Ease.OutSine, LoopType loopType = LoopType.Restart, Action callback = null, float delay = 0,
+            int loops = -1, Ease ease = Ease.OutSine, LoopType loopType = LoopType.Restart, Action callback = null,
+            float delay = 0,
             CompositeMotionHandle compositeMotionHandle = null)
         {
             Vector3 defaultPosition = modifierTransform.localRotation.eulerAngles;
@@ -122,7 +124,8 @@ namespace _Project.Scripts.Infrastructure.Services
         }
 
         public void Color(TMP_Text text, Color from, Color to, float duration,
-            int loops = 1, Ease ease = Ease.Linear, LoopType loopType = LoopType.Restart, float delay = 0, Action callback = null,
+            int loops = 1, Ease ease = Ease.Linear, LoopType loopType = LoopType.Restart, float delay = 0,
+            Action callback = null,
             CompositeMotionHandle compositeMotionHandle = null)
         {
             MotionHandle mh = LMotion
@@ -138,7 +141,8 @@ namespace _Project.Scripts.Infrastructure.Services
         }
 
         public void Color(SpriteRenderer sprite, Color from, Color to, float duration,
-            int loops = 1, Ease ease = Ease.Linear, Action callback = null, float delay = 0,
+            int loops = 1, Ease ease = Ease.Linear, LoopType loopType = LoopType.Restart, Action callback = null,
+            float delay = 0,
             CompositeMotionHandle compositeMotionHandle = null)
         {
             MotionHandle mh = LMotion
@@ -146,11 +150,28 @@ namespace _Project.Scripts.Infrastructure.Services
                 .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
                 .WithDelay(delay)
                 .WithEase(ease)
-                .WithLoops(loops)
+                .WithLoops(loops, loopType)
                 .WithOnComplete(callback)
                 .Bind(c => sprite.color = c);
 
             AddMotionHandle(mh, sprite.gameObject, compositeMotionHandle);
+        }
+
+        public void AnimatePath(RectTransform rectTransform, Vector3 first, Vector3 second, float duration,
+            int loops = -1, Ease ease = Ease.Linear, LoopType loopType = LoopType.Restart, Action callback = null,
+            float delay = 0,
+            CompositeMotionHandle compositeMotionHandle = null)
+        {
+            MotionHandle mh = LMotion
+                .Create(first, second, duration)
+                .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .WithDelay(delay)
+                .WithEase(ease)
+                .WithLoops(loops, loopType)
+                .WithOnComplete(callback)
+                .Bind(x => rectTransform.anchoredPosition = x.WithZ(0));
+
+            AddMotionHandle(mh, null, compositeMotionHandle);
         }
 
         public void ResourceChanged(Transform transform, int oldValue, int currentValue, float duration,

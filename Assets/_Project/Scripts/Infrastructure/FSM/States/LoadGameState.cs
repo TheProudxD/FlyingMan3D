@@ -1,4 +1,5 @@
 using System.Collections;
+using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Tools.Coroutine;
@@ -13,16 +14,18 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly SaveLoadService _saveLoadService;
         private readonly GameFactory _gameFactory;
         private readonly UIFactory _uiFactory;
+        private readonly WindowService _windowService;
 
         private StateMachine _stateMachine;
 
         public LoadGameState(IPersistentProgressService progressService, SaveLoadService saveLoadService,
-            GameFactory gameFactory, UIFactory uiFactory)
+            GameFactory gameFactory, UIFactory uiFactory, WindowService windowService)
         {
             _progressService = progressService;
             _saveLoadService = saveLoadService;
             _gameFactory = gameFactory;
             _uiFactory = uiFactory;
+            _windowService = windowService;
         }
 
         public void Enter() => Coroutines.StartRoutine(LoadProgress());
@@ -36,7 +39,8 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _progressService.Progress = _saveLoadService.LoadProgress();
 
             yield return _gameFactory.Initialize();
-            yield return _uiFactory.Initialize();
+
+            _uiFactory.Initialize(_windowService);
 
             foreach (ScoreBaseView view in Object.FindObjectsByType<ScoreBaseView>(FindObjectsInactive.Include,
                          FindObjectsSortMode.None))

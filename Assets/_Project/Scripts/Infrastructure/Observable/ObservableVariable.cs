@@ -31,6 +31,6 @@ namespace _Project.Scripts.Infrastructure.Observable
             Changed?.Invoke(_current);
         }
 
-        public ObservableVariable<T> Clone<T>() => (ObservableVariable<T>)MemberwiseClone();
+        public ObservableVariable<TT> Clone<TT>() => (ObservableVariable<TT>)MemberwiseClone();
     }
 }

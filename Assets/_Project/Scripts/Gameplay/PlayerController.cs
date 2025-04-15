@@ -1,15 +1,20 @@
 using UnityEngine;
 using System.Collections;
+using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools;
+using _Project.Scripts.UI.Windows;
 using Reflex.Attributes;
 
 public class PlayerController : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private AudioService _audioService;
+    [Inject] private WindowService _windowService;
+    [Inject] private LevelResourceService _levelResourceService;
 
     private const float DIE_HEIGHT = -5;
 
@@ -115,6 +120,11 @@ public class PlayerController : MonoBehaviour
             _capsule.position = Vector3.Lerp(targetPos, _initialPos, _time / 0.2f);
             _time += Time.deltaTime;
             yield return null;
+        }
+
+        if (_levelResourceService.ObservableValue.Value == 1)
+        {
+            (_windowService.Show(WindowId.Tutorial) as TutorialWindow)?.AnimateHandMovementCursor();
         }
 
         Destroy(_joint);

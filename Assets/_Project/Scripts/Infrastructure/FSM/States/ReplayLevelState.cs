@@ -12,20 +12,17 @@ namespace _Project.Scripts.Infrastructure.FSM.States
     {
         private readonly GameFactory _gameFactory;
         private readonly UIFactory _uiFactory;
-        private readonly AudioService _audioService;
         private readonly StatisticsService _statisticsService;
         private readonly LoadingCurtain _loadingCurtain;
         private readonly LevelResourceService _levelResourceService;
 
         private StateMachine _stateMachine;
 
-        public ReplayLevelState(GameFactory gameFactory,
-            AudioService audioService, UIFactory uiFactory, StatisticsService statisticsService,
+        public ReplayLevelState(GameFactory gameFactory, UIFactory uiFactory, StatisticsService statisticsService,
             LoadingCurtain loadingCurtain,
             LevelResourceService levelResourceService)
         {
             _gameFactory = gameFactory;
-            _audioService = audioService;
             _uiFactory = uiFactory;
             _statisticsService = statisticsService;
             _loadingCurtain = loadingCurtain;
@@ -55,7 +52,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _gameFactory.CreateLevel();
             player.Initialize();
             _gameFactory.GetIndicator().Enable();
-            _uiFactory.GetHUD().Show();
             _loadingCurtain.Hide();
 
             _stateMachine.Enter<GameLoopState, IExitableState>(this);

@@ -10,46 +10,40 @@ using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.Factories
 {
-    public class UIFactory : IInitializable
+    public class UIFactory : IService
     {
         private readonly AssetProvider _assetProvider;
-        private readonly GameFactory _gameFactory;
 
         private Transform _uiRoot;
         private UIFactory _iuiFactoryImplementation;
         private Hud _hud;
 
-        public UIFactory(AssetProvider assetProvider, GameFactory gameFactory)
-        {
-            _assetProvider = assetProvider;
-            _gameFactory = gameFactory;
-        }
+        public UIFactory(AssetProvider assetProvider) => _assetProvider = assetProvider;
 
-        public IEnumerator Initialize()
+        public void Initialize(WindowService windowService)
         {
             _uiRoot = _assetProvider.CreateUIRoot();
-            _hud = _assetProvider.CreateHUD();
+            _hud = (Hud)windowService.Show(WindowId.HUD);
             _hud.Initialize();
-            yield break;
         }
 
         public Transform GetUIRoot() => _uiRoot;
 
         public Hud GetHUD() => _hud;
 
-        public WindowBase CreatePauseWindow() => InstantiateRegistered(WindowId.Pause, _uiRoot);
+        public UIContainer CreatePauseWindow() => InstantiateRegistered(WindowId.Pause, _uiRoot);
 
-        public WindowBase CreateLoseWindow() => InstantiateRegistered(WindowId.Lose, _uiRoot);
+        public UIContainer CreateLoseWindow() => InstantiateRegistered(WindowId.Lose, _uiRoot);
 
-        //public WindowBase CreateTutorialWindow() => InstantiateRegistered(WindowId.Tutorial, _uiRoot);
+        public UIContainer CreateTutorialWindow() => InstantiateRegistered(WindowId.Tutorial, _uiRoot);
 
-        public WindowBase CreateLeaderboardWindow() => InstantiateRegistered(WindowId.Leaderboard, _uiRoot);
+        public UIContainer CreateLeaderboardWindow() => InstantiateRegistered(WindowId.Leaderboard, _uiRoot);
 
-        public WindowBase CreateWinWindow() => InstantiateRegistered(WindowId.Win, _uiRoot);
+        public UIContainer CreateWinWindow() => InstantiateRegistered(WindowId.Win, _uiRoot);
 
-        public void ShowMinusTimer() => Object.FindObjectOfType<TimerView>().ShowMinusText();
+        public UIContainer CreateHUD() => InstantiateRegistered(WindowId.HUD, _uiRoot);
 
-        private WindowBase InstantiateRegistered(WindowId windowId, Transform parent) =>
+        private UIContainer InstantiateRegistered(WindowId windowId, Transform parent) =>
             _assetProvider.Instantiate(windowId, parent);
     }
 }

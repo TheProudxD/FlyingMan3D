@@ -1,6 +1,4 @@
-using System.Collections;
 using _Project.Scripts.Infrastructure.FSM;
-using _Project.Scripts.Infrastructure.FSM.States;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Tools;
 using Reflex.Attributes;

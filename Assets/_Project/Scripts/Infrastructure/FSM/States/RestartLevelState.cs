@@ -3,6 +3,7 @@ using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.UI;
+using _Project.Scripts.UI.Windows;
 using Cinemachine;
 using UnityEngine;
 
@@ -16,13 +17,14 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly StatisticsService _statisticsService;
         private readonly LoadingCurtain _loadingCurtain;
         private readonly LevelResourceService _levelResourceService;
+        private readonly WindowService _windowService;
 
         private StateMachine _stateMachine;
 
         public RestartLevelState(GameFactory gameFactory,
             AudioService audioService, UIFactory uiFactory, StatisticsService statisticsService,
             LoadingCurtain loadingCurtain,
-            LevelResourceService levelResourceService)
+            LevelResourceService levelResourceService, WindowService windowService)
         {
             _gameFactory = gameFactory;
             _audioService = audioService;
@@ -30,6 +32,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _statisticsService = statisticsService;
             _loadingCurtain = loadingCurtain;
             _levelResourceService = levelResourceService;
+            _windowService = windowService;
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
@@ -45,7 +48,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             hud.Show();
             hud.ActivateStartText();
             hud.ShowSkipLevelButton();
-            
+
             CinemachineVirtualCamera camera = _gameFactory.GetFinishCamera();
             camera.Priority = 5;
             _gameFactory.GetScore().Reset();
@@ -53,9 +56,8 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _gameFactory.CreateLevel();
             player.Initialize();
             _gameFactory.GetIndicator().Enable();
-            _uiFactory.GetHUD().Show();
             _loadingCurtain.Hide();
-            
+
             _stateMachine.Enter<GameLoopState, IExitableState>(this);
         }
 

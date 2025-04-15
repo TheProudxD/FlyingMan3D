@@ -68,5 +68,7 @@ namespace TS.LocalizationSystem
         public const string skipLevel = "skipLevel";
         
         public const string claim = "claim";
+        
+        public const string holdAndDrag = "holdAndDrag";
     }
 }
