@@ -103,6 +103,9 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator ApplyLaunchForce(float factor)
     {
+        _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
+        _movementSpeed = YG.YG2.saves.flyingControl;
+
         _audioService.PlayLaunchSound();
         Vector3 targetPos = _initialPos + new Vector3(0f, -1f, -4f) * factor;
 

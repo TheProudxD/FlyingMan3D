@@ -15,7 +15,6 @@ namespace _Project.Scripts.UI.Windows
         [SerializeField] private Transform _popup;
         [SerializeField] private Button _continueGameButton;
         [SerializeField] private RestartGameButton _restartButton;
-        [SerializeField] private LeaderboardButton _leaderboardButton;
         [SerializeField] private MoreGamesButton _moreGamesButton;
         [SerializeField] private CustomToggle _soundButton;
         //[SerializeField] private CustomToggle _musicButton;
@@ -35,7 +34,6 @@ namespace _Project.Scripts.UI.Windows
             _continueGameButton.Add(ContinueGame);
             _restartButton.Activate();
             _restartButton.Add(Hide);
-            _leaderboardButton.Activate();
             _moreGamesButton.Activate();
         }
 

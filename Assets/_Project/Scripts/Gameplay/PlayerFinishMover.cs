@@ -40,7 +40,7 @@ public class PlayerFinishMover : MonoBehaviour
         enabled = true;
         _stopDistance = _gameFactory.GetCurrentLevel().StopDistance;
         _moveSpeed = YG2.saves.movingSpeed;
-        Health = YG2.saves.health;
+        Health = Random.Range(1, YG2.saves.health + 1);
         _healthCanvas.gameObject.SetActive(true);
     }
 
@@ -54,10 +54,10 @@ public class PlayerFinishMover : MonoBehaviour
 
     private void Update()
     {
+        _playerController.CheckForHeight();
+
         if (!_canMove)
             return;
-
-        _playerController.CheckForHeight();
 
         if (_target == null)
         {
@@ -105,6 +105,7 @@ public class PlayerFinishMover : MonoBehaviour
         if (collision.transform.root.TryGetComponent(out Enemy enemy) && !enemy.IsDie && !_playerController.IsDie)
         {
             _audioService.PlayHitSound();
+
             if (_canSmoke)
             {
                 _canSmoke = false;

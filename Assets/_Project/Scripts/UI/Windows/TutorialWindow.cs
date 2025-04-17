@@ -46,7 +46,7 @@ namespace _Project.Scripts.UI.Windows
 
         private void Update()
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) && _closeTutorialCoroutine != null)
             {
                 StopCoroutine(_closeTutorialCoroutine);
                 Hide();
