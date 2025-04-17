@@ -83,7 +83,7 @@ public class Finish : MonoBehaviour
 
         root.GetComponent<CapsuleCollider>().enabled = true;
 
-        root.GetComponent<Animator>().enabled = true;
+        playerController.Animator.enabled = true;
         Collider[] colliders = root.GetComponentsInChildren<Collider>();
 
         for (int i = 1; i < colliders.Length; i++)

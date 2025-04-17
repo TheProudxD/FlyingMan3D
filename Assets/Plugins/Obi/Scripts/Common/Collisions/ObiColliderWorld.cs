@@ -72,7 +72,6 @@ namespace Obi
         [NonSerialized] public ObiTriangleMeshContainer triangleMeshContainer;
         [NonSerialized] public ObiEdgeMeshContainer edgeMeshContainer;
         [NonSerialized] public ObiDistanceFieldContainer distanceFieldContainer;
-        [NonSerialized] public ObiHeightFieldContainer heightFieldContainer;
 
         private static ObiColliderWorld instance;
 
@@ -117,8 +116,6 @@ namespace Obi
                 edgeMeshContainer = new ObiEdgeMeshContainer();
             if (distanceFieldContainer == null)
                 distanceFieldContainer = new ObiDistanceFieldContainer();
-            if (heightFieldContainer == null)
-                heightFieldContainer = new ObiHeightFieldContainer();
         }
 
         private void Destroy()
@@ -167,8 +164,6 @@ namespace Obi
                 edgeMeshContainer.Dispose();
             if (distanceFieldContainer != null)
                 distanceFieldContainer.Dispose();
-            if (heightFieldContainer != null)
-                heightFieldContainer.Dispose();
 
             instance = null;
         }
@@ -234,15 +229,15 @@ namespace Obi
             triangleMeshContainer.DestroyTriangleMesh(meshHandle);
         }
 
-        public ObiEdgeMeshHandle GetOrCreateEdgeMesh(EdgeCollider2D collider)
-        {
-            return edgeMeshContainer.GetOrCreateEdgeMesh(collider);
-        }
+        // public ObiEdgeMeshHandle GetOrCreateEdgeMesh(EdgeCollider2D collider)
+        // {
+        //     return edgeMeshContainer.GetOrCreateEdgeMesh(collider);
+        // }
 
-        public void DestroyEdgeMesh(ObiEdgeMeshHandle meshHandle)
-        {
-            edgeMeshContainer.DestroyEdgeMesh(meshHandle);
-        }
+        // public void DestroyEdgeMesh(ObiEdgeMeshHandle meshHandle)
+        // {
+        //     edgeMeshContainer.DestroyEdgeMesh(meshHandle);
+        // }
 
         public ObiDistanceFieldHandle GetOrCreateDistanceField(ObiDistanceField df)
         {
@@ -252,16 +247,6 @@ namespace Obi
         public void DestroyDistanceField(ObiDistanceFieldHandle dfHandle)
         {
             distanceFieldContainer.DestroyDistanceField(dfHandle);
-        }
-
-        public ObiHeightFieldHandle GetOrCreateHeightField(TerrainData hf)
-        {
-            return heightFieldContainer.GetOrCreateHeightField(hf);
-        }
-
-        public void DestroyHeightField(ObiHeightFieldHandle hfHandle)
-        {
-            heightFieldContainer.DestroyHeightField(hfHandle);
         }
 
         public void DestroyCollider(ObiColliderHandle handle)
@@ -391,7 +376,6 @@ namespace Obi
                     implementations[i].SetTriangleMeshData(triangleMeshContainer.headers, triangleMeshContainer.bihNodes, triangleMeshContainer.triangles, triangleMeshContainer.vertices);
                     implementations[i].SetEdgeMeshData(edgeMeshContainer.headers, edgeMeshContainer.bihNodes, edgeMeshContainer.edges, edgeMeshContainer.vertices);
                     implementations[i].SetDistanceFieldData(distanceFieldContainer.headers, distanceFieldContainer.dfNodes);
-                    implementations[i].SetHeightFieldData(heightFieldContainer.headers, heightFieldContainer.samples);
 
                     // update world implementation:
                     implementations[i].UpdateWorld(deltaTime);

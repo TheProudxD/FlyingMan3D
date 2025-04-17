@@ -88,7 +88,6 @@ namespace Obi
         }
 
         public void SetDistanceFieldData(ObiNativeDistanceFieldHeaderList headers, ObiNativeDFNodeList nodes) { }
-        public void SetHeightFieldData(ObiNativeHeightFieldHeaderList headers, ObiNativeFloatList samples) { }
 
         public void UpdateWorld(float deltaTime)
         {
@@ -260,8 +259,6 @@ namespace Obi
             [ReadOnly] public NativeArray<float2> edgeVertices;
 
             // height field data:
-            [ReadOnly] public NativeArray<HeightFieldHeader> heightFieldHeaders;
-            [ReadOnly] public NativeArray<float> heightFieldSamples;
 
             // output contacts queue:
             [WriteOnly]
@@ -424,8 +421,6 @@ namespace Obi
                             colliderToSolver = colliderToSolver,
                             solverToWorld = solverToWorld,
                             shape = shape,
-                            header = heightFieldHeaders[shape.dataIndex],
-                            heightFieldSamples = heightFieldSamples,
                             collisionMargin = parameters.collisionMargin,
                             dt = deltaTime
                         };
@@ -526,9 +521,6 @@ namespace Obi
                 edgeBihNodes = world.edgeMeshContainer.bihNodes.AsNativeArray<BIHNode>(),
                 edges = world.edgeMeshContainer.edges.AsNativeArray<Edge>(),
                 edgeVertices = world.edgeMeshContainer.vertices.AsNativeArray<float2>(),
-
-                heightFieldHeaders = world.heightFieldContainer.headers.AsNativeArray<HeightFieldHeader>(),
-                heightFieldSamples = world.heightFieldContainer.samples.AsNativeArray<float>(),
 
                 contactsQueue = colliderContactQueue.AsParallelWriter(),
                 solverToWorld = solver.solverToWorld,

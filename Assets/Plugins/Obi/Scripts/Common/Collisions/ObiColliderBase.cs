@@ -113,7 +113,7 @@ namespace Obi
 
             // find the first rigidbody up our hierarchy:
             Rigidbody rb = GetComponentInParent<Rigidbody>();
-            Rigidbody2D rb2D = GetComponentInParent<Rigidbody2D>();
+            // Rigidbody2D rb2D = GetComponentInParent<Rigidbody2D>();
 
             // if we have an rigidbody above us, see if it has a ObiRigidbody component and add one if it doesn't:
             if (rb != null)
@@ -125,15 +125,15 @@ namespace Obi
                     obiRigidbody = rb.gameObject.AddComponent<ObiRigidbody>();
 
             }
-            else if (rb2D != null)
-            {
-
-                obiRigidbody = rb2D.GetComponent<ObiRigidbody2D>();
-
-                if (obiRigidbody == null)
-                    obiRigidbody = rb2D.gameObject.AddComponent<ObiRigidbody2D>();
-
-            }
+            // else if (rb2D != null)
+            // {
+            //
+            //     obiRigidbody = rb2D.GetComponent<ObiRigidbody2D>();
+            //
+            //     if (obiRigidbody == null)
+            //         obiRigidbody = rb2D.gameObject.AddComponent<ObiRigidbody2D>();
+            //
+            // }
 
         }
 

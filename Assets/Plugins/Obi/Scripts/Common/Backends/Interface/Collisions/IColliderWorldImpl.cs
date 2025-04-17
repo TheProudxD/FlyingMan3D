@@ -18,6 +18,5 @@ namespace Obi
         void SetTriangleMeshData(ObiNativeTriangleMeshHeaderList headers, ObiNativeBIHNodeList nodes, ObiNativeTriangleList triangles, ObiNativeVector3List vertices);
         void SetEdgeMeshData(ObiNativeEdgeMeshHeaderList headers, ObiNativeBIHNodeList nodes, ObiNativeEdgeList triangles, ObiNativeVector2List vertices);
         void SetDistanceFieldData(ObiNativeDistanceFieldHeaderList headers, ObiNativeDFNodeList nodes);
-        void SetHeightFieldData(ObiNativeHeightFieldHeaderList headers, ObiNativeFloatList samples);
     }
 }

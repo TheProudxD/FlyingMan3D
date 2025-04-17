@@ -85,8 +85,6 @@ namespace Obi
                     tracker = new ObiCapsuleShapeTracker(this, (CapsuleCollider)m_SourceCollider);
                 else if (m_SourceCollider is CharacterController)
                     tracker = new ObiCharacterControllerShapeTracker(this, (CharacterController)m_SourceCollider);
-                else if (m_SourceCollider is TerrainCollider)
-                    tracker = new ObiTerrainShapeTracker(this, (TerrainCollider)m_SourceCollider);
                 else if (m_SourceCollider is MeshCollider)
                     tracker = new ObiMeshShapeTracker(this,(MeshCollider)m_SourceCollider);
                 else

@@ -30,8 +30,8 @@ namespace Obi{
         {
 
             bool trigger = false;
-            if (collider is Collider) trigger = ((Collider)collider).isTrigger;
-            else if (collider is Collider2D) trigger = ((Collider2D)collider).isTrigger;
+            if (collider is Collider collider1) trigger = collider1.isTrigger;
+            // else if (collider is Collider2D) trigger = ((Collider2D)collider).isTrigger;
 
             // retrieve collision world and index:
             var world = ObiColliderWorld.GetInstance();

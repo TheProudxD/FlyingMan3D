@@ -41,27 +41,27 @@ namespace Obi
 
         }
 
-        public void FromRigidbody(UnityEngine.Rigidbody2D rb, bool kinematicForParticles)
-        {
-
-            bool kinematic = !Application.isPlaying || rb.isKinematic || kinematicForParticles;
-            velocity = rb.velocity;
-
-            // For some weird reason, in 2D angular velocity is measured in *degrees* per second, 
-            // instead of radians. Seriously Unity, WTF??
-            angularVelocity = new Vector4(0, 0, rb.angularVelocity * Mathf.Deg2Rad, 0);
-
-            // center of mass in unity is affected by local rotation and poistion, but not scale. We need it expressed in world space:
-            com = rb.transform.position + rb.transform.rotation * rb.centerOfMass;
-
-            Vector3 inertiaTensor = kinematic ? Vector3.zero : new Vector3(0, 0, (rb.constraints & RigidbodyConstraints2D.FreezeRotation) != 0 ? 0 : 1 / rb.inertia);
-
-            Matrix4x4 rotation = Matrix4x4.Rotate(Quaternion.AngleAxis(rb.rotation, Vector3.forward));
-            inverseInertiaTensor = rotation * Matrix4x4.Scale(inertiaTensor) * rotation.transpose;
-
-            inverseMass = kinematic ? 0 : 1 / rb.mass;
-
-        }
+        // public void FromRigidbody(UnityEngine.Rigidbody2D rb, bool kinematicForParticles)
+        // {
+        //
+        //     bool kinematic = !Application.isPlaying || rb.isKinematic || kinematicForParticles;
+        //     velocity = rb.velocity;
+        //
+        //     // For some weird reason, in 2D angular velocity is measured in *degrees* per second, 
+        //     // instead of radians. Seriously Unity, WTF??
+        //     angularVelocity = new Vector4(0, 0, rb.angularVelocity * Mathf.Deg2Rad, 0);
+        //
+        //     // center of mass in unity is affected by local rotation and poistion, but not scale. We need it expressed in world space:
+        //     com = rb.transform.position + rb.transform.rotation * rb.centerOfMass;
+        //
+        //     Vector3 inertiaTensor = kinematic ? Vector3.zero : new Vector3(0, 0, (rb.constraints & RigidbodyConstraints2D.FreezeRotation) != 0 ? 0 : 1 / rb.inertia);
+        //
+        //     Matrix4x4 rotation = Matrix4x4.Rotate(Quaternion.AngleAxis(rb.rotation, Vector3.forward));
+        //     inverseInertiaTensor = rotation * Matrix4x4.Scale(inertiaTensor) * rotation.transpose;
+        //
+        //     inverseMass = kinematic ? 0 : 1 / rb.mass;
+        //
+        // }
 
 
     }

@@ -249,7 +249,7 @@ MonoBehaviour:
   platformInfo:
     ownHost: 0
   platformToggles:
-    showFirstAdv: 0
+    showFirstAdv: 1
     interAdvInterval: 0
     postponeCallByFail: 0
     useYandexMetrica: 0
@@ -259,10 +259,10 @@ MonoBehaviour:
     saveCloud: 0
     selectWebGLTemplate: 1
     runInBackground: 1
-    enableExceptions: 1
-    compressionFormat: 1
-    decompressionFallback: 1
-    autoGraphicsAPI: 1
+    enableExceptions: 0
+    compressionFormat: 0
+    decompressionFallback: 0
+    autoGraphicsAPI: 0
     minimalCodeCompression: 1
     dataCaching: 0
     colorSpace: 0

@@ -8,7 +8,7 @@ public class ObiParticleCounter : MonoBehaviour {
 
     ObiSolver solver;
     public int counter = 0;
-    public Collider2D targetCollider = null;
+    // public Collider2D targetCollider = null;
     
     Obi.ObiSolver.ObiCollisionEventArgs frame;
     HashSet<int> particles = new HashSet<int>();

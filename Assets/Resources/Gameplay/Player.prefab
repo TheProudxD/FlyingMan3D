@@ -616,6 +616,18 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2223639932434330405, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_Animation
+      value: 
+      objectReference: {fileID: 7400000, guid: bed24eec62c7140c9a43cfe732bf876a, type: 2}
+    - target: {fileID: 2223639932434330405, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_Animations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223639932434330405, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_Animations.Array.data[0]
+      value: 
+      objectReference: {fileID: 7400000, guid: ee2527b5a88044c6b86ab3f1383de1bf, type: 2}
     - target: {fileID: 2571476084130988995, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -722,7 +734,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: d7191c3b5d814f545959e34ae6747407, type: 2}
     - target: {fileID: 5866666021909216657, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
       propertyPath: m_CullingMode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
       propertyPath: m_ApplyRootMotion

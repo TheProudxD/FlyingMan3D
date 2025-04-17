@@ -6,7 +6,6 @@ namespace Obi
 {
     public struct BurstHeightField : BurstLocalOptimization.IDistanceFunction, IBurstCollider
     {
-
         public BurstColliderShape shape;
         public BurstAffineTransform colliderToSolver;
         public BurstAffineTransform solverToWorld;
@@ -16,7 +15,6 @@ namespace Obi
         public BurstMath.CachedTri tri;
         public float4 triNormal;
 
-        public HeightFieldHeader header;
         public NativeArray<float> heightFieldSamples;
 
         public void Evaluate(float4 point, ref BurstLocalOptimization.SurfacePoint projectedPoint)
@@ -34,23 +32,21 @@ namespace Obi
         }
 
         public void Contacts(int colliderIndex,
-                             int rigidbodyIndex,
-                              NativeArray<BurstRigidbody> rigidbodies,
-
-                              NativeArray<float4> positions,
-                              NativeArray<float4> velocities,
-                              NativeArray<float4> radii,
-
-                              NativeArray<int> simplices,
-                              in BurstAabb simplexBounds,
-                              int simplexIndex,
-                              int simplexStart,
-                              int simplexSize,
-
-                              NativeQueue<BurstContact>.ParallelWriter contacts,
-                              int optimizationIterations,
-                              float optimizationTolerance)
+            int rigidbodyIndex,
+            NativeArray<BurstRigidbody> rigidbodies,
+            NativeArray<float4> positions,
+            NativeArray<float4> velocities,
+            NativeArray<float4> radii,
+            NativeArray<int> simplices,
+            in BurstAabb simplexBounds,
+            int simplexIndex,
+            int simplexStart,
+            int simplexSize,
+            NativeQueue<BurstContact>.ParallelWriter contacts,
+            int optimizationIterations,
+            float optimizationTolerance)
         {
+            /*
             if (shape.dataIndex < 0) return;
 
             triNormal = float4.zero;
@@ -65,8 +61,11 @@ namespace Obi
             float cellHeight = shape.size.z / (resolutionV - 1);
 
             // calculate particle bounds min/max cells:
-            int2 min = new int2((int)math.floor(simplexBounds.min[0] / cellWidth), (int)math.floor(simplexBounds.min[2] / cellHeight));
-            int2 max = new int2((int)math.floor(simplexBounds.max[0] / cellWidth), (int)math.floor(simplexBounds.max[2] / cellHeight));
+            int2 min = new int2((int)math.floor(simplexBounds.min[0] / cellWidth),
+                (int)math.floor(simplexBounds.min[2] / cellHeight));
+
+            int2 max = new int2((int)math.floor(simplexBounds.max[0] / cellWidth),
+                (int)math.floor(simplexBounds.max[2] / cellHeight));
 
             for (int su = min[0]; su <= max[0]; ++su)
             {
@@ -84,7 +83,9 @@ namespace Obi
                             float h1 = heightFieldSamples[header.firstSample + sv * resolutionU + su] * shape.size.y;
                             float h2 = heightFieldSamples[header.firstSample + sv * resolutionU + csu1] * shape.size.y;
                             float h3 = heightFieldSamples[header.firstSample + csv1 * resolutionU + su] * shape.size.y;
-                            float h4 = heightFieldSamples[header.firstSample + csv1 * resolutionU + csu1] * shape.size.y;
+
+                            float h4 = heightFieldSamples[header.firstSample + csv1 * resolutionU + csu1] *
+                                       shape.size.y;
 
                             float min_x = su * shape.size.x / (resolutionU - 1);
                             float max_x = csu1 * shape.size.x / (resolutionU - 1);
@@ -102,11 +103,13 @@ namespace Obi
                             tri.Cache(v1, v2, v3);
                             triNormal.xyz = math.normalizesafe(math.cross((v2 - v1).xyz, (v3 - v1).xyz));
 
-                            var colliderPoint = BurstLocalOptimization.Optimize<BurstHeightField>(ref this, positions, radii, simplices, simplexStart, simplexSize,
-                                                                                ref simplexBary, out convexPoint, optimizationIterations, optimizationTolerance);
+                            var colliderPoint = BurstLocalOptimization.Optimize<BurstHeightField>(ref this, positions,
+                                radii, simplices, simplexStart, simplexSize,
+                                ref simplexBary, out convexPoint, optimizationIterations, optimizationTolerance);
 
                             float4 velocity = float4.zero;
                             float simplexRadius = 0;
+
                             for (int j = 0; j < simplexSize; ++j)
                             {
                                 int particleIndex = simplices[simplexStart + j];
@@ -115,8 +118,10 @@ namespace Obi
                             }
 
                             float4 rbVelocity = float4.zero;
+
                             if (rigidbodyIndex >= 0)
-                                rbVelocity = BurstMath.GetRigidbodyVelocityAtPoint(rigidbodyIndex, colliderPoint.point, rigidbodies, solverToWorld);
+                                rbVelocity = BurstMath.GetRigidbodyVelocityAtPoint(rigidbodyIndex, colliderPoint.point,
+                                    rigidbodies, solverToWorld);
 
                             float dAB = math.dot(convexPoint - colliderPoint.point, colliderPoint.normal);
                             float vel = math.dot(velocity - rbVelocity, colliderPoint.normal);
@@ -137,11 +142,13 @@ namespace Obi
                             tri.Cache(v1, v2, v3);
                             triNormal.xyz = math.normalizesafe(math.cross((v2 - v1).xyz, (v3 - v1).xyz));
 
-                            colliderPoint = BurstLocalOptimization.Optimize<BurstHeightField>(ref this, positions, radii, simplices, simplexStart, simplexSize,
-                                                                                ref simplexBary, out convexPoint, optimizationIterations, optimizationTolerance);
+                            colliderPoint = BurstLocalOptimization.Optimize<BurstHeightField>(ref this, positions,
+                                radii, simplices, simplexStart, simplexSize,
+                                ref simplexBary, out convexPoint, optimizationIterations, optimizationTolerance);
 
                             velocity = float4.zero;
                             simplexRadius = 0;
+
                             for (int j = 0; j < simplexSize; ++j)
                             {
                                 int particleIndex = simplices[simplexStart + j];
@@ -150,8 +157,10 @@ namespace Obi
                             }
 
                             rbVelocity = float4.zero;
+
                             if (rigidbodyIndex >= 0)
-                                rbVelocity = BurstMath.GetRigidbodyVelocityAtPoint(rigidbodyIndex, colliderPoint.point, rigidbodies, solverToWorld);
+                                rbVelocity = BurstMath.GetRigidbodyVelocityAtPoint(rigidbodyIndex, colliderPoint.point,
+                                    rigidbodies, solverToWorld);
 
                             dAB = math.dot(convexPoint - colliderPoint.point, colliderPoint.normal);
                             vel = math.dot(velocity - rbVelocity, colliderPoint.normal);
@@ -168,10 +177,8 @@ namespace Obi
                     }
                 }
             }
-            
+            */
         }
-
     }
-
 }
 #endif
