@@ -601,12 +601,32 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1676831429412873536, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_Quality
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1676831429412873536, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
       propertyPath: m_RootBone
       value: 
       objectReference: {fileID: 7601387721896550201}
     - target: {fileID: 1676831429412873536, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
-      propertyPath: m_DynamicOccludee
+      propertyPath: m_CastShadows
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1676831429412873536, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1676831429412873536, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1676831429412873536, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_ReflectionProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1676831429412873536, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2155116534991089834, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
       propertyPath: m_Layer

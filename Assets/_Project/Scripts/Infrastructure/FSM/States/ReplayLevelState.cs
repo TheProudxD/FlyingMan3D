@@ -3,7 +3,6 @@ using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.UI;
-using Cinemachine;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
@@ -45,8 +44,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             hud.Show();
             hud.ActivateStartText();
 
-            CinemachineVirtualCamera camera = _gameFactory.GetFinishCamera();
-            camera.Priority = 5;
+            _gameFactory.SetPlayerCamera();
             _gameFactory.GetScore().Reset();
             _statisticsService.IncreaseGamesPlayedNumberCounter();
             _gameFactory.CreateLevel();

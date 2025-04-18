@@ -6,10 +6,9 @@ using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
+using _Project.Scripts.Tools.Camera;
 using BhorGames.Mechanics;
-using Cinemachine;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace _Project.Scripts.Infrastructure.Services.Factories
 {
@@ -161,19 +160,16 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         {
             var startPosition = new Vector3(0, 1.75f, -1);
             _mainPlayer = _assetProvider.CreatePlayer(startPosition);
-            var capsule = Object.FindObjectOfType<Slingshot>().Capsule;
+            Rigidbody capsule = Object.FindObjectOfType<Slingshot>().Capsule;
             var fixedJoint = _mainPlayer.SelfHips.gameObject.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = capsule;
             _mainPlayer.SetInitial(fixedJoint, capsule.transform);
             AddPlayer(_mainPlayer);
-            var camera = GameObject.Find("Cinemachine").GetComponent<CinemachineVirtualCamera>();
-            camera.Follow = _mainPlayer.SelfHips.transform;
+            SetPlayerCamera();
+
             _levelHolder.Add(_mainPlayer.gameObject);
             return _mainPlayer;
         }
-
-        public CinemachineVirtualCamera GetFinishCamera() =>
-            GameObject.Find("FinishCamera").GetComponent<CinemachineVirtualCamera>();
 
         public Finish CreateFinish(Vector3 vector3, Quaternion identity)
         {
@@ -243,15 +239,34 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public void SetPlayerCamera()
         {
-            CinemachineVirtualCamera camera = GetFinishCamera();
-            camera.Priority = 5;
+            var camera = Object.FindObjectOfType<CameraFollow>();
+            camera.enabled = true;
+            var offset = new Vector3(0, 4, -11);
+            var cameraSetup = Object.FindObjectOfType<CameraSetup>();
+            cameraSetup.MainCamera.fieldOfView = 60;
+            camera.transform.rotation = Quaternion.Euler(new Vector3(10, 0, 0));
+
+            camera.Setup(() =>
+            {
+                if (_mainPlayer != null && _mainPlayer.SelfHips != null)
+                {
+                    camera.enabled = true;
+                    return _mainPlayer.SelfHips.transform.position + offset;
+                }
+
+                camera.enabled = false;
+                return Vector3.zero;
+            }, () => 100, true, true);
         }
 
         public void SetFinishCamera(float finishZPosition)
         {
-            CinemachineVirtualCamera camera = GetFinishCamera();
-            camera.Priority = 15;
-            camera.transform.position = new Vector3(0, 20, finishZPosition - 27f);
+            var camera = Object.FindObjectOfType<CameraFollow>();
+            var cameraSetup = Object.FindObjectOfType<CameraSetup>();
+            cameraSetup.MainCamera.fieldOfView = 95;
+            camera.enabled = false;
+            camera.transform.position = new Vector3(0, 20, finishZPosition - 28f);
+            camera.transform.rotation = Quaternion.Euler(new Vector3(50, 0, 0));
         }
     }
 }

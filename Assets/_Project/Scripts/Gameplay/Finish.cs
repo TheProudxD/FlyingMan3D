@@ -3,7 +3,6 @@ using _Project.Scripts.Infrastructure.FSM;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using UnityEngine;
-using Cinemachine;
 using Reflex.Attributes;
 
 public class Finish : MonoBehaviour
