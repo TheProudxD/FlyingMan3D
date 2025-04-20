@@ -2230,6 +2230,9 @@ MonoBehaviour:
   _playerController: {fileID: 9154461922809862172}
   _healthText: {fileID: 3689083413507674111}
   _healthCanvas: {fileID: 3841038850648120551}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 193
 --- !u!114 &9154461922809862172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2325,9 +2328,9 @@ CapsuleCollider:
   m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.4
-  m_Height: 3
+  m_Height: 5
   m_Direction: 1
-  m_Center: {x: 0, y: 1.5, z: 0}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!4 &7601387721896550201 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8913716230897266256, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}

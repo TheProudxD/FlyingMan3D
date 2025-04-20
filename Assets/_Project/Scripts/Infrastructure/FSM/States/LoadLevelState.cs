@@ -53,7 +53,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             hud.ActivateStartText();
 
             TryShowTutorial();
-            _gameFactory.GetScore().Reset();
             _statisticsService.IncreaseGamesPlayedNumberCounter();
             _levelResourceService.Current.Value = _levelResourceService.ObservableValue.Value;
             _gameFactory.CreateLevel();

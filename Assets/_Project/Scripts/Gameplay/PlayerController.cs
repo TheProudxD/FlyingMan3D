@@ -6,12 +6,14 @@ using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows;
 using Reflex.Attributes;
 
 public class PlayerController : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
+    [Inject] private UIFactory _uiFactory;
     [Inject] private AudioService _audioService;
     [Inject] private WindowService _windowService;
     [Inject] private LevelResourceService _levelResourceService;
@@ -103,6 +105,9 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator ApplyLaunchForce(float factor)
     {
+        Hud hud = _uiFactory.GetHUD();
+        hud.Show();
+        hud.DeactivateStartText();
         _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
         _movementSpeed = YG.YG2.saves.flyingControl;
 

@@ -45,7 +45,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             hud.ActivateStartText();
 
             _gameFactory.SetPlayerCamera();
-            _gameFactory.GetScore().Reset();
             _statisticsService.IncreaseGamesPlayedNumberCounter();
             _gameFactory.CreateLevel();
             player.Initialize();

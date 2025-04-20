@@ -92,12 +92,17 @@ namespace _Project.Scripts.UI.Windows
         public override void Hide()
         {
             base.Hide();
+            Hud hud = _uiFactory.GetHUD();
+            hud.Show();
             Time.timeScale = 1;
 
             _holdAndDragText.Deactivate();
             _tapToThrowText.Deactivate();
             _compositeMotionHandle.Cancel();
-            StopCoroutine(_closeTutorialCoroutine);
+
+            if (_closeTutorialCoroutine != null)
+                StopCoroutine(_closeTutorialCoroutine);
+
             _metricService.TutorialPassed();
         }
 

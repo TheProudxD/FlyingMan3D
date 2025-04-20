@@ -1,36 +1,23 @@
-﻿/*
-    ------------------- Code Monkey -------------------
-
-    Thank you for downloading the Code Monkey Utilities
-    I hope you find them useful in your projects
-    If you have any questions use the contact form
-    Cheers!
-
-               unitycodemonkey.com
-    --------------------------------------------------
- */
-
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Tools.Camera
 {
-    /*
-     * Script to handle Camera Movement and Zoom
-     * Place on Camera GameObject
-     * */
+    [RequireComponent(typeof(UnityEngine.Camera))]
     public class CameraFollow : MonoBehaviour
     {
         private UnityEngine.Camera _myCamera;
         private Func<Vector3> _getCameraFollowPositionFunc;
         private Func<float> _getCameraZoomFunc;
+        private float _moveSpeed;
+        private const float DEFAULT_MOVE_SPEED = 3f;
 
-        public void Setup(Func<Vector3> getCameraFollowPositionFunc, Func<float> getCameraZoomFunc,
+        public void Setup(Func<Vector3> getCameraFollowPositionFunc, Func<float> getCameraZoomFunc, float moveSpeed,
             bool teleportToFollowPosition, bool instantZoom)
         {
             _getCameraFollowPositionFunc = getCameraFollowPositionFunc;
             _getCameraZoomFunc = getCameraZoomFunc;
-
+            _moveSpeed = moveSpeed;
             if (teleportToFollowPosition)
             {
                 Vector3 cameraFollowPosition = getCameraFollowPositionFunc();
@@ -68,7 +55,8 @@ namespace _Project.Scripts.Tools.Camera
         {
             _getCameraZoomFunc = getCameraZoomFunc;
         }
-
+        
+        public void SetMoveSpeed(float moveSpeed) => _moveSpeed = moveSpeed;
 
         private void FixedUpdate()
         {
@@ -85,12 +73,18 @@ namespace _Project.Scripts.Tools.Camera
 
             Vector3 cameraMoveDir = (cameraFollowPosition - transform.position).normalized;
             float distance = Vector3.Distance(cameraFollowPosition, transform.position);
-            float cameraMoveSpeed = 3f;
 
-            if (distance > 0)
+            if (_moveSpeed <= 0)
             {
+                transform.position = cameraFollowPosition;
+            }
+            else
+            {
+                if (distance <= 0)
+                    return;
+
                 Vector3 newCameraPosition =
-                    transform.position + cameraMoveDir * distance * cameraMoveSpeed * Time.deltaTime;
+                    transform.position + cameraMoveDir * distance * _moveSpeed * Time.deltaTime;
 
                 float distanceAfterMoving = Vector3.Distance(newCameraPosition, cameraFollowPosition);
 

@@ -33,12 +33,12 @@ MonoBehaviour:
       MovementAxis: {x: 0, y: 0, z: 0}
       Speed: 0
     - RingType: 0
-      Effect: 1
+      Effect: 2
       MovementAxis: {x: 0, y: 0, z: 0}
       Speed: 0
   - InsideRings:
     - RingType: 0
-      Effect: 3
+      Effect: 4
       MovementAxis: {x: 0, y: 0, z: 0}
       Speed: 0
     - RingType: 1

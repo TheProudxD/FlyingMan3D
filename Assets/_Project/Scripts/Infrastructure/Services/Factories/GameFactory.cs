@@ -25,7 +25,6 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         public IReadOnlyList<PlayerController> Players => _players;
         public IReadOnlyList<Enemy> Enemies => _enemies;
 
-        private Score _score;
         private HeartTracker _heartTracker;
         private Level _gameLevel;
         private PlayerController _mainPlayer;
@@ -46,14 +45,11 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public IEnumerator Initialize()
         {
-            _score = new Score();
             EnemiesCounter = new ObservableVariable<int>(Enemies.Count);
             PlayersCounter = new ObservableVariable<int>(Players.Count);
             _levelHolder = new List<GameObject>();
             yield break;
         }
-
-        public Score GetScore() => _score;
 
         public Level CreateLevel() =>
             _gameLevel = _assetProvider.CreateLevel(_levelResourceService.Current.Value);
@@ -239,9 +235,10 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public void SetPlayerCamera()
         {
+            var offset = new Vector3(0, 5, -8);
             var camera = Object.FindObjectOfType<CameraFollow>();
+            camera.transform.position = _mainPlayer.SelfHips.transform.position + offset;
             camera.enabled = true;
-            var offset = new Vector3(0, 4, -11);
             var cameraSetup = Object.FindObjectOfType<CameraSetup>();
             cameraSetup.MainCamera.fieldOfView = 60;
             camera.transform.rotation = Quaternion.Euler(new Vector3(10, 0, 0));
@@ -256,7 +253,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
                 camera.enabled = false;
                 return Vector3.zero;
-            }, () => 100, true, true);
+            }, () => 100000, 15, false, true);
         }
 
         public void SetFinishCamera(float finishZPosition)
@@ -264,6 +261,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             var camera = Object.FindObjectOfType<CameraFollow>();
             var cameraSetup = Object.FindObjectOfType<CameraSetup>();
             cameraSetup.MainCamera.fieldOfView = 95;
+            camera.SetMoveSpeed(-1);
             camera.enabled = false;
             camera.transform.position = new Vector3(0, 20, finishZPosition - 28f);
             camera.transform.rotation = Quaternion.Euler(new Vector3(50, 0, 0));

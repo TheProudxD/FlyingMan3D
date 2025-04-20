@@ -34,7 +34,6 @@ public class Indicator : MonoBehaviour
             StartCoroutine(_gameFactory.GetMainPlayer().ApplyLaunchForce(launchFactor));
 
             Disable();
-            _uiFactory.GetHUD().DeactivateStartText();
         }
         else
         {

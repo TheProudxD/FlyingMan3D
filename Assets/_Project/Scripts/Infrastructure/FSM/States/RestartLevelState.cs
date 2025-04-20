@@ -48,7 +48,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             hud.ShowSkipLevelButton();
 
             _gameFactory.SetPlayerCamera();
-            _gameFactory.GetScore().Reset();
             _statisticsService.IncreaseGamesPlayedNumberCounter();
             _gameFactory.CreateLevel();
             player.Initialize();

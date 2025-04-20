@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8459f7f25b8a41bfb50299b9069bcb99, type: 3}
+  m_Name: 30
+  m_EditorClassIdentifier: 
+  <LevelTimer>k__BackingField: 3
+  <Rings>k__BackingField:
+  - InsideRings:
+    - RingType: 0
+      Effect: 1
+      MovementAxis: {x: 0, y: 0, z: 0}
+      Speed: 0
+    - RingType: 3
+      Effect: 2
+      MovementAxis: {x: 0, y: 0, z: 0}
+      Speed: 0
+    - RingType: 2
+      Effect: 2
+      MovementAxis: {x: 0, y: 0, z: 0}
+      Speed: 0
+  - InsideRings:
+    - RingType: 1
+      Effect: 2
+      MovementAxis: {x: 0, y: 0, z: 0}
+      Speed: 0
+    - RingType: 0
+      Effect: 3
+      MovementAxis: {x: 0, y: 5, z: 0}
+      Speed: 2
+  - InsideRings:
+    - RingType: 2
+      Effect: 5
+      MovementAxis: {x: 0, y: 2, z: 0}
+      Speed: 2
+    - RingType: 3
+      Effect: 2
+      MovementAxis: {x: 0, y: 8, z: 0}
+      Speed: 6
+    - RingType: 0
+      Effect: 3
+      MovementAxis: {x: 0, y: 2, z: 0}
+      Speed: 3
+  - InsideRings:
+    - RingType: 0
+      Effect: 4
+      MovementAxis: {x: 0, y: 5, z: 0}
+      Speed: 2
+    - RingType: 2
+      Effect: 3
+      MovementAxis: {x: 0, y: 3, z: 0}
+      Speed: 2
+  <EnemyCount>k__BackingField: 20
+  <TimeDif>k__BackingField: 2.5
+  <MaxLaunchSpeed>k__BackingField: 120
+  <StopDistance>k__BackingField: 0.2
+  <EnemyStopDistance>k__BackingField: 0.2
+  <EnemyMoveSpeed>k__BackingField: 4
+  <MoneyReward>k__BackingField: 450

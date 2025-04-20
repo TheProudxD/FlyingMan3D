@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <WindowShowSound>k__BackingField: {fileID: 8300000, guid: fe32e50818fb06343b5729e51d3f3c0b, type: 3}
   <Click>k__BackingField: {fileID: 8300000, guid: 361da367a2419be4f91da60cbe29937d, type: 3}
-  <Win>k__BackingField: {fileID: 8300000, guid: 40a6022603247284b86903337a22406c, type: 3}
+  <Win>k__BackingField: {fileID: 8300000, guid: b8ffd804a6ecf8f4ca3444390aab7215, type: 3}
   <Lose>k__BackingField: {fileID: 8300000, guid: 3582b2b2287a6c646b2d3d509d8376a6, type: 3}
   <Hit>k__BackingField: {fileID: 8300000, guid: 9a5500ba722a64a4fba5fc435ec378ea, type: 3}
   <Money>k__BackingField: {fileID: 8300000, guid: ee3c89544cc5e954383fed814c46a769, type: 3}

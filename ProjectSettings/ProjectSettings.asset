@@ -822,7 +822,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: OBI_ONI_SUPPORTED;DREAMTECK_SPLINES
+    Android: OBI_ONI_SUPPORTED;DREAMTECK_SPLINES;PLUGIN_YG_2;YandexGamesPlatform_yg;Authorization_yg;EnvirData_yg;InterstitialAdv_yg;Leaderboards_yg;Localization_yg;Metrica_yg;OpenURL_yg;Review_yg;RewardedAdv_yg;Storage_yg;TMP_YG2
     Standalone: OBI_ONI_SUPPORTED;DREAMTECK_SPLINES;PLUGIN_YG_2;YandexGamesPlatform_yg;Authorization_yg;EnvirData_yg;InterstitialAdv_yg;Leaderboards_yg;Localization_yg;Metrica_yg;OpenURL_yg;Review_yg;RewardedAdv_yg;Storage_yg;TMP_YG2
     WebGL: YandexGamesPlatform_yg;PLUGIN_YG_2;TMP_YG2;InterstitialAdv_yg;RewardedAdv_yg;Authorization_yg;Review_yg;Leaderboards_yg;Metrica_yg;Storage_yg;Localization_yg;EnvirData_yg;OpenURL_yg
     iPhone: OBI_ONI_SUPPORTED;DREAMTECK_SPLINES
@@ -919,6 +919,7 @@ PlayerSettings:
     Build: 0
     Collab: 1
     Game Performance: 0
+    Legacy Analytics: 0
     Purchasing: 0
     UDP: 0
     UNet: 1
@@ -942,11 +943,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: ff4a8ff4-e0f2-47dc-a144-352408270e55
+  cloudProjectId: b9ceeaa6-9978-4e6a-8659-0bf449433f18
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: FlyingMan3D
-  organizationId: bhorgames
+  organizationId: theproud
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

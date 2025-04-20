@@ -619,7 +619,6 @@ MonoBehaviour:
   _nextLevelButton: {fileID: 7057583631140303491}
   _replayLevelButton: {fileID: 19725338759136970}
   _multiplierButton: {fileID: 2189262224705995245}
-  _coinRewardAnimation: {fileID: 7769325042676474156}
   _emojiImage: {fileID: 6743537469020086448}
 --- !u!114 &4706011521480309339
 MonoBehaviour:
@@ -2539,7 +2538,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_fontSize
-      value: 85
+      value: 62
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_fontAsset
@@ -2567,7 +2566,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_fontSizeBase
-      value: 85
+      value: 62
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_sharedMaterial
@@ -2579,7 +2578,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4294941006
+      value: 4294941779
       objectReference: {fileID: 0}
     - target: {fileID: 8060599417035423909, guid: e81f6a2b307e66a459002d8818018266, type: 3}
       propertyPath: m_hasFontAssetChanged

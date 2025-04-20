@@ -69,7 +69,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         private void SetRecordInLeaderboard()
         {
-            int current = _gameFactory.GetScore().Value.Value;
+            int current = _levelResourceService.Current.Value;
 
             if (current > _leaderboardService.GetMaxLeaderboardScore())
             {

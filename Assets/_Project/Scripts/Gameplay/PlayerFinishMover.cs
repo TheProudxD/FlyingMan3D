@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
@@ -5,6 +6,7 @@ using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
 using YG;
+using Random = UnityEngine.Random;
 
 public class PlayerFinishMover : MonoBehaviour
 {
@@ -15,7 +17,10 @@ public class PlayerFinishMover : MonoBehaviour
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private TextMeshProUGUI _healthText;
     [SerializeField] private Canvas _healthCanvas;
+    private float _raycastDistance = 100;
+    [SerializeField] private LayerMask _groundLayer;
 
+    private readonly RaycastHit[] _raycastHits = new RaycastHit[2];
     private float _moveSpeed;
     private float _stopDistance;
     private GameObject _target;
@@ -75,6 +80,24 @@ public class PlayerFinishMover : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
             transform.Translate(Vector3.forward * (_moveSpeed * Time.deltaTime));
         }
+    }
+
+    public bool IsGrounded()
+    {
+        int hitsCount = Physics.RaycastNonAlloc(
+            _playerController.SelfHips.position,
+            Vector3.down,
+            _raycastHits,
+            _raycastDistance,
+            _groundLayer
+        );
+
+        return hitsCount > 0;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Debug.DrawRay(_playerController.SelfHips.position, Vector3.down, Color.red);
     }
 
     private GameObject NearestTarget()

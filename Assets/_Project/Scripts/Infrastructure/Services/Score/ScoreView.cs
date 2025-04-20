@@ -8,7 +8,7 @@ namespace _Project.Scripts.UI.Views
 
         public override void Initialize()
         {
-            _score = GameFactory.GetScore();
+            // _score = GameFactory.GetScore();
             _score.Value.ChangedWithOld += OnScoreChanged;
 
             DisplayDefaultScore();

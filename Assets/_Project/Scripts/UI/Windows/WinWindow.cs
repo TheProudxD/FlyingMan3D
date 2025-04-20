@@ -39,7 +39,7 @@ namespace _Project.Scripts.UI.Windows
         [SerializeField] private Button _nextLevelButton;
         [SerializeField] private ReplayGameButton _replayLevelButton;
         [SerializeField] private WheelMultiplierButton _multiplierButton;
-        [SerializeField] private CoinRewardAnimation _coinRewardAnimation;
+        // [SerializeField] private CoinRewardAnimation _coinRewardAnimation;
         [SerializeField] private Image _emojiImage;
 
         private readonly CompositeMotionHandle _compositeMotionHandle = new();
@@ -76,7 +76,7 @@ namespace _Project.Scripts.UI.Windows
             _replayLevelButton.Add(Restart);
             _replayLevelButton.Activate();
 
-            _coinRewardAnimation.OnAnimationFinished += LoadNextLevel;
+            // _coinRewardAnimation.OnAnimationFinished += LoadNextLevel;
 
             StartCoroutine(ShowNextLevelButtonCoroutine());
 
@@ -95,7 +95,7 @@ namespace _Project.Scripts.UI.Windows
             _nextLevelButton.Deactivate();
             _multiplierButton.Deactivate();
 
-            _coinRewardAnimation.CountCoins();
+            // _coinRewardAnimation.CountCoins();
         }
 
         private void UpdateTitleText()
@@ -120,7 +120,7 @@ namespace _Project.Scripts.UI.Windows
 
         private void ShowNextLevelButton()
         {
-            _nextLevelButton.Add(PlayMoneyFX);
+            _nextLevelButton.Add(LoadNextLevel);
             _nextLevelButton.Activate();
 
             _animationService.ShakingScale(_multiplierButton.transform, _animationsConfig.FromScale,
@@ -155,7 +155,7 @@ namespace _Project.Scripts.UI.Windows
         {
             _nextLevelButton.Remove(LoadNextLevel);
             _replayLevelButton.Remove(Restart);
-            _coinRewardAnimation.OnAnimationFinished -= LoadNextLevel;
+            // _coinRewardAnimation.OnAnimationFinished -= LoadNextLevel;
             // _sendReviewButton.Deactivate();
             // _moreGamesButton.Deactivate();
 

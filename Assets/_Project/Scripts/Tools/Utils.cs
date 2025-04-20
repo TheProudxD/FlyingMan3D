@@ -68,6 +68,9 @@ namespace _Project.Scripts.Tools
 
         public static bool IsPointerOverUI()
         {
+            if (EventSystem.current == null)
+                return false;
+            
             if (EventSystem.current.IsPointerOverGameObject())
                 return true;
 
