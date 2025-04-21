@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        // Input.simulateMouseWithTouches = true;
         Animator = GetComponent<Animator>();
         Bodies = GetComponentsInChildren<Rigidbody>();
     }
@@ -65,11 +66,11 @@ public class PlayerController : MonoBehaviour
         if (_enabled == false)
             return;
 
-        if (Utils.IsPointerOverUI())
-            return;
-
         CheckForBoundaries();
         CheckForHeight();
+
+        if (Utils.IsPointerOverUI())
+            return;
 
         if (!Input.GetMouseButton(0))
             return;
@@ -116,6 +117,9 @@ public class PlayerController : MonoBehaviour
 
         while (_time <= 0.8f)
         {
+            if (_capsule == null)
+                yield break;
+
             _capsule.position = Vector3.Lerp(_initialPos, targetPos, _time / 0.8f);
             _time += Time.deltaTime;
             yield return null;
@@ -125,6 +129,9 @@ public class PlayerController : MonoBehaviour
 
         while (_time <= 0.1f)
         {
+            if (_capsule == null)
+                yield break;
+
             _capsule.position = Vector3.Lerp(targetPos, _initialPos, _time / 0.2f);
             _time += Time.deltaTime;
             yield return null;
@@ -141,13 +148,16 @@ public class PlayerController : MonoBehaviour
 
         foreach (Rigidbody rb in Bodies)
         {
+            if (rb == null)
+                continue;
+
             rb.velocity = forceVector;
             rb.AddTorque(Vector3.forward);
         }
 
         if (factor > 0.1f)
         {
-            _gameFactory.GetSpawner().SpawnObjects(Bodies[0].velocity);
+            _gameFactory.GetSpawner()?.SpawnObjects(Bodies[0].velocity);
         }
     }
 

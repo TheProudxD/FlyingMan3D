@@ -46,7 +46,7 @@ MonoBehaviour:
       Effect: 3
       MovementAxis: {x: 0, y: 0, z: 0}
       Speed: 0
-  <EnemyCount>k__BackingField: 15
+  <EnemyCount>k__BackingField: 12
   <TimeDif>k__BackingField: 2
   <MaxLaunchSpeed>k__BackingField: 70
   <StopDistance>k__BackingField: 0.2

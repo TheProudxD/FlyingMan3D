@@ -4,9 +4,11 @@ using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Tools.Extensions;
 using _Project.Scripts.UI.Buttons;
 using _Project.Scripts.UI.Windows;
+using LitMotion;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace _Project.Scripts.UI
@@ -19,10 +21,12 @@ namespace _Project.Scripts.UI
         [SerializeField] private PauseButton _pauseButton;
         [SerializeField] private TMP_Text _enemiesNumberText;
         [SerializeField] private TMP_Text _playersNumberText;
+        [SerializeField] private TMP_Text _tapToPlayText;
         [SerializeField] private GameObject _moneyNumber;
         [SerializeField] private MoreGamesButton _moreGamesButton;
         [SerializeField] private SkipLevelButton _skipLevelButton;
         private bool _showSkipLevelButton;
+        private readonly CompositeMotionHandle _compositeMotionHandle = new CompositeMotionHandle();
 
         [field: SerializeField] public GameObject TapToThrow { get; private set; }
         [field: SerializeField] public GameObject PowerupShop { get; private set; }
@@ -42,11 +46,17 @@ namespace _Project.Scripts.UI
             _gameFactory.PlayersCounter.ChangedWithOld += PlayersCounterChanged;
             _gameFactory.EnemiesCounter?.Invoke();
             _gameFactory.PlayersCounter?.Invoke();
+
+            _animationService.ShakingScale(_tapToPlayText.transform, 1f, 1.2f, 0.7f, loops: -1,
+                compositeMotionHandle: _compositeMotionHandle);
         }
 
         public override void Hide()
         {
             gameObject.SetActive(false);
+            
+            _compositeMotionHandle?.Cancel();
+            
             _enemiesNumberText.transform.parent.gameObject.SetActive(false);
             _playersNumberText.transform.parent.gameObject.SetActive(false);
             _pauseButton.Deactivate();

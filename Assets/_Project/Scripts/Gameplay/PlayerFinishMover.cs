@@ -95,11 +95,6 @@ public class PlayerFinishMover : MonoBehaviour
         return hitsCount > 0;
     }
 
-    private void OnDrawGizmos()
-    {
-        Debug.DrawRay(_playerController.SelfHips.position, Vector3.down, Color.red);
-    }
-
     private GameObject NearestTarget()
     {
         float minDistance = float.MaxValue;

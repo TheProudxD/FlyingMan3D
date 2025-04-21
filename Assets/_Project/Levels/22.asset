@@ -34,7 +34,7 @@ MonoBehaviour:
       Speed: 5
   - InsideRings:
     - RingType: 0
-      Effect: 1
+      Effect: 5
       MovementAxis: {x: 3, y: 0, z: 0}
       Speed: 5
   - InsideRings:

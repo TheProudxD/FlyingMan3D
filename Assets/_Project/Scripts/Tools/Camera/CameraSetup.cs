@@ -8,6 +8,7 @@ namespace _Project.Scripts.Tools.Camera
     {
         [SerializeField] private UnityEngine.Camera _mainCamera;
         [SerializeField] private UnityEngine.Camera _postProccessingCamera;
+        [SerializeField] private CameraFollow _cameraFollow;
         [SerializeField] private bool _autoFindCamera = false;
         [SerializeField] private float _offset = 0f;
         [SerializeField] private float _cameraAngle = 75f;
@@ -16,6 +17,7 @@ namespace _Project.Scripts.Tools.Camera
 
         public UnityEngine.Camera MainCamera => _mainCamera;
         public UnityEngine.Camera PostProccessingCamera => _postProccessingCamera;
+        public CameraFollow CameraFollow => _cameraFollow;
 
         private void Awake()
         {

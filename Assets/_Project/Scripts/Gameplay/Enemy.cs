@@ -82,6 +82,8 @@ public class Enemy : MonoBehaviour
         if (_enabled == false)
             return;
 
+        CheckForHeight();
+
         if (_target == null)
         {
             Animator.SetBool(CanAttack, false);
@@ -104,12 +106,20 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void CheckForHeight()
+    {
+        float yPos = transform.position.y;
+
+        if (yPos < -5)
+            Die();
+    }
+
     public void Die()
     {
         IsDie = true;
         _gameFactory.RemoveEnemy(this);
         var ragdoll = _gameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
-        ragdoll.GetComponentInChildren<Rigidbody>().AddForce(-transform.forward * 800, ForceMode.Impulse);
+        ragdoll.GetComponentInChildren<Rigidbody>().AddForce(-transform.forward * 300, ForceMode.Impulse);
         Destroy(gameObject);
     }
 }

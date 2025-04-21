@@ -68,20 +68,29 @@ namespace _Project.Scripts.Tools
 
         public static bool IsPointerOverUI()
         {
-            if (EventSystem.current == null)
+            EventSystem eventSystem = EventSystem.current;
+
+            if (eventSystem == null)
                 return false;
             
-            if (EventSystem.current.IsPointerOverGameObject())
-                return true;
-
-            var pe = new PointerEventData(EventSystem.current)
+            var eventData = new PointerEventData(eventSystem)
             {
                 position = Input.mousePosition
             };
 
-            var hits = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pe, hits);
-            return hits.Count > 0;
+            var results = new List<RaycastResult>();
+            eventSystem.RaycastAll(eventData, results);
+    
+            return results.Count > 0;
+
+            // var pe = new PointerEventData(EventSystem.current)
+            // {
+            //     position = Input.mousePosition
+            // };
+            //
+            // var hits = new List<RaycastResult>();
+            // EventSystem.current.RaycastAll(pe, hits);
+            // return hits.Count > 0;
         }
 
         public static float GetAngleFromVectorFloat(Vector3 dir)

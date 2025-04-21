@@ -70,7 +70,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: -1
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -142,6 +142,7 @@ MonoBehaviour:
   _pauseButton: {fileID: 9184096163738144333}
   _enemiesNumberText: {fileID: 6072664241633303182}
   _playersNumberText: {fileID: 1566485713636919969}
+  _tapToPlayText: {fileID: 4655598911081570634}
   _moneyNumber: {fileID: 7049674364218269101}
   _moreGamesButton: {fileID: 2937395578146366451}
   _skipLevelButton: {fileID: 504070141384020001}
@@ -1008,7 +1009,19 @@ PrefabInstance:
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 4021546366708180697, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 4ab2d39aad846a9468498566a0305132, type: 2}
+    - target: {fileID: 4021546366708180697, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
       propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021546366708180697, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
+      propertyPath: m_useMaxVisibleDescender
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021546366708180697, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
+      propertyPath: m_IsTextObjectScaleStatic
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4223227226732353492, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
@@ -1710,11 +1723,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].time
-      value: 3.441914
+      value: 3.4044156
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].time
-      value: 4.263629
+      value: 5.688632
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].time
@@ -1722,27 +1735,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[0].value
-      value: 220
+      value: 210
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].value
-      value: 1308.8293
+      value: 1321.9426
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].value
-      value: 1905.1707
+      value: 2145.6895
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].value
-      value: 3000
+      value: 2900
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].inSlope
-      value: 825.00146
+      value: 507.77914
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].inSlope
-      value: 501.28165
+      value: 301.65182
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].inSlope
@@ -1754,7 +1767,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].outSlope
-      value: 825.00146
+      value: 507.77914
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].inWeight
@@ -1762,7 +1775,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].outSlope
-      value: 501.28165
+      value: 301.65182
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].outSlope
@@ -1770,11 +1783,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].outWeight
-      value: 1
+      value: 0.47167546
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].outWeight
-      value: 0.22294505
+      value: 0.19189233
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1987,27 +2000,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].time
-      value: 8.459107
+      value: 9.552918
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].time
-      value: 14
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[0].value
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].value
-      value: 1990.891
+      value: 2007.4348
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].value
-      value: 3500
+      value: 3400
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].inSlope
-      value: 416.8632
+      value: 545.38666
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].inSlope
@@ -2019,7 +2032,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].outSlope
-      value: 416.8632
+      value: 545.38666
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].outSlope
@@ -2027,7 +2040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].outWeight
-      value: 0.18310072
+      value: 0.13237123
       objectReference: {fileID: 0}
     - target: {fileID: 8221245873172961943, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: m_text
@@ -2393,7 +2406,15 @@ PrefabInstance:
     - target: {fileID: 4021546366708180697, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -8716332136683103658, guid: a1a90492b6e6a4c4fbf4463466668738, type: 2}
+      objectReference: {fileID: 2100000, guid: 4ab2d39aad846a9468498566a0305132, type: 2}
+    - target: {fileID: 4021546366708180697, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
+      propertyPath: m_useMaxVisibleDescender
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021546366708180697, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
+      propertyPath: m_IsTextObjectScaleStatic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4223227226732353492, guid: 53990ffff47bf5d4c9fcc7948d4dcc5c, type: 3}
       propertyPath: m_SizeDelta.x
       value: 95
@@ -3004,7 +3025,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[0].time
@@ -3012,15 +3033,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].time
-      value: 3.0244696
+      value: 3.2650216
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].time
-      value: 4.271715
+      value: 3.8307056
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].time
-      value: 4.7382946
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[4].time
@@ -3032,19 +3053,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[0].value
-      value: 800
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].value
-      value: 2600.5664
+      value: 2486.2227
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].value
-      value: 3369.8445
+      value: 3494.583
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].value
-      value: 3944.7095
+      value: 4444
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[4].value
@@ -3056,19 +3077,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[0].inSlope
-      value: -301.33322
+      value: 163.03015
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].inSlope
-      value: 989.0928
+      value: 1021.7722
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].inSlope
-      value: 821.0934
+      value: 1845.3129
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].inSlope
-      value: 1636.5038
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[4].inSlope
@@ -3084,7 +3105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[0].outSlope
-      value: -301.33322
+      value: 163.03015
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].inWeight
@@ -3092,7 +3113,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].outSlope
-      value: 989.0928
+      value: 1021.7722
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].inWeight
@@ -3100,15 +3121,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].outSlope
-      value: 821.0934
+      value: 1845.3129
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].inWeight
-      value: 0.52027833
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].outSlope
-      value: 1636.5038
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[4].inWeight
@@ -3124,19 +3145,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[0].outWeight
-      value: 0.09721288
+      value: 0.55338436
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[1].outWeight
-      value: 0.3900641
+      value: 0.9078454
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[2].outWeight
-      value: 0.538663
+      value: 0.4186846
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[3].outWeight
-      value: 0.34308958
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: _priceCurve.m_Curve.Array.data[4].outWeight

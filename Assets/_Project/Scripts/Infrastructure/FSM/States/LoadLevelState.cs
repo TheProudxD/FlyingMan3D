@@ -17,13 +17,15 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly GameFactory _gameFactory;
         private readonly LevelResourceService _levelResourceService;
         private readonly WindowService _windowService;
+        private readonly MetricService _metricService;
 
         private StateMachine _stateMachine;
         private string _sceneName;
 
         public LoadLevelState(LoadingCurtain loadingCurtain,
             SaveLoadService saveLoadService, GameFactory gameFactory, StatisticsService statisticsService,
-            LevelResourceService levelResourceService, WindowService windowService, UIFactory uiFactory)
+            LevelResourceService levelResourceService, WindowService windowService, UIFactory uiFactory,
+            MetricService metricService)
         {
             _loadingCurtain = loadingCurtain;
             _saveLoadService = saveLoadService;
@@ -32,6 +34,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _levelResourceService = levelResourceService;
             _windowService = windowService;
             _uiFactory = uiFactory;
+            _metricService = metricService;
         }
 
         public void Enter()
@@ -60,9 +63,9 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _gameFactory.GetIndicator().Enable();
             _gameFactory.SetPlayerCamera();
 
-            _loadingCurtain.Hide();
+            _metricService.LevelStarted(_levelResourceService.Current.Value);
             _saveLoadService.InformAll();
-
+            _loadingCurtain.Hide();
             _stateMachine.Enter<GameLoopState, IExitableState>(this);
         }
 

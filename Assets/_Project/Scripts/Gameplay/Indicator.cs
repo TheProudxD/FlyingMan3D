@@ -3,6 +3,7 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Tools;
 using Reflex.Attributes;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Indicator : MonoBehaviour
 {

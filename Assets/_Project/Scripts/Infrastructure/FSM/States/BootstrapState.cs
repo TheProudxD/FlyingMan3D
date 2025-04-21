@@ -48,13 +48,14 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         public IEnumerator Initialize()
         {
             _loadingCurtain.Show();
+            Cursor.lockState = CursorLockMode.Confined;
             yield return _assetProvider.Initialize();
             yield return _configService.Initialize();
             yield return _audioService.Initialize();
             
             _localizationService.DefineLanguage();
             _graphicsService.DefineGraphicsSettings();
-            _metricService.GameStarted();
+            _metricService.GameLoaded();
             LoadGame();
         }
 

@@ -29,6 +29,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private Level _gameLevel;
         private PlayerController _mainPlayer;
         private List<GameObject> _levelHolder;
+        private Finish _finish;
 
         public GameFactory(SaveLoadService saveLoadService,
             LeaderboardService leaderboardService, AssetProvider assetProvider,
@@ -55,6 +56,8 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _gameLevel = _assetProvider.CreateLevel(_levelResourceService.Current.Value);
 
         public Level GetCurrentLevel() => _gameLevel;
+        
+        public Finish GetFinish() => _finish;
 
         private void CopyTransformData(Transform sourceTransform, Transform targetTransform)
         {
@@ -169,9 +172,9 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public Finish CreateFinish(Vector3 vector3, Quaternion identity)
         {
-            var finish = _assetProvider.GetFinish(vector3, identity);
-            _levelHolder.Add(finish.gameObject);
-            return finish;
+            _finish = _assetProvider.GetFinish(vector3, identity);
+            _levelHolder.Add(_finish.gameObject);
+            return _finish;
         }
 
         public GameObject GetEnemyRagdoll(Vector3 transformPosition, Quaternion identity)
@@ -235,36 +238,37 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public void SetPlayerCamera()
         {
-            var offset = new Vector3(0, 5, -8);
-            var camera = Object.FindObjectOfType<CameraFollow>();
-            camera.transform.position = _mainPlayer.SelfHips.transform.position + offset;
-            camera.enabled = true;
-            var cameraSetup = Object.FindObjectOfType<CameraSetup>();
-            cameraSetup.MainCamera.fieldOfView = 60;
-            camera.transform.rotation = Quaternion.Euler(new Vector3(10, 0, 0));
+            var offset = new Vector3(0, 7, -14);
 
-            camera.Setup(() =>
+            var cameraSetup = Object.FindObjectOfType<CameraSetup>();
+            CameraFollow follow = cameraSetup.CameraFollow;
+            follow.transform.position = _mainPlayer.SelfHips.transform.position + offset;
+            follow.enabled = true;
+            follow.transform.rotation = Quaternion.Euler(new Vector3(10, 0, 0));
+            cameraSetup.MainCamera.fieldOfView = 60;
+
+            follow.Setup(() =>
             {
                 if (_mainPlayer != null && _mainPlayer.SelfHips != null)
                 {
-                    camera.enabled = true;
+                    follow.enabled = true;
                     return _mainPlayer.SelfHips.transform.position + offset;
                 }
 
-                camera.enabled = false;
+                follow.enabled = false;
                 return Vector3.zero;
-            }, () => 100000, 15, false, true);
+            }, moveSpeed: 500f);
         }
 
         public void SetFinishCamera(float finishZPosition)
         {
-            var camera = Object.FindObjectOfType<CameraFollow>();
             var cameraSetup = Object.FindObjectOfType<CameraSetup>();
-            cameraSetup.MainCamera.fieldOfView = 95;
-            camera.SetMoveSpeed(-1);
-            camera.enabled = false;
-            camera.transform.position = new Vector3(0, 20, finishZPosition - 28f);
-            camera.transform.rotation = Quaternion.Euler(new Vector3(50, 0, 0));
+            CameraFollow follow = cameraSetup.CameraFollow;
+            cameraSetup.MainCamera.fieldOfView = 90;
+            follow.SetMoveSpeed(-1);
+            follow.enabled = false;
+            follow.transform.position = new Vector3(0, 20, finishZPosition - 35f);
+            follow.transform.rotation = Quaternion.Euler(new Vector3(50, 0, 0));
         }
     }
 }

@@ -83,8 +83,17 @@ public class Finish : MonoBehaviour
         root.GetComponent<CapsuleCollider>().enabled = true;
 
         playerController.Animator.enabled = true;
-        Collider[] colliders = root.GetComponentsInChildren<Collider>();
 
+        Rigidbody[] rgs = playerController.Bodies;
+
+        for (int i = 0; i < rgs.Length; i++)
+        {
+            rgs[i].isKinematic = true;
+            rgs[i].useGravity = false;
+        }
+        
+        Collider[] colliders = root.GetComponentsInChildren<Collider>();
+        
         for (int i = 1; i < colliders.Length; i++)
         {
             colliders[i].enabled = false;

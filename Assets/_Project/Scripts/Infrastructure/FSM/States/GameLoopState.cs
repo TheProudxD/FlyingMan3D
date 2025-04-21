@@ -54,6 +54,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             }
             else if (_gameFactory.Enemies.Count == 0 &&
                      _gameFactory.Players.Count > 0 &&
+                     _gameFactory.GetFinish() != null &&
                      _gameFactory.GetIndicator().Enabled == false)
             {
                 foreach (PlayerController item in _gameFactory.Players)

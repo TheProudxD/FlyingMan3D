@@ -16,7 +16,7 @@ namespace YG
         public int movingSpeedProgress = 1;
         [NonSerialized] public float movingSpeedDelta = 1.5f;
 
-        public float flyingControl = 20;
+        public float flyingControl = 65;
         public int flyingControlProgress = 1;
         [NonSerialized] public float flyingControlDelta = 3f;
     }

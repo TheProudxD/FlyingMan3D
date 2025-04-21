@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3943128954011686812}
   - component: {fileID: 6070537311236441837}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CameraSetup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mainCamera: {fileID: 1095508253068395749}
   _postProccessingCamera: {fileID: 0}
+  _cameraFollow: {fileID: 2214876045451355408}
   _autoFindCamera: 0
   _offset: 0
   _cameraAngle: 2
@@ -64,7 +65,7 @@ GameObject:
   - component: {fileID: 1095508253068395749}
   - component: {fileID: 1326988025935086288}
   - component: {fileID: 2214876045451355408}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: No Post Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -151,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EventMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_MaxRayIntersections: 0
 --- !u!114 &2214876045451355408
 MonoBehaviour:

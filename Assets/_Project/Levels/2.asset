@@ -50,5 +50,5 @@ MonoBehaviour:
   <MaxLaunchSpeed>k__BackingField: 65
   <StopDistance>k__BackingField: 0.2
   <EnemyStopDistance>k__BackingField: 0.2
-  <EnemyMoveSpeed>k__BackingField: 2.25
+  <EnemyMoveSpeed>k__BackingField: 3
   <MoneyReward>k__BackingField: 180

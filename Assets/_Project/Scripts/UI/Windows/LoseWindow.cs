@@ -3,6 +3,7 @@ using _Project.Scripts.Infrastructure.FSM;
 using _Project.Scripts.Infrastructure.FSM.States;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.SO;
 using _Project.Scripts.Tools.Extensions;
 using _Project.Scripts.UI.Buttons;
@@ -21,6 +22,7 @@ namespace _Project.Scripts.UI.Windows
         [Inject] private StateMachine _stateMachine;
         [Inject] private AdsService _adsService;
         [Inject] private MetricService _metricService;
+        [Inject] private LevelResourceService _levelResourceService;
 
         [SerializeField] private Transform _popup;
         [SerializeField] private Button _restartButton;
@@ -55,7 +57,7 @@ namespace _Project.Scripts.UI.Windows
                 $"Получи дополнительные <color=#{_rewardMoneyColor}>{_moreTimeData.AdditionalTime.ToString()}</color> секунд");
             */
 
-            _metricService.LevelLost();
+            _metricService.LevelLost(_levelResourceService.Current.Value);
         }
 
         private void ContinueGame()
@@ -65,7 +67,7 @@ namespace _Project.Scripts.UI.Windows
             _metricService.GameContinuedForAd();
             _stateMachine.Enter<ContinueLevelState>();
         }
-        
+
         private void RestartGame()
         {
             _restartButton.Remove(RestartGame);

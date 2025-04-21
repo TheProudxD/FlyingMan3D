@@ -73,6 +73,7 @@ namespace _Project.Scripts.UI.Windows
             _multiplierButton.Add(MultiplyMoney);
             UpdateMoneyRewardText();
 
+            _nextLevelButton.Add(LoadNextLevel);
             _replayLevelButton.Add(Restart);
             _replayLevelButton.Activate();
 
@@ -81,7 +82,7 @@ namespace _Project.Scripts.UI.Windows
             StartCoroutine(ShowNextLevelButtonCoroutine());
 
             _moneyResourceService.Add(this, _rewardAmount);
-            _metricService.LevelPassed();
+            _metricService.LevelPassed(_levelResourceService.Current.Value);
             UpdateTitleText();
             AnimateEmoji();
         }
@@ -120,7 +121,6 @@ namespace _Project.Scripts.UI.Windows
 
         private void ShowNextLevelButton()
         {
-            _nextLevelButton.Add(LoadNextLevel);
             _nextLevelButton.Activate();
 
             _animationService.ShakingScale(_multiplierButton.transform, _animationsConfig.FromScale,
@@ -155,6 +155,7 @@ namespace _Project.Scripts.UI.Windows
         {
             _nextLevelButton.Remove(LoadNextLevel);
             _replayLevelButton.Remove(Restart);
+            _multiplierButton.Remove(MultiplyMoney);
             // _coinRewardAnimation.OnAnimationFinished -= LoadNextLevel;
             // _sendReviewButton.Deactivate();
             // _moreGamesButton.Deactivate();
