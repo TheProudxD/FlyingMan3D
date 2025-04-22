@@ -42,6 +42,8 @@ namespace _Project.Scripts.Infrastructure.DI
             BindAssets(builder);
             BindGameplayServices(builder);
 
+            builder.AddScoped(typeof(AudioLoader));
+
             builder.OnContainerBuilt += c => c.Resolve<ConfigService>();
         }
 

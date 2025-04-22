@@ -7,7 +7,6 @@
     "com.kylewbanks.scenerefattribute": "https://github.com/KyleBanks/scene-ref-attribute.git",
     "com.leth.colorlink": "https://github.com/leth4/Colorlink.git",
     "com.marijnzwemmer.unity-toolbar-extender": "https://github.com/marijnz/unity-toolbar-extender.git",
-    "com.unity.ai.navigation": "1.1.5",
     "com.unity.ide.rider": "3.0.28",
     "com.unity.recorder": "4.0.3",
     "com.unity.textmeshpro": "3.0.9",
@@ -24,6 +23,7 @@
     "com.unity.modules.ui": "1.0.0",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.unitywebrequest": "1.0.0",
+    "com.unity.modules.unitywebrequestaudio": "1.0.0",
     "com.unity.modules.unitywebrequesttexture": "1.0.0"
   }
 }

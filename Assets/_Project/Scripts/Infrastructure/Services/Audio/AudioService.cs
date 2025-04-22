@@ -1,6 +1,7 @@
 using System.Collections;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Config;
+using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.Audio
 {
@@ -63,7 +64,9 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
         
         public void PlayRingCollideSound() => _audioServiceView.PlaySound(_audioConfig.RingCollide);
         
-        //public void PlayMusic() => _audioServiceView.PlaySound(_audioConfig.Music);
+        // public void PlayMusic() => _audioServiceView.PlaySound(_audioConfig.Music);
+        
+        public void PlayMusic(AudioClip music) => _audioServiceView.PlaySound(music);
 
         public void MuteSound() => _audioServiceView.DisableSounds();
 
