@@ -149,6 +149,8 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             _container.Inject(ring);
         }
 
+        public void CreateBarrel(Vector3 transformPosition) => Instantiate<ExplosionBarrel>(AssetPath.BARREL, transformPosition);
+
         private GameObject Instantiate(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
             Transform parent = null, bool isActivateGameObject = true)
         {

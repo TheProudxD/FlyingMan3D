@@ -7,6 +7,7 @@ using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.Resources;
+using _Project.Scripts.Tools.Extensions;
 using Reflex.Attributes;
 
 public class Spawner : MonoBehaviour
@@ -88,6 +89,13 @@ public class Spawner : MonoBehaviour
             }
 
             time += timeDif;
+        }
+
+        for (int i = 0; i < level.BarrelAmount; i++)
+        {
+            Vector3 randomPosition = finishGo.transform.position + Random.insideUnitSphere * 15;
+            randomPosition = randomPosition.WithY(finishGo.transform.position.y + 1.5f);
+            _assetProvider.CreateBarrel(randomPosition);
         }
     }
 

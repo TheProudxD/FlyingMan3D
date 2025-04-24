@@ -48,8 +48,9 @@ MonoBehaviour:
       Speed: 0
   <EnemyCount>k__BackingField: 12
   <TimeDif>k__BackingField: 2
-  <MaxLaunchSpeed>k__BackingField: 70
+  <MaxLaunchSpeed>k__BackingField: 75
   <StopDistance>k__BackingField: 0.2
   <EnemyStopDistance>k__BackingField: 0.2
   <EnemyMoveSpeed>k__BackingField: 3
   <MoneyReward>k__BackingField: 160
+  <BarrelAmount>k__BackingField: 5

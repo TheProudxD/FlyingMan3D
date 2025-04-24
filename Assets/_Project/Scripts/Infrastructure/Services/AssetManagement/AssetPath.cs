@@ -29,5 +29,6 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public const string ENEMY_RAGDOLL = GAMEPLAY_FOLDER + "/EnemyRagdoll";
         public const string PLAYER_RAGDOLL = GAMEPLAY_FOLDER + "/PlayerRagdoll";
         public const string SLINGSHOT = GAMEPLAY_FOLDER + "/Slingshot";
+        public const string BARREL = GAMEPLAY_FOLDER + "/Barrel";
     }
 }

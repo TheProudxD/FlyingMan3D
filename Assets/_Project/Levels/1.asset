@@ -29,16 +29,16 @@ MonoBehaviour:
       MovementAxis: {x: 0, y: 0, z: 0}
       Speed: 0
     - RingType: 0
-      Effect: 1
+      Effect: 2
       MovementAxis: {x: 0, y: 0, z: 0}
       Speed: 0
   - InsideRings:
     - RingType: 0
-      Effect: 2
+      Effect: 3
       MovementAxis: {x: 0, y: 0, z: 0}
       Speed: 0
     - RingType: 2
-      Effect: 2
+      Effect: 1
       MovementAxis: {x: 0, y: 0, z: 0}
       Speed: 0
   <EnemyCount>k__BackingField: 4
@@ -48,3 +48,4 @@ MonoBehaviour:
   <EnemyStopDistance>k__BackingField: 0.2
   <EnemyMoveSpeed>k__BackingField: 5
   <MoneyReward>k__BackingField: 150
+  <BarrelAmount>k__BackingField: 0
