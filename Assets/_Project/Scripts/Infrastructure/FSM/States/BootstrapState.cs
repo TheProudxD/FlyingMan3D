@@ -22,14 +22,14 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly AssetProvider _assetProvider;
         private readonly AudioService _audioService;
         private readonly GameFactory _gameFactory;
-        private readonly AudioLoader _audioLoader;
+        // private readonly AudioLoader _audioLoader;
 
         private StateMachine _stateMachine;
 
         public BootstrapState(SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
             MetricService metricService, LocalizationService localizationService,
             DeviceSpecificGraphics graphicsService, ConfigService configService, AssetProvider assetProvider,
-            AudioService audioService, GameFactory gameFactory, AudioLoader audioLoader)
+            AudioService audioService, GameFactory gameFactory)
         {
             _sceneLoader = sceneLoader;
             _loadingCurtain = loadingCurtain;
@@ -40,7 +40,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _assetProvider = assetProvider;
             _audioService = audioService;
             _gameFactory = gameFactory;
-            _audioLoader = audioLoader;
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
@@ -55,7 +54,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             yield return _configService.Initialize();
             yield return _audioService.Initialize();
 
-            Coroutines.StartRoutine(_audioLoader.Load());
+            // Coroutines.StartRoutine(_audioLoader.Load());
 
             _localizationService.DefineLanguage();
             _graphicsService.DefineGraphicsSettings();

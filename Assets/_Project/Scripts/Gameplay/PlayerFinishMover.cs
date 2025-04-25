@@ -14,13 +14,15 @@ public class PlayerFinishMover : MonoBehaviour
     [Inject] private AudioService _audioService;
 
     private static readonly int IsGround = Animator.StringToHash("IsGround");
+
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private TextMeshProUGUI _healthText;
     [SerializeField] private Canvas _healthCanvas;
-    private float _raycastDistance = 100;
     [SerializeField] private LayerMask _groundLayer;
 
+    private float _raycastDistance = 100;
     private readonly RaycastHit[] _raycastHits = new RaycastHit[2];
+
     private float _moveSpeed;
     private float _stopDistance;
     private GameObject _target;
@@ -29,6 +31,7 @@ public class PlayerFinishMover : MonoBehaviour
     private bool _canMove;
     private float _rotationSpeed = 100;
     private int _health;
+    private int _damage = 1;
 
     public int Health
     {
@@ -120,7 +123,17 @@ public class PlayerFinishMover : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.root.TryGetComponent(out Enemy enemy) && !enemy.IsDie && !_playerController.IsDie)
+        Fight(collision);
+    }
+
+    private void OnCollisionStay(Collision other)
+    {
+        Fight(other);
+    }
+
+    private void Fight(Collision collision)
+    {
+        if (collision.transform.root.TryGetComponent(out EnemyBase enemy) && !enemy.IsDie && !_playerController.IsDie)
         {
             _audioService.PlayHitSound();
 
@@ -130,7 +143,7 @@ public class PlayerFinishMover : MonoBehaviour
                 _gameFactory.GetSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
             }
 
-            enemy.Die();
+            enemy.TakeDamage(_damage);
             Health--;
 
             if (Health <= 0)

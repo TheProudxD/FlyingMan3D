@@ -41,6 +41,7 @@ MonoBehaviour:
   - skipLevel
   - claim
   - holdAndDrag
+  - music
   _values:
   - "Configuraci\xF3n"
   - Juego Terminado
@@ -70,3 +71,4 @@ MonoBehaviour:
   - Saltar Nivel
   - Reclamar
   - "Mant\xE9n y arrastra"
+  - "M\xFAsica"

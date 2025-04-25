@@ -35,10 +35,10 @@ public class Finish : MonoBehaviour
         _attack = true;
         _gameFactory.SetFinishCamera(transform.position.z);
 
-        foreach (Enemy e in _gameFactory.Enemies)
+        foreach (EnemyBase e in _gameFactory.Enemies)
         {
             if (e.gameObject.activeInHierarchy)
-                e.SetAttackState();
+                e.Initialize();
         }
     }
 

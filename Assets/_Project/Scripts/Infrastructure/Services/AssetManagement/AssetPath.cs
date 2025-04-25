@@ -22,6 +22,8 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public const string POST_PROCESS_VOLUME = "PostProcessVolume";
 
         public const string ENEMY = GAMEPLAY_FOLDER + "/Enemy";
+        public const string BIG_ENEMY = GAMEPLAY_FOLDER + "/BigEnemy";
+        public const string LARGE_ENEMY = GAMEPLAY_FOLDER + "/LargeEnemy";
         public const string PLAYER = GAMEPLAY_FOLDER + "/Player";
         public const string FINISH = GAMEPLAY_FOLDER + "/Finish";
         public const string SMOKE = GAMEPLAY_FOLDER + "/Smoke";

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay;
@@ -9,6 +10,8 @@ using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools.Camera;
 using BhorGames.Mechanics;
 using UnityEngine;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Infrastructure.Services.Factories
 {
@@ -20,10 +23,10 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private readonly AssetProvider _assetProvider;
 
         private readonly List<PlayerController> _players = new();
-        private readonly List<Enemy> _enemies = new();
+        private readonly List<EnemyBase> _enemies = new();
 
         public IReadOnlyList<PlayerController> Players => _players;
-        public IReadOnlyList<Enemy> Enemies => _enemies;
+        public IReadOnlyList<EnemyBase> Enemies => _enemies;
 
         private HeartTracker _heartTracker;
         private Level _gameLevel;
@@ -56,7 +59,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _gameLevel = _assetProvider.CreateLevel(_levelResourceService.Current.Value);
 
         public Level GetCurrentLevel() => _gameLevel;
-        
+
         public Finish GetFinish() => _finish;
 
         private void CopyTransformData(Transform sourceTransform, Transform targetTransform)
@@ -109,15 +112,23 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             RemovePlayer(playerController);
         }
 
-        public void RemoveEnemy(Enemy enemy)
+        public void RemoveEnemy(EnemyBase enemy)
         {
             _enemies.Remove(enemy);
             EnemiesCounter.Value = _enemies.Count;
         }
 
-        public void AddEnemy(Vector3 position, float rotation)
+        public void AddEnemy(EnemyType enemyType, Vector3 position, float rotation)
         {
-            Enemy enemy = _assetProvider.GetEnemy(position, Quaternion.Euler(0f, 180f, 0f));
+            EnemyBase enemy = enemyType switch
+            {
+                EnemyType.Simple or EnemyType.WithGun or EnemyType.WithGunAndShield =>
+                    _assetProvider.CreateSimpleEnemy(position, Quaternion.Euler(0f, 180f, 0f)),
+                EnemyType.Big => _assetProvider.CreateBigEnemy(position, Quaternion.Euler(0f, 180f, 0f)),
+                EnemyType.Large => _assetProvider.CreateLargeEnemy(position, Quaternion.Euler(0f, 180f, 0f)),
+                _ => throw new ArgumentOutOfRangeException(nameof(enemyType), enemyType, null)
+            };
+
             enemy.transform.Rotate(0, rotation, 0);
             enemy.transform.Translate(new Vector3(0, 0, -16f));
             _enemies.Add(enemy);
@@ -196,6 +207,12 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _levelHolder.Add(s);
         }
 
+        public void CreateBarrel(Vector3 randomPosition)
+        {
+            ExplosionBarrel barrel = _assetProvider.CreateBarrel(randomPosition);
+            _levelHolder.Add(barrel.gameObject);
+        }
+
         public RingHolder GetRing(Vector3 calculateRingPosition, Spawner.Colors[] colorArray, int index)
         {
             RingHolder ringHolder = _assetProvider.CreateRing(calculateRingPosition, colorArray, index);
@@ -226,7 +243,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
                 Object.Destroy(player?.gameObject);
             }
 
-            foreach (Enemy enemy in _enemies)
+            foreach (EnemyBase enemy in _enemies)
             {
                 Object.Destroy(enemy?.gameObject);
             }

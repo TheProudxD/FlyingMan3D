@@ -18,7 +18,7 @@ public class ExplosionBarrel : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         if (!other.gameObject.TryGetComponent(out PlayerFinishMover _) &&
-            !other.gameObject.TryGetComponent(out Enemy _) &&
+            !other.gameObject.TryGetComponent(out EnemyBase _) &&
             !other.gameObject.TryGetComponent(out PlayerController _))
             return;
 

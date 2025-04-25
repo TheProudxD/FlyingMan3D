@@ -17,10 +17,11 @@ namespace _Project.Scripts.UI.Windows
         [SerializeField] private RestartGameButton _restartButton;
         [SerializeField] private MoreGamesButton _moreGamesButton;
         [SerializeField] private CustomToggle _soundButton;
-        //[SerializeField] private CustomToggle _musicButton;
+        // [SerializeField] private CustomSlider _musicSlider;
 
         private readonly float _fadeOutDuration = 0.13f;
         private readonly float _fadeInDuration = 0.15f;
+        private AudioServiceView _audioServiceView;
 
         public override void Show()
         {
@@ -28,9 +29,11 @@ namespace _Project.Scripts.UI.Windows
             _animationService.FadeOut(_popup.gameObject, _fadeOutDuration);
 
             Time.timeScale = 0;
-            
-            _soundButton.OnValueChanged += AmendSound;
-            //_musicButton.OnValueChanged += AmendMusic;
+            _audioServiceView = FindObjectOfType<AudioServiceView>();
+
+            _soundButton.ValueChanged += AmendSound;
+            // _musicSlider.ValueChanged += AmendMusic;
+            // _musicSlider.Initialize(_audioServiceView.GetMusicVolume());
             _continueGameButton.Add(ContinueGame);
             _restartButton.Activate();
             _restartButton.Add(Hide);
@@ -56,13 +59,12 @@ namespace _Project.Scripts.UI.Windows
             AudioService.PlayClickSound();
             Hide();
         }
-        
-        private void AmendMusic(bool isOn)
-        {
-            AudioService.PlayClickSound();
 
-            if (isOn)
+        private void AmendMusic(float value)
+        {
+            if (value >= 0)
             {
+                _audioServiceView.SetMusicVolume(value);
                 AudioService.UnmuteMusic();
             }
             else
@@ -71,44 +73,40 @@ namespace _Project.Scripts.UI.Windows
             }
         }
 
-        private void LoadSettings()
-        {
-            if (PlayerPrefs.GetInt("Sound") == 0)
-            {
-                _soundButton.ToggleValue(false);
-                AudioService.MuteSound();
-            }
-            else
-            {
-                _soundButton.ToggleValue(true);
-                AudioService.UnmuteSound();
-            }
+        // private void LoadSettings()
+        // {
+        //     if (PlayerPrefs.GetInt("Sound") == 0)
+        //     {
+        //         _soundButton.ToggleValue(false);
+        //         AudioService.MuteSound();
+        //     }
+        //     else
+        //     {
+        //         _soundButton.ToggleValue(true);
+        //         AudioService.UnmuteSound();
+        //     }
+        //
+        //     if (PlayerPrefs.GetInt("Music") == 0)
+        //     {
+        //         //_musicButton.ToggleValue(false);
+        //         AudioService.MuteMusic();
+        //     }
+        //     else
+        //     {
+        //         //_musicButton.ToggleValue(true);
+        //         AudioService.UnmuteMusic();
+        //     }
+        // }
 
-            if (PlayerPrefs.GetInt("Music") == 0)
-            {
-                //_musicButton.ToggleValue(false);
-                AudioService.MuteMusic();
-            }
-            else
-            {
-                //_musicButton.ToggleValue(true);
-                AudioService.UnmuteMusic();
-            }
-        }
-        
         public override void Hide()
         {
-            _soundButton.OnValueChanged -= AmendSound;
-            //_musicButton.OnValueChanged -= AmendMusic;
+            _soundButton.ValueChanged -= AmendSound;
+            // _musicSlider.ValueChanged -= AmendMusic;
             _continueGameButton.Remove(ContinueGame);
-            //_restartButton.Deactivate();
             _restartButton.Remove(Hide);
-            //_openStatisticsButton.Deactivate();
-            //_openLeaderboardButton.Deactivate();
-            //_openMoreGamesButton.Deactivate();
 
             Time.timeScale = 1;
-            
+
             _animationService.FadeIn(_popup.gameObject, _fadeInDuration, callback: () => base.Hide());
         }
     }

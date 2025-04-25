@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using _Project.Scripts.Infrastructure;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -60,15 +61,20 @@ public class Spawner : MonoBehaviour
         Finish finishGo = _gameFactory.CreateFinish(new Vector3(0, -0.5f, finishZPos), Quaternion.identity);
 
         Level level = _gameFactory.GetCurrentLevel();
-        int enemyCount = level.EnemyCount;
+        int enemyCount = level.Enemies.Sum(x => x.Amount);
 
         float angle = 360f / enemyCount;
 
-        for (int i = 0; i < enemyCount; i++)
-        {
-            float rotation = angle * i;
+        int counter = 0;
 
-            _gameFactory.AddEnemy(finishGo.transform.position, rotation);
+        foreach (EnemyData enemyData in level.Enemies)
+        {
+            for (int j = 0; j < enemyData.Amount; j++)
+            {
+                float rotation = angle * counter;
+                _gameFactory.AddEnemy(enemyData.Type, finishGo.transform.position, rotation);
+                counter++;
+            }
         }
 
         int ringCount = level.Rings.Length;
@@ -95,7 +101,7 @@ public class Spawner : MonoBehaviour
         {
             Vector3 randomPosition = finishGo.transform.position + Random.insideUnitSphere * 15;
             randomPosition = randomPosition.WithY(finishGo.transform.position.y + 1.5f);
-            _assetProvider.CreateBarrel(randomPosition);
+            _gameFactory.CreateBarrel(randomPosition);
         }
     }
 

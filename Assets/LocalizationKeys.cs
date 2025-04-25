@@ -70,5 +70,7 @@ namespace TS.LocalizationSystem
         public const string claim = "claim";
         
         public const string holdAndDrag = "holdAndDrag";
+        
+        public const string music = "music";
     }
 }

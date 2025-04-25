@@ -9,7 +9,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
     public class AudioLoader : IService
     {
         private readonly AudioService _audioService;
-        private readonly string _audioPathInStreamingAssets = "Music/background.ogg";
+        private readonly string _audioPathInStreamingAssets = "Music/background.mp3";
         private readonly bool _playOnLoad = true;
 
         public AudioLoader(AudioService audioService) => _audioService = audioService;

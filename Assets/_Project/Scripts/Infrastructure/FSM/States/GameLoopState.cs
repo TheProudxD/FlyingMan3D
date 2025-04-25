@@ -41,7 +41,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             if (_gameFactory.Players.Count == 0 && _gameFactory.Enemies.Count >= 0)
             {
-                foreach (Enemy item in _gameFactory.Enemies)
+                foreach (EnemyBase item in _gameFactory.Enemies)
                 {
                     if (item == null)
                         continue;

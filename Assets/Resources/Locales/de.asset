@@ -41,6 +41,7 @@ MonoBehaviour:
   - skipLevel
   - claim
   - holdAndDrag
+  - music
   _values:
   - Einstellungen
   - Spiel vorbei
@@ -70,3 +71,4 @@ MonoBehaviour:
   - "Level \xFCberspringen"
   - Abholen
   - Halten und ziehen
+  - Musik

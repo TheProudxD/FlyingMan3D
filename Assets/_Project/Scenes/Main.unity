@@ -384,7 +384,7 @@ Transform:
   m_GameObject: {fileID: 62414985}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.82}
+  m_LocalPosition: {x: 0, y: 0, z: 2.77}
   m_LocalScale: {x: 30, y: 1, z: 15}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -548,15 +548,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4161245141115118, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
       propertyPath: m_LocalScale.x
-      value: 29
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 4161245141115118, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
       propertyPath: m_LocalScale.y
-      value: 29
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 4161245141115118, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
       propertyPath: m_LocalScale.z
-      value: 29
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 4161245141115118, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
       propertyPath: m_LocalPosition.x
@@ -619,12 +619,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198913592581941320, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
+      propertyPath: lengthInSec
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198913592581941320, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
       propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198913592581941320, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
       propertyPath: InitialModule.maxNumParticles
       value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 198913592581941320, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 198913592581941320, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 85
       objectReference: {fileID: 0}
     - target: {fileID: 199191892390278896, guid: b67b8c45390698d4dab3aad82e12f7ea, type: 3}
       propertyPath: m_Materials.Array.size
@@ -938,7 +950,7 @@ Transform:
   m_GameObject: {fileID: 1079134073}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5, y: 50, z: 0}
+  m_LocalPosition: {x: 5, y: 140.5, z: 300}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1276,7 +1288,7 @@ Transform:
   m_GameObject: {fileID: 1998824874}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5, y: 50, z: 0}
+  m_LocalPosition: {x: -5, y: 140.5, z: 300}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

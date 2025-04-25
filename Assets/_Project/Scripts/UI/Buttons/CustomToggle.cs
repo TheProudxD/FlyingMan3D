@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Infrastructure.Services.Audio;
+using NaughtyAttributes;
 using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,7 @@ namespace _Project.Scripts.UI.Buttons
 
         private Toggle _toggle;
 
-        public event Action<bool> OnValueChanged;
+        public event Action<bool> ValueChanged;
 
         private void Awake()
         {
@@ -28,7 +29,7 @@ namespace _Project.Scripts.UI.Buttons
         {
             _audioService.PlayClickSound();
             _toggle.image.sprite = value ? _isOnSprite : _isOffSprite;
-            OnValueChanged?.Invoke(_toggle.isOn);
+            ValueChanged?.Invoke(_toggle.isOn);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             _configService = _container.Resolve<ConfigService>();
             yield break;
         }
-        
+
         public AudioServiceView CreateAudioServiceView() => Instantiate<AudioServiceView>(AssetPath.AUDIO_SERVICE_VIEW);
 
         public Transform CreateUIRoot() => Instantiate<UIRoot>(UIAssetsPath.UI_ROOT_PATH).transform;
@@ -79,8 +79,14 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public WindowStaticData GetWindowStaticData() => Load<WindowStaticData>(AssetPath.WINDOW_CONFIG_PATH);
 
-        public Enemy GetEnemy(Vector3 position, Quaternion rotation) =>
+        public Enemy CreateSimpleEnemy(Vector3 position, Quaternion rotation) =>
             Instantiate<Enemy>(AssetPath.ENEMY, position, rotation);
+
+        public BigEnemy CreateBigEnemy(Vector3 position, Quaternion rotation) =>
+            Instantiate<BigEnemy>(AssetPath.BIG_ENEMY, position, rotation);
+
+        public LargeEnemy CreateLargeEnemy(Vector3 position, Quaternion rotation)
+            => Instantiate<LargeEnemy>(AssetPath.LARGE_ENEMY, position, rotation);
 
         public Finish GetFinish(Vector3 position, Quaternion rotation) =>
             Instantiate<Finish>(AssetPath.FINISH, position, rotation);
@@ -149,7 +155,8 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             _container.Inject(ring);
         }
 
-        public void CreateBarrel(Vector3 transformPosition) => Instantiate<ExplosionBarrel>(AssetPath.BARREL, transformPosition);
+        public ExplosionBarrel CreateBarrel(Vector3 transformPosition) =>
+            Instantiate<ExplosionBarrel>(AssetPath.BARREL, transformPosition);
 
         private GameObject Instantiate(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
             Transform parent = null, bool isActivateGameObject = true)

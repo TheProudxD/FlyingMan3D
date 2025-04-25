@@ -66,7 +66,7 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
         
         // public void PlayMusic() => _audioServiceView.PlaySound(_audioConfig.Music);
         
-        public void PlayMusic(AudioClip music) => _audioServiceView.PlaySound(music);
+        public void PlayMusic(AudioClip music) => _audioServiceView.PlayMusic(music);
 
         public void MuteSound() => _audioServiceView.DisableSounds();
 

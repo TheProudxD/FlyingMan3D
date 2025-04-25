@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8459f7f25b8a41bfb50299b9069bcb99, type: 3}
   m_Name: 28
   m_EditorClassIdentifier: 
-  <LevelTimer>k__BackingField: 3
   <Rings>k__BackingField:
   - InsideRings:
     - RingType: 1
@@ -50,10 +49,13 @@ MonoBehaviour:
       Effect: 1
       MovementAxis: {x: 0, y: 4, z: 0}
       Speed: 2
-  <EnemyCount>k__BackingField: 18
   <TimeDif>k__BackingField: 2
-  <MaxLaunchSpeed>k__BackingField: 90
+  <MaxLaunchSpeed>k__BackingField: 95
   <StopDistance>k__BackingField: 0.2
-  <EnemyStopDistance>k__BackingField: 0.2
-  <EnemyMoveSpeed>k__BackingField: 2.5
   <MoneyReward>k__BackingField: 300
+  <BarrelAmount>k__BackingField: 1
+  <Enemies>k__BackingField:
+  - Type: 0
+    Amount: 14
+  - Type: 2
+    Amount: 2

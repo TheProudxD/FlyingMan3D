@@ -41,6 +41,7 @@ MonoBehaviour:
   - skipLevel
   - claim
   - holdAndDrag
+  - music
   _values:
   - Settings
   - Game Over
@@ -70,3 +71,4 @@ MonoBehaviour:
   - Skip Level
   - Claim
   - Hold and drag
+  - Music
