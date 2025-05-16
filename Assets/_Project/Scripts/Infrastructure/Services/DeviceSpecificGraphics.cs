@@ -10,11 +10,11 @@ namespace _Project.Scripts.Infrastructure.Services
 
         public DeviceSpecificGraphics(AssetProvider assetProvider) => _assetProvider = assetProvider;
 
-        public void DefineGraphicsSettings()
+        public async void DefineGraphicsSettings()
         {
-            GraphicsPreset preset = IsMobileDevice()
+            GraphicsPreset preset = await (IsMobileDevice()
                 ? _assetProvider.GetMobileGraphicsPreset()
-                : _assetProvider.GetDesktopGraphicsPreset();
+                : _assetProvider.GetDesktopGraphicsPreset());
 
             QualitySettings.globalTextureMipmapLimit = preset.textureQuality;
             QualitySettings.shadows = preset.shadows;

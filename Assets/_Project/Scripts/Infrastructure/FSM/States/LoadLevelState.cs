@@ -44,12 +44,12 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             Initialize();
         }
 
-        public void Initialize()
+        public async void Initialize()
         {
             _gameFactory.ClearLevelHolder();
-            _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
-            PlayerController player = _gameFactory.CreateMainPlayer();
-            _gameFactory.GetSpawner().Initialize();
+            await _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
+            PlayerController player = await _gameFactory.CreateMainPlayer();
+            await _gameFactory.GetSpawner().Initialize();
 
             Hud hud = _uiFactory.GetHUD();
             hud.Show();
@@ -78,7 +78,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
                 _windowService.Show(WindowId.Tutorial);
             }
         }
-
 
         public void Exit()
         {

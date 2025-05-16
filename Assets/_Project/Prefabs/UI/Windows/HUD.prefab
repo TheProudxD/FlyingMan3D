@@ -1705,6 +1705,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 7a585a8a32092d044849fa1bd7d60eba, type: 3}
+    - target: {fileID: 6842575084625573379, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
+      propertyPath: _localizationKey
+      value: moveSpeed
+      objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: LocalizationName
       value: moveSpeed
@@ -1981,6 +1985,10 @@ PrefabInstance:
     - target: {fileID: 4183326924732262554, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: m_PreserveAspect
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842575084625573379, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
+      propertyPath: _localizationKey
+      value: flyingControl
       objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: LocalizationName
@@ -3019,6 +3027,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: e6c1d3443a3eed54489ee68f03e57db0, type: 3}
+    - target: {fileID: 6842575084625573379, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
+      propertyPath: _localizationKey
+      value: health
+      objectReference: {fileID: 0}
     - target: {fileID: 7082975403926101047, guid: 9fbe03ef68361e248ae05979c9b0f994, type: 3}
       propertyPath: LocalizationName
       value: health

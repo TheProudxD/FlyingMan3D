@@ -41,16 +41,17 @@ namespace _Project.Scripts.Infrastructure.Services.Localization.UI
         private void OnEnable()
         {
             if (_localizationService == null)
+            {
+                UnityEngine.Debug.LogError("Localization Service is null: " + _localizationKey);
                 return;
+            }
 
             _localizationService.LocaleChanged += LocaleManager_LocaleChanged;
 
             if (_updateNumber == _localizationService.UpdateNumber) 
                 return;
 
-            _updateNumber = _localizationService.UpdateNumber;
-
-            UpdateLabel();
+            LocaleManager_LocaleChanged(null, _localizationService.UpdateNumber);
         }
 
         private void OnDisable()
@@ -66,9 +67,13 @@ namespace _Project.Scripts.Infrastructure.Services.Localization.UI
             UpdateLabel();
         }
 
-        public void UpdateLabel()
+        public async void UpdateLabel()
         {
-            string label = _localizationService.Localize(_localizationKey);
+            if (string.IsNullOrEmpty(_localizationKey))
+            {
+                UnityEngine.Debug.Log(gameObject.name + " has not been set yet", gameObject);
+            }
+            string label = await _localizationService.Localize(_localizationKey);
 
             if (!string.IsNullOrEmpty(label) && _useCaps)
             {

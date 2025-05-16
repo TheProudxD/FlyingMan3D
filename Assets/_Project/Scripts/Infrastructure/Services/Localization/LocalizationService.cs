@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Localization.SO;
 using UnityEngine;
@@ -10,12 +11,12 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
     public class LocalizationService : IService
     {
         private readonly AssetProvider _assetProvider;
-        private LocaleConfig _current;
         private TextCollection _currentCollection;
 
         public Action<LocaleConfig, int> LocaleChanged;
 
         public int UpdateNumber { get; private set; }
+        public LocaleConfig Current { get; private set; }
 
         public LocalizationService(AssetProvider assetProvider)
         {
@@ -25,67 +26,48 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
 
         ~LocalizationService() => YG2.onSwitchLang -= SwitchLanguage;
 
-        private void SwitchLanguage(string lang)
+        private async void SwitchLanguage(string lang)
         {
             bool tryParse = Enum.TryParse(lang, out Locale @case);
 
-            SetLocale(tryParse ? @case : Locale.en);
+            await SetLocale(tryParse ? @case : Locale.en);
         }
 
-        public LocaleConfig Current
-        {
-            get
-            {
-                if (_current == null)
-                    SetDefaultLocale();
+        public Task SetLocale(SystemLanguage systemLanguage) => UpdateLocale(LocaleSettings.GetLocale(systemLanguage));
 
-                return _current;
-            }
-        }
+        public Task SetLocale(Locale locale) => UpdateLocale(LocaleSettings.Locales[locale]);
 
-        public void SetLocale(SystemLanguage systemLanguage) => UpdateLocale(LocaleSettings.GetLocale(systemLanguage));
+        public Task SetDefaultLocale() => UpdateLocale(LocaleSettings.GetDefault());
 
-        public void SetLocale(Locale locale) => UpdateLocale(LocaleSettings.Locales[locale]);
-
-        public void SetDefaultLocale() => UpdateLocale(LocaleSettings.GetDefault());
-
-        private void UpdateLocale(LocaleConfig localeConfig)
+        private async Task UpdateLocale(LocaleConfig localeConfig)
         {
             if (localeConfig == null)
                 return;
 
-            _current = localeConfig;
+            Current = localeConfig;
             UpdateNumber++;
 
-            _currentCollection = _assetProvider.GetLocal(localeConfig);
+            _currentCollection = await _assetProvider.GetLocal(localeConfig);
 
-            LocaleChanged?.Invoke(_current, UpdateNumber);
+            LocaleChanged?.Invoke(Current, UpdateNumber);
         }
 
-        public string Localize(string key)
+        public async Task<string> Localize(string key)
         {
             if (string.IsNullOrEmpty(key))
             {
                 return null;
             }
 
-            if (_currentCollection == null)
-            {
-                return null;
-            }
-
             if (Current == null)
             {
-                UpdateLocale(LocaleSettings.GetDefault());
+                await SetDefaultLocale();
             }
-
+            
             if (_currentCollection == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                UnityEngine.Debug.LogError("Current collection is null");
-#endif
-
-                return "";
+                _currentCollection = await _assetProvider.GetLocal(Current);
+                return null;
             }
 
             string text = _currentCollection.Localize(key);
@@ -100,9 +82,9 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
             return Regex.Unescape(text ?? string.Empty);
         }
 
-        public string LocalizeUpper(string key)
+        public async Task<string> LocalizeUpper(string key)
         {
-            string text = Localize(key);
+            string text = await Localize(key);
             return string.IsNullOrEmpty(text) ? null : text.ToUpper();
         }
 

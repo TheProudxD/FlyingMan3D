@@ -1,9 +1,9 @@
-using System.Collections;
+using System.Threading.Tasks;
 
 namespace _Project.Scripts.Infrastructure
 {
     public interface IInitializable
     {
-        IEnumerator Initialize();
+        Task Initialize();
     }
 }

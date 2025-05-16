@@ -131,7 +131,7 @@ public class PlayerFinishMover : MonoBehaviour
         Fight(other);
     }
 
-    private void Fight(Collision collision)
+    private async void Fight(Collision collision)
     {
         if (collision.transform.root.TryGetComponent(out EnemyBase enemy) && !enemy.IsDie && !_playerController.IsDie)
         {
@@ -140,7 +140,7 @@ public class PlayerFinishMover : MonoBehaviour
             if (_canSmoke)
             {
                 _canSmoke = false;
-                _gameFactory.GetSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
+                await _gameFactory.GetSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
             }
 
             enemy.TakeDamage(_damage);

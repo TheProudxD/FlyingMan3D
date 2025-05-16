@@ -28,19 +28,18 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _windowService = windowService;
         }
 
-        public void Enter() => Coroutines.StartRoutine(LoadProgress());
+        public void Enter() => LoadProgress();
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
 
         public void Exit() { }
 
-        private IEnumerator LoadProgress()
+        private async void LoadProgress()
         {
             _progressService.Progress = _saveLoadService.LoadProgress();
 
-            yield return _gameFactory.Initialize();
-
-            _uiFactory.Initialize(_windowService);
+            await _gameFactory.Initialize();
+            await _uiFactory.Initialize(_windowService);
 
             foreach (ScoreBaseView view in Object.FindObjectsByType<ScoreBaseView>(FindObjectsInactive.Include,
                          FindObjectsSortMode.None))

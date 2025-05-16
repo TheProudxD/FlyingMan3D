@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.FSM.States;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
@@ -20,9 +21,9 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public UIFactory(AssetProvider assetProvider) => _assetProvider = assetProvider;
 
-        public void Initialize(WindowService windowService)
+        public async Task Initialize(WindowService windowService)
         {
-            _uiRoot = _assetProvider.CreateUIRoot();
+            _uiRoot = (await _assetProvider.CreateUIRoot()).transform;
             _hud = (Hud)windowService.Show(WindowId.HUD);
             _hud.Initialize();
         }

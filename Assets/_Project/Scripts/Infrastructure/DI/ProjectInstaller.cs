@@ -11,6 +11,8 @@ using _Project.Scripts.Infrastructure.Services.Logger;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Infrastructure.Services.Review;
+using _Project.Scripts.Tools.Camera;
+using _Project.Scripts.UI;
 using Reflex.Core;
 using UnityEngine;
 using ILogger = _Project.Scripts.Infrastructure.Services.Logger.ILogger;
@@ -19,6 +21,9 @@ namespace _Project.Scripts.Infrastructure.DI
 {
     public class ProjectInstaller : MonoBehaviour, IInstaller
     {
+        [SerializeField] private CameraSetup _cameraSetup;
+        [SerializeField] private LoadingCurtain _loadingCurtain;
+
         public void InstallBindings(ContainerBuilder builder)
         {
             BindLogger(builder);
@@ -128,16 +133,20 @@ namespace _Project.Scripts.Infrastructure.DI
 
         private void BindAssets(ContainerBuilder builder) => builder.AddSingleton(typeof(AssetProvider));
 
-        private void BindCamera(ContainerBuilder builder)
+        private void BindCamera(ContainerBuilder builder) => builder.AddSingleton(c =>
+        {
+            CameraSetup cameraSetup = c.Resolve<AssetProvider>().Instantiate<CameraSetup>(_cameraSetup.gameObject);
+            return cameraSetup.MainCamera;
+        });
+
+        private void BindLoadingBar(ContainerBuilder builder)
         {
             builder.AddSingleton(c =>
             {
-                var asset = c.Resolve<AssetProvider>();
-                return asset.CreateCameraSetup().MainCamera;
+                LoadingCurtain loadingCurtain = c.Resolve<AssetProvider>().Instantiate<LoadingCurtain>(_loadingCurtain.gameObject);
+                return loadingCurtain;
             });
+            // builder.AddSingleton(async c => await c.Resolve<AssetProvider>().CreateLoadingCurtain());
         }
-
-        private void BindLoadingBar(ContainerBuilder builder) =>
-            builder.AddSingleton(c => c.Resolve<AssetProvider>().CreateLoadingCurtain());
     }
 }

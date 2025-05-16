@@ -28,11 +28,9 @@ namespace _Project.Scripts.UI.Windows
         [SerializeField] private Button _restartButton;
         [SerializeField] private Button _skipButton;
         [SerializeField] private TextMeshProUGUI _descriptionText;
-        [SerializeField] private MoreTimeData _moreTimeData;
 
         private readonly float _fadeOutDuration = 0.75f;
         private readonly float _fadeInDuration = 0.2f;
-        private readonly string _rewardMoneyColor = "00F80DFF";
 
         public override void Show()
         {

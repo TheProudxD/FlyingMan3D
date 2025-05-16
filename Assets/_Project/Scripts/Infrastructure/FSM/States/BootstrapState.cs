@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
@@ -44,15 +45,15 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
 
-        public void Enter() => Coroutines.StartRoutine(Initialize());
+        public async void Enter() => await Initialize();
 
-        public IEnumerator Initialize()
+        public async Task Initialize()
         {
             _loadingCurtain.Show();
             Cursor.lockState = CursorLockMode.Confined;
-            yield return _assetProvider.Initialize();
-            yield return _configService.Initialize();
-            yield return _audioService.Initialize();
+            await _assetProvider.Initialize();
+            await _configService.Initialize();
+            await _audioService.Initialize();
 
             // Coroutines.StartRoutine(_audioLoader.Load());
 

@@ -161,11 +161,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Die()
+    public async void Die()
     {
         IsDie = true;
         IsTarget = false;
-        _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
+        await _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
         _gameFactory.RemovePlayer(this);
     }
 }

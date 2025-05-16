@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Config;
 using _Project.Scripts.UI.Windows;
@@ -19,14 +20,12 @@ namespace _Project.Scripts.Infrastructure.Services.Config
 
         public WindowConfig ForWindow(WindowId window) => _windowConfigs.GetValueOrDefault(window);
 
-        public IEnumerator Initialize()
+        public async Task Initialize()
         {
-            _configContainer = _assetProvider.GetConfigContainer();
+            _configContainer = await _assetProvider.GetConfigContainer();
 
-            _windowConfigs = _assetProvider.GetWindowStaticData().Configs
+            _windowConfigs = (await _assetProvider.GetWindowStaticData()).Configs
                 .ToDictionary(x => x.Id, x => x);
-
-            yield break;
         }
     }
 }

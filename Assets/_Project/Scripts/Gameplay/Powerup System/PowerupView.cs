@@ -11,8 +11,6 @@ namespace UI
 {
     internal class PowerupView : MonoBehaviour
     {
-        [field: SerializeField] private LocalizedLabel _localizedLabel;
-        [field: SerializeField] public string LocalizationName;
         [field: SerializeField] public PowerupType Id { get; private set; }
         [SerializeField] private AnimationCurve _priceCurve;
 
@@ -76,9 +74,7 @@ namespace UI
                 PriceText.SetText(value.ToString());
             }
         }
-
-        private void Start() => _localizedLabel.ChangeKey(LocalizationName);
-
+        
         public int GetPrice() => (int)_priceCurve.Evaluate(Progress);
 
         public int GetPriceAtStart()

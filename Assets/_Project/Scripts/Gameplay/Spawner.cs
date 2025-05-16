@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,7 +12,7 @@ using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools.Extensions;
 using Reflex.Attributes;
 
-public class Spawner : MonoBehaviour
+public class Spawner : MonoBehaviour, IInitializable
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private AssetProvider _assetProvider;
@@ -38,7 +39,7 @@ public class Spawner : MonoBehaviour
     private float _zPos;
     private int _index;
 
-    public void Initialize()
+    public Task Initialize()
     {
         int level = _levelResourceService.Current.Value;
         _index = level % _colorArray.Length;
@@ -46,9 +47,10 @@ public class Spawner : MonoBehaviour
         _gameFactory.GetPlatform().GetComponent<Renderer>().sharedMaterial.color = _colorArray[_index].PlatformColor;
 
         _playerTransform = _gameFactory.GetMainPlayer().transform;
+        return Task.CompletedTask;
     }
 
-    public void SpawnObjects(Vector3 velocity)
+    public async void SpawnObjects(Vector3 velocity)
     {
         _velY = velocity.y;
         _velZ = velocity.z;
@@ -58,7 +60,7 @@ public class Spawner : MonoBehaviour
 
         float finishTime = _averageTime * 2;
         float finishZPos = _playerTransform.position.z + (_velZ + Random.Range(2, 5)) * finishTime;
-        Finish finishGo = _gameFactory.CreateFinish(new Vector3(0, -0.5f, finishZPos), Quaternion.identity);
+        Finish finishGo = await _gameFactory.CreateFinish(new Vector3(0, -0.5f, finishZPos), Quaternion.identity);
 
         Level level = _gameFactory.GetCurrentLevel();
         int enemyCount = level.Enemies.Sum(x => x.Amount);
@@ -88,7 +90,7 @@ public class Spawner : MonoBehaviour
         {
             for (int j = 0; j < level.Rings[i].InsideRings.Length; j++)
             {
-                RingHolder ring = _gameFactory.GetRing(CalculateRingPosition(time, i, j), _colorArray, _index);
+                RingHolder ring = await _gameFactory.GetRing(CalculateRingPosition(time, i, j), _colorArray, _index);
 
                 RingData ringData = level.Rings[i].InsideRings[j];
                 _assetProvider.GetRingByType(ringData, ring.transform.GetChild(0).gameObject);
@@ -101,7 +103,7 @@ public class Spawner : MonoBehaviour
         {
             Vector3 randomPosition = finishGo.transform.position + Random.insideUnitSphere * 15;
             randomPosition = randomPosition.WithY(finishGo.transform.position.y + 1.5f);
-            _gameFactory.CreateBarrel(randomPosition);
+            await _gameFactory.CreateBarrel(randomPosition);
         }
     }
 

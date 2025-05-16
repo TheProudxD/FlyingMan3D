@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Observable;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
@@ -47,12 +48,12 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         public ObservableVariable<int> EnemiesCounter { get; private set; }
         public ObservableVariable<int> PlayersCounter { get; private set; }
 
-        public IEnumerator Initialize()
+        public Task Initialize()
         {
             EnemiesCounter = new ObservableVariable<int>(Enemies.Count);
             PlayersCounter = new ObservableVariable<int>(Players.Count);
             _levelHolder = new List<GameObject>();
-            yield break;
+            return Task.CompletedTask;
         }
 
         public Level CreateLevel() =>
@@ -118,14 +119,14 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             EnemiesCounter.Value = _enemies.Count;
         }
 
-        public void AddEnemy(EnemyType enemyType, Vector3 position, float rotation)
+        public async void AddEnemy(EnemyType enemyType, Vector3 position, float rotation)
         {
             EnemyBase enemy = enemyType switch
             {
                 EnemyType.Simple or EnemyType.WithGun or EnemyType.WithGunAndShield =>
-                    _assetProvider.CreateSimpleEnemy(position, Quaternion.Euler(0f, 180f, 0f)),
-                EnemyType.Big => _assetProvider.CreateBigEnemy(position, Quaternion.Euler(0f, 180f, 0f)),
-                EnemyType.Large => _assetProvider.CreateLargeEnemy(position, Quaternion.Euler(0f, 180f, 0f)),
+                    await _assetProvider.CreateSimpleEnemy(position, Quaternion.Euler(0f, 180f, 0f)),
+                EnemyType.Big => await _assetProvider.CreateBigEnemy(position, Quaternion.Euler(0f, 180f, 0f)),
+                EnemyType.Large => await _assetProvider.CreateLargeEnemy(position, Quaternion.Euler(0f, 180f, 0f)),
                 _ => throw new ArgumentOutOfRangeException(nameof(enemyType), enemyType, null)
             };
 
@@ -141,7 +142,9 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _players.Remove(player);
             player.Disable();
             PlayersCounter.Value = _players.Count;
-            Object.Destroy(player.gameObject);
+
+            if (player != null)
+                Object.Destroy(player.gameObject);
         }
 
         public void AddPlayer(PlayerController player)
@@ -166,10 +169,10 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             return player;
         }
 
-        public PlayerController CreateMainPlayer()
+        public async Task<PlayerController> CreateMainPlayer()
         {
             var startPosition = new Vector3(0, 1.75f, -1);
-            _mainPlayer = _assetProvider.CreatePlayer(startPosition);
+            _mainPlayer = await _assetProvider.CreatePlayer(startPosition);
             Rigidbody capsule = Object.FindObjectOfType<Slingshot>().Capsule;
             var fixedJoint = _mainPlayer.SelfHips.gameObject.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = capsule;
@@ -181,48 +184,48 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             return _mainPlayer;
         }
 
-        public Finish CreateFinish(Vector3 vector3, Quaternion identity)
+        public async Task<Finish> CreateFinish(Vector3 vector3, Quaternion identity)
         {
-            _finish = _assetProvider.GetFinish(vector3, identity);
+            _finish = await _assetProvider.GetFinish(vector3, identity);
             _levelHolder.Add(_finish.gameObject);
             return _finish;
         }
 
-        public GameObject GetEnemyRagdoll(Vector3 transformPosition, Quaternion identity)
+        public async Task<GameObject> GetEnemyRagdoll(Vector3 transformPosition, Quaternion identity)
         {
-            var a = _assetProvider.CreateEnemyRagdoll(transformPosition, identity);
+            var a = await _assetProvider.CreateEnemyRagdoll(transformPosition, identity);
             _levelHolder.Add(a);
             return a;
         }
 
-        public void GetPlayerRagdoll(Vector3 transformPosition, Quaternion identity)
+        public async Task GetPlayerRagdoll(Vector3 transformPosition, Quaternion identity)
         {
-            var a = _assetProvider.CreatePlayerRagdoll(transformPosition, identity);
+            var a = await _assetProvider.CreatePlayerRagdoll(transformPosition, identity);
             _levelHolder.Add(a);
         }
 
-        public void GetSmoke(Vector3 vector3, Quaternion euler)
+        public async Task GetSmoke(Vector3 vector3, Quaternion euler)
         {
-            var s = _assetProvider.CreateSmoke(vector3, euler);
+            var s = await _assetProvider.CreateSmoke(vector3, euler);
             _levelHolder.Add(s);
         }
 
-        public void CreateBarrel(Vector3 randomPosition)
+        public async Task CreateBarrel(Vector3 randomPosition)
         {
-            ExplosionBarrel barrel = _assetProvider.CreateBarrel(randomPosition);
+            ExplosionBarrel barrel = await _assetProvider.CreateBarrel(randomPosition);
             _levelHolder.Add(barrel.gameObject);
         }
 
-        public RingHolder GetRing(Vector3 calculateRingPosition, Spawner.Colors[] colorArray, int index)
+        public async Task<RingHolder> GetRing(Vector3 calculateRingPosition, Spawner.Colors[] colorArray, int index)
         {
-            RingHolder ringHolder = _assetProvider.CreateRing(calculateRingPosition, colorArray, index);
+            RingHolder ringHolder = await _assetProvider.CreateRing(calculateRingPosition, colorArray, index);
             _levelHolder.Add(ringHolder.gameObject);
             return ringHolder;
         }
 
-        public void CreateSlingshot(Vector3 position)
+        public async Task CreateSlingshot(Vector3 position)
         {
-            GameObject slingshot = _assetProvider.CreateSlingshot(position);
+            GameObject slingshot = await _assetProvider.CreateSlingshot(position);
             _levelHolder.Add(slingshot.gameObject);
         }
 

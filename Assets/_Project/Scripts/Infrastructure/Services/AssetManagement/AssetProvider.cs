@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Config;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
@@ -12,6 +13,8 @@ using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows;
 using Reflex.Core;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityUtils;
 using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.Infrastructure.Services.AssetManagement
@@ -23,20 +26,23 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public AssetProvider(Container container) => _container = container;
 
-        public IEnumerator Initialize()
+        public Task Initialize()
         {
             _configService = _container.Resolve<ConfigService>();
-            yield break;
+            return Task.CompletedTask;
         }
 
-        public AudioServiceView CreateAudioServiceView() => Instantiate<AudioServiceView>(AssetPath.AUDIO_SERVICE_VIEW);
+        public Task<AudioServiceView> CreateAudioServiceView() =>
+            Instantiate<AudioServiceView>(AssetPath.AUDIO_SERVICE_VIEW);
 
-        public Transform CreateUIRoot() => Instantiate<UIRoot>(UIAssetsPath.UI_ROOT_PATH).transform;
+        public Task<UIRoot> CreateUIRoot() =>
+            Instantiate<UIRoot>(AssetPath.UI_ROOT_PATH);
 
-        public LoadingCurtain CreateLoadingCurtain() => Instantiate<LoadingCurtain>(UIAssetsPath.LOADING_CURTAIN);
+        public Task<LoadingCurtain> CreateLoadingCurtain() =>
+            Instantiate<LoadingCurtain>(AssetPath.LOADING_CURTAIN);
 
-        public CameraSetup CreateCameraSetup() =>
-            Instantiate<CameraSetup>(UIAssetsPath.CAMERA_SETUP, overrideTransform: false);
+        public async Task<CameraSetup> CreateCameraSetup() =>
+            await Instantiate<CameraSetup>(AssetPath.CAMERA_SETUP, overrideTransform: false);
 
         public UIContainer Instantiate(WindowId windowId, Transform uiRoot)
         {
@@ -49,23 +55,21 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             return component;
         }
 
-        public ConfigContainer GetConfigContainer() => Load<ConfigContainer>(AssetPath.CONFIG_CONTAINER);
+        public Task<ConfigContainer> GetConfigContainer()
+        {
+            return Load<ConfigContainer>(AssetPath.CONFIG_CONTAINER);
+        }
 
-        public GraphicsPreset GetMobileGraphicsPreset() =>
+        public Task<GraphicsPreset> GetMobileGraphicsPreset() =>
             Load<GraphicsPreset>(AssetPath.MOBILE_GRAPHICS_PRESET);
 
-        public GraphicsPreset GetDesktopGraphicsPreset() =>
+        public Task<GraphicsPreset> GetDesktopGraphicsPreset() =>
             Load<GraphicsPreset>(AssetPath.DESKTOP_GRAPHICS_PRESET);
 
-        public TextCollection GetLocal(LocaleConfig localeConfig)
+        public async Task<TextCollection> GetLocal(LocaleConfig localeConfig)
         {
-            string path = string.Format(AssetPath.LOCALE_RESOURCES_PATH_FORMAT, localeConfig.Code);
-            var textCollection = Load<TextCollection>(path);
-
-            if (textCollection == null)
-            {
-                textCollection = Load<TextCollection>(path);
-            }
+            string path = localeConfig.Code.ToString();
+            var textCollection = await Load<TextCollection>(path);
 
             if (textCollection == null)
             {
@@ -77,23 +81,23 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             return textCollection;
         }
 
-        public WindowStaticData GetWindowStaticData() => Load<WindowStaticData>(AssetPath.WINDOW_CONFIG_PATH);
+        public Task<WindowStaticData> GetWindowStaticData() => Load<WindowStaticData>(AssetPath.WINDOW_CONFIG_PATH);
 
-        public Enemy CreateSimpleEnemy(Vector3 position, Quaternion rotation) =>
+        public Task<Enemy> CreateSimpleEnemy(Vector3 position, Quaternion rotation) =>
             Instantiate<Enemy>(AssetPath.ENEMY, position, rotation);
 
-        public BigEnemy CreateBigEnemy(Vector3 position, Quaternion rotation) =>
+        public Task<BigEnemy> CreateBigEnemy(Vector3 position, Quaternion rotation) =>
             Instantiate<BigEnemy>(AssetPath.BIG_ENEMY, position, rotation);
 
-        public LargeEnemy CreateLargeEnemy(Vector3 position, Quaternion rotation)
+        public Task<LargeEnemy> CreateLargeEnemy(Vector3 position, Quaternion rotation)
             => Instantiate<LargeEnemy>(AssetPath.LARGE_ENEMY, position, rotation);
 
-        public Finish GetFinish(Vector3 position, Quaternion rotation) =>
+        public Task<Finish> GetFinish(Vector3 position, Quaternion rotation) =>
             Instantiate<Finish>(AssetPath.FINISH, position, rotation);
 
-        public RingHolder CreateRing(Vector3 position, Spawner.Colors[] colors, int level)
+        public async Task<RingHolder> CreateRing(Vector3 position, Spawner.Colors[] colors, int level)
         {
-            var ringPrefab = Instantiate<RingHolder>(AssetPath.RING, position);
+            var ringPrefab = await Instantiate<RingHolder>(AssetPath.RING, position);
 
             ringPrefab.Renderers.sharedMaterial.color = colors[level].RingColor;
             ringPrefab.TransRenderers.sharedMaterial.color = colors[level].RingTransColor;
@@ -101,19 +105,19 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             return ringPrefab;
         }
 
-        public GameObject CreateSmoke(Vector3 position, Quaternion rotation) =>
+        public Task<GameObject> CreateSmoke(Vector3 position, Quaternion rotation) =>
             Instantiate(AssetPath.SMOKE, position, rotation);
 
-        public GameObject CreateEnemyRagdoll(Vector3 position, Quaternion rotation)
+        public async Task<GameObject> CreateEnemyRagdoll(Vector3 position, Quaternion rotation)
         {
-            GameObject enemy = Instantiate(AssetPath.ENEMY_RAGDOLL, position, rotation);
+            GameObject enemy = await Instantiate(AssetPath.ENEMY_RAGDOLL, position, rotation);
             enemy.layer = 8;
             return enemy;
         }
 
-        public GameObject CreatePlayerRagdoll(Vector3 position, Quaternion rotation)
+        public async Task<GameObject> CreatePlayerRagdoll(Vector3 position, Quaternion rotation)
         {
-            GameObject player = Instantiate(AssetPath.PLAYER_RAGDOLL, position, rotation);
+            GameObject player = await Instantiate(AssetPath.PLAYER_RAGDOLL, position, rotation);
             player.layer = 8;
             return player;
         }
@@ -121,10 +125,10 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public PlayerController CreatePlayer(GameObject root, Vector3 position, Quaternion rotation) =>
             Instantiate<PlayerController>(root, position, rotation);
 
-        public GameObject CreateSlingshot(Vector3 position) =>
+        public Task<GameObject> CreateSlingshot(Vector3 position) =>
             Instantiate(AssetPath.SLINGSHOT, position);
 
-        public PlayerController CreatePlayer(Vector3 position) =>
+        public Task<PlayerController> CreatePlayer(Vector3 position) =>
             Instantiate<PlayerController>(AssetPath.PLAYER, position);
 
         public Level CreateLevel(int levelId)
@@ -155,7 +159,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             _container.Inject(ring);
         }
 
-        public ExplosionBarrel CreateBarrel(Vector3 transformPosition) =>
+        public Task<ExplosionBarrel> CreateBarrel(Vector3 transformPosition) =>
             Instantiate<ExplosionBarrel>(AssetPath.BARREL, transformPosition);
 
         private GameObject Instantiate(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
@@ -169,10 +173,11 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             return gameObject;
         }
 
-        private GameObject Instantiate(string path, Vector3 position = default, Quaternion rotation = default,
+        private async Task<GameObject> Instantiate(string path, Vector3 position = default,
+            Quaternion rotation = default,
             Transform parent = null, bool overrideTransform = true, bool isActivateGameObject = true)
         {
-            var prefab = Load<GameObject>(path);
+            var prefab = await Load<GameObject>(path);
 
             if (overrideTransform == false)
             {
@@ -183,7 +188,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             return Instantiate(prefab, position, rotation, parent, isActivateGameObject);
         }
 
-        private T Instantiate<T>(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
+        public T Instantiate<T>(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
             Transform parent = null, bool isActivateGameObject = true, bool componentEnabled = true)
             where T : MonoBehaviour
         {
@@ -197,12 +202,12 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             return component;
         }
 
-        private T Instantiate<T>(string path, Vector3 position = default, Quaternion rotation = default,
+        private async Task<T> Instantiate<T>(string path, Vector3 position = default, Quaternion rotation = default,
             Transform parent = null, bool overrideTransform = true, bool isActivateGameObject = true,
             bool componentEnabled = true)
             where T : MonoBehaviour
         {
-            var prefab = Load<GameObject>(path);
+            var prefab = await Load<GameObject>(path);
 
             if (overrideTransform == false)
             {
@@ -213,9 +218,12 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             return Instantiate<T>(prefab, position, rotation, parent, isActivateGameObject, componentEnabled);
         }
 
-        private T Load<T>(string path) where T : Object =>
-            //AssetRef.AssetsLoader.LoadAssetSync<T>(AssetRef.None);
-            UnityEngine.Resources.Load<T>(path);
+        private Task<T> Load<T>(string path) where T : Object
+        {
+            // return UnityEngine.Resources.LoadAsync<T>(path).AsTask<T>();
+            var asset = Addressables.LoadAssetAsync<T>(path);
+            return asset.Task;
+        }
 
         private IEnumerator LoadAsync<T>(string path) where T : Object
         {

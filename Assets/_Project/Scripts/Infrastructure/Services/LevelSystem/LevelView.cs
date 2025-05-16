@@ -25,9 +25,10 @@ namespace _Project.Scripts.UI.Views
 
         private void Localize(LocaleConfig config, int number) => Localize(_levelResourceService.Current.Value.ToString());
 
-        private void Localize(string level)
+        private async void Localize(string level)
         {
-            string text = $"{_localizationService.Localize(LocalizationKeys.Level)} {level}";
+            var localized = await _localizationService.Localize(LocalizationKeys.Level);
+            string text = $"{localized} {level}";
             Text.SetText(text);
         }
     }

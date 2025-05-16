@@ -4,33 +4,30 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 {
     public static class AssetPath
     {
-        private const string DATA_FOLDER = "Data";
-        private const string GRAPHICS_FOLDER = "Graphics";
-        private const string LOCALE_FOLDER = "Locales";
-        private const string GAMEPLAY_FOLDER = "Gameplay";
-
-        public const string LOCALE_RESOURCES_PATH_FORMAT = LOCALE_FOLDER + "/{0}";
-
-        public const string CONFIG_CONTAINER = DATA_FOLDER + "/ConfigContainer";
-        public const string WINDOW_CONFIG_PATH = DATA_FOLDER + "/UI/WindowsData";
+        public const string CONFIG_CONTAINER = "ConfigContainer";
+        public const string WINDOW_CONFIG_PATH = "WindowsData";
 
         public const string AUDIO_SERVICE_VIEW = "Audio";
 
-        public const string MOBILE_GRAPHICS_PRESET = GRAPHICS_FOLDER + "/MobileGraphics";
-        public const string DESKTOP_GRAPHICS_PRESET = GRAPHICS_FOLDER + "/DesktopGraphics";
+        public const string MOBILE_GRAPHICS_PRESET = "MobileGraphics";
+        public const string DESKTOP_GRAPHICS_PRESET = "DesktopGraphics";
 
         public const string POST_PROCESS_VOLUME = "PostProcessVolume";
 
-        public const string ENEMY = GAMEPLAY_FOLDER + "/Enemy";
-        public const string BIG_ENEMY = GAMEPLAY_FOLDER + "/BigEnemy";
-        public const string LARGE_ENEMY = GAMEPLAY_FOLDER + "/LargeEnemy";
-        public const string PLAYER = GAMEPLAY_FOLDER + "/Player";
-        public const string FINISH = GAMEPLAY_FOLDER + "/Finish";
-        public const string SMOKE = GAMEPLAY_FOLDER + "/Smoke";
-        public const string RING = GAMEPLAY_FOLDER + "/Ring";
-        public const string ENEMY_RAGDOLL = GAMEPLAY_FOLDER + "/EnemyRagdoll";
-        public const string PLAYER_RAGDOLL = GAMEPLAY_FOLDER + "/PlayerRagdoll";
-        public const string SLINGSHOT = GAMEPLAY_FOLDER + "/Slingshot";
-        public const string BARREL = GAMEPLAY_FOLDER + "/Barrel";
+        public const string ENEMY = "Enemy";
+        public const string BIG_ENEMY = "BigEnemy";
+        public const string LARGE_ENEMY = "LargeEnemy";
+        public const string PLAYER = "Player";
+        public const string FINISH = "Finish";
+        public const string SMOKE = "Smoke";
+        public const string RING = "Ring";
+        public const string ENEMY_RAGDOLL = "EnemyRagdoll";
+        public const string PLAYER_RAGDOLL = "PlayerRagdoll";
+        public const string SLINGSHOT = "Slingshot";
+        public const string BARREL = "Barrel";
+
+        public const string UI_ROOT_PATH = "UIRoot";
+        public const string LOADING_CURTAIN = "LoadingCurtain";
+        public const string CAMERA_SETUP = "CameraSetup";
     }
 }

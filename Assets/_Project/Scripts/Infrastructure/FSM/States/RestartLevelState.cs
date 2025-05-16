@@ -35,12 +35,12 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
 
-        public void Enter()
+        public async void Enter()
         {
             _gameFactory.ClearLevelHolder();
-            _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
-            PlayerController player = _gameFactory.CreateMainPlayer();
-            _gameFactory.GetSpawner().Initialize();
+            await _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
+            PlayerController player = await _gameFactory.CreateMainPlayer();
+            await _gameFactory.GetSpawner().Initialize();
             
             Hud hud = _uiFactory.GetHUD();
             hud.Show();

@@ -13,7 +13,27 @@ namespace UnityUtils
         public static Task AsTask(this AsyncOperation asyncOperation)
         {
             var tcs = new TaskCompletionSource<bool>();
-            asyncOperation.completed += _ => tcs.SetResult(true);
+            asyncOperation.completed += a => tcs.SetResult(true);
+            return tcs.Task;
+        }
+
+
+        public static Task<T> AsTask<T>(this ResourceRequest request) where T : Object
+        {
+            var tcs = new TaskCompletionSource<T>();
+
+            request.completed += _ =>
+            {
+                if (request.asset == null)
+                {
+                    tcs.SetException(new System.Exception($"Failed to load resource of type {typeof(T)}"));
+                }
+                else
+                {
+                    tcs.SetResult((T)request.asset);
+                }
+            };
+
             return tcs.Task;
         }
     }
