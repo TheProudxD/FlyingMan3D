@@ -14,14 +14,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Configs:
   - Id: 4
-    Prefab: {fileID: -5998452654727488246, guid: b3a83faa2fa3c5f49bcc18db2344bcc8, type: 3}
+    Prefab:
+      m_AssetGUID: b3a83faa2fa3c5f49bcc18db2344bcc8
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - Id: 3
-    Prefab: {fileID: 8461656417885539619, guid: ba826eb6b56fb8e488f846e5c952a3ca, type: 3}
+    Prefab:
+      m_AssetGUID: ba826eb6b56fb8e488f846e5c952a3ca
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - Id: 1
-    Prefab: {fileID: -165516302508314262, guid: 21ef8c7f4736ef8468f650e8b6e403f2, type: 3}
+    Prefab:
+      m_AssetGUID: 21ef8c7f4736ef8468f650e8b6e403f2
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - Id: 2
-    Prefab: {fileID: -825887314522318874, guid: 5ac874ee2ca52f841b5d047d09cdf2f7, type: 3}
+    Prefab:
+      m_AssetGUID: 5ac874ee2ca52f841b5d047d09cdf2f7
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - Id: 5
-    Prefab: {fileID: 134424030558686262, guid: c9bc70eb4867d1f41a3e5fb91bc478a7, type: 3}
+    Prefab:
+      m_AssetGUID: c9bc70eb4867d1f41a3e5fb91bc478a7
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
   - Id: 6
-    Prefab: {fileID: 5383594875609986839, guid: 1e737faa187d5cb4996e51a277743ade, type: 3}
+    Prefab:
+      m_AssetGUID: 1e737faa187d5cb4996e51a277743ade
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0

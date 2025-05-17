@@ -11,6 +11,6 @@ namespace _Project.Scripts.UI.Buttons
         
         [SerializeField] private WindowId _windowId;
 
-        protected override void OnClick() => _windowService.Show(_windowId);
+        protected override async void OnClick() => await _windowService.Show(_windowId);
     }
 }

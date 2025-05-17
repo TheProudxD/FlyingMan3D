@@ -24,7 +24,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         public async Task Initialize(WindowService windowService)
         {
             _uiRoot = (await _assetProvider.CreateUIRoot()).transform;
-            _hud = (Hud)windowService.Show(WindowId.HUD);
+            _hud = (Hud)await windowService.Show(WindowId.HUD);
             _hud.Initialize();
         }
 
@@ -32,19 +32,21 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public Hud GetHUD() => _hud;
 
-        public UIContainer CreatePauseWindow() => InstantiateRegistered(WindowId.Pause, _uiRoot);
+        public async Task<UIContainer> CreatePauseWindow() => await InstantiateRegistered(WindowId.Pause, _uiRoot);
 
-        public UIContainer CreateLoseWindow() => InstantiateRegistered(WindowId.Lose, _uiRoot);
+        public async Task<UIContainer> CreateLoseWindow() => await InstantiateRegistered(WindowId.Lose, _uiRoot);
 
-        public UIContainer CreateTutorialWindow() => InstantiateRegistered(WindowId.Tutorial, _uiRoot);
+        public async Task<UIContainer> CreateTutorialWindow() =>
+            await InstantiateRegistered(WindowId.Tutorial, _uiRoot);
 
-        public UIContainer CreateLeaderboardWindow() => InstantiateRegistered(WindowId.Leaderboard, _uiRoot);
+        public async Task<UIContainer> CreateLeaderboardWindow() =>
+            await InstantiateRegistered(WindowId.Leaderboard, _uiRoot);
 
-        public UIContainer CreateWinWindow() => InstantiateRegistered(WindowId.Win, _uiRoot);
+        public async Task<UIContainer> CreateWinWindow() => await InstantiateRegistered(WindowId.Win, _uiRoot);
 
-        public UIContainer CreateHUD() => InstantiateRegistered(WindowId.HUD, _uiRoot);
+        public async Task<UIContainer> CreateHUD() => await InstantiateRegistered(WindowId.HUD, _uiRoot);
 
-        private UIContainer InstantiateRegistered(WindowId windowId, Transform parent) =>
+        private Task<UIContainer> InstantiateRegistered(WindowId windowId, Transform parent) =>
             _assetProvider.Instantiate(windowId, parent);
     }
 }

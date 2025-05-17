@@ -1,31 +1,45 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using _Project.Scripts.Infrastructure.Services.Config;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.UI.Windows;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.Infrastructure.Services
 {
     public class WindowService : IService
     {
         private readonly UIFactory _uiFactory;
+        private readonly ConfigService _configService;
         private readonly Dictionary<WindowId, UIContainer> _openedWindows = new();
 
-        public WindowService(UIFactory uiFactory) => _uiFactory = uiFactory;
-
-        public UIContainer Show(WindowId windowId)
+        public WindowService(UIFactory uiFactory, ConfigService configService)
         {
-            if (_openedWindows.ContainsKey(windowId) == false)
+            _uiFactory = uiFactory;
+            _configService = configService;
+        }
+
+        public async Task<UIContainer> Show(WindowId windowId)
+        {
+            if (_openedWindows.ContainsKey(windowId))
+            {
+                UnityEngine.Debug.LogError("Double opening window");
+            }
+            else
             {
                 UIContainer window = windowId switch
                 {
                     WindowId.Unknown => throw new ArgumentOutOfRangeException(nameof(windowId), windowId, null),
-                    WindowId.Pause => _uiFactory.CreatePauseWindow(),
-                    WindowId.Lose => _uiFactory.CreateLoseWindow(),
-                    WindowId.Tutorial => _uiFactory.CreateTutorialWindow(),
-                    WindowId.Leaderboard => _uiFactory.CreateLeaderboardWindow(),
-                    WindowId.Win => _uiFactory.CreateWinWindow(),
-                    WindowId.HUD => _uiFactory.CreateHUD(),
+                    WindowId.Pause => await _uiFactory.CreatePauseWindow(),
+                    WindowId.Lose => await _uiFactory.CreateLoseWindow(),
+                    WindowId.Tutorial => await _uiFactory.CreateTutorialWindow(),
+                    WindowId.Leaderboard => await _uiFactory.CreateLeaderboardWindow(),
+                    WindowId.Win => await _uiFactory.CreateWinWindow(),
+                    WindowId.HUD => await _uiFactory.CreateHUD(),
                     _ => throw new ArgumentOutOfRangeException(nameof(windowId), windowId, null)
                 };
 
@@ -44,14 +58,14 @@ namespace _Project.Scripts.Infrastructure.Services
 
         public void Hide(WindowId windowId)
         {
-            if (_openedWindows.TryGetValue(windowId, out UIContainer window))
+            if (_openedWindows.Remove(windowId, out UIContainer window))
             {
-                //Object.Destroy(window.gameObject);
-                window.Hide();
+                Object.Destroy(window.gameObject);
+                _configService.ForWindow(windowId).Prefab.ReleaseAsset();
             }
             else
             {
-                UnityEngine.Debug.LogError("Закрытие не открытого окна.");
+                UnityEngine.Debug.LogError("Trying to hide already hidden window.");
             }
         }
 
@@ -64,7 +78,7 @@ namespace _Project.Scripts.Infrastructure.Services
             }
             else
             {
-                UnityEngine.Debug.LogError("Закрытие не открытого окна.");
+                UnityEngine.Debug.LogError("Trying to hide already hidden window.");
             }
         }
     }

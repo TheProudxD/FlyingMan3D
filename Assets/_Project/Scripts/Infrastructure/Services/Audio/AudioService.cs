@@ -23,28 +23,7 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
         public async Task Initialize()
         {
             _audioConfig = _configService.Get<AudioConfig>();
-            var audio = await _assetProvider.CreateAudioServiceView();
-
-            _audioServiceView = audio;
-            /*
-            if (PlayerPrefs.GetInt("Music") == 0)
-            {
-                MuteMusic();
-            }
-            else
-            {
-                UnmuteSound();
-            }
-
-            if (PlayerPrefs.GetInt("Sound") == 0)
-            {
-                MuteSound();
-            }
-            else
-            {
-                UnmuteMusic();
-            }
-            */
+            _audioServiceView = await _assetProvider.CreateAudioServiceView();
         }
 
         public void PlayClickSound() => _audioServiceView.PlaySound(_audioConfig.Click);

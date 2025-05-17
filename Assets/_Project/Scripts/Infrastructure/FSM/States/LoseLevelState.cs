@@ -31,11 +31,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public void Exit() { }
 
-        private void LoseLevel()
+        private async void LoseLevel()
         {
             _audioService.PlayLoseSound();
             _timer.Stop();
-            _windowService.Show(WindowId.Lose);
+            await _windowService.Show(WindowId.Lose);
         }
     }
 }

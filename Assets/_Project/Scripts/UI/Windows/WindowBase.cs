@@ -30,7 +30,7 @@ namespace _Project.Scripts.UI.Windows
             gameObject.SetActive(true);
         }
 
-        public override void Hide() => gameObject.SetActive(false);
+        public override void Hide() => WindowService.Hide(this);
 
         protected virtual void OnAwake()
         {

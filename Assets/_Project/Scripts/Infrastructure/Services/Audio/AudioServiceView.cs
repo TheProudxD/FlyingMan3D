@@ -11,7 +11,11 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
 
         public void PlaySound(AudioClip clip) => _soundAudioSource.PlayOneShot(clip);
 
-        public void PlayMusic(AudioClip clip) => _musicAudioSource.PlayOneShot(clip);
+        public void PlayMusic(AudioClip clip)
+        {
+            _musicAudioSource.clip = clip;
+            _musicAudioSource.Play();
+        }
 
         public void DisableSounds() => _soundAudioSource.mute = true;
 
@@ -24,9 +28,9 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
         public void SetSoundVolume(float volume) => _soundAudioSource.volume = volume;
 
         public void SetMusicVolume(float volume) => _musicAudioSource.volume = volume;
-        
+
         public float GetSoundVolume() => _soundAudioSource.volume;
-        
+
         public float GetMusicVolume() => _musicAudioSource.volume;
     }
 }

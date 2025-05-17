@@ -16,12 +16,9 @@ namespace _Project.Scripts.UI.Windows
         [SerializeField] private Button _continueGameButton;
         [SerializeField] private RestartGameButton _restartButton;
         [SerializeField] private MoreGamesButton _moreGamesButton;
-        [SerializeField] private CustomToggle _soundButton;
-        // [SerializeField] private CustomSlider _musicSlider;
 
         private readonly float _fadeOutDuration = 0.13f;
         private readonly float _fadeInDuration = 0.15f;
-        private AudioServiceView _audioServiceView;
 
         public override void Show()
         {
@@ -29,29 +26,10 @@ namespace _Project.Scripts.UI.Windows
             _animationService.FadeOut(_popup.gameObject, _fadeOutDuration);
 
             Time.timeScale = 0;
-            _audioServiceView = FindObjectOfType<AudioServiceView>();
-
-            _soundButton.ValueChanged += AmendSound;
-            // _musicSlider.ValueChanged += AmendMusic;
-            // _musicSlider.Initialize(_audioServiceView.GetMusicVolume());
             _continueGameButton.Add(ContinueGame);
             _restartButton.Activate();
             _restartButton.Add(Hide);
             _moreGamesButton.Activate();
-        }
-
-        private void AmendSound(bool isOn)
-        {
-            AudioService.PlayClickSound();
-
-            if (isOn)
-            {
-                AudioService.UnmuteSound();
-            }
-            else
-            {
-                AudioService.MuteSound();
-            }
         }
 
         private void ContinueGame()
@@ -59,51 +37,13 @@ namespace _Project.Scripts.UI.Windows
             AudioService.PlayClickSound();
             Hide();
         }
-
-        private void AmendMusic(float value)
-        {
-            if (value >= 0)
-            {
-                _audioServiceView.SetMusicVolume(value);
-                AudioService.UnmuteMusic();
-            }
-            else
-            {
-                AudioService.MuteMusic();
-            }
-        }
-
-        // private void LoadSettings()
-        // {
-        //     if (PlayerPrefs.GetInt("Sound") == 0)
-        //     {
-        //         _soundButton.ToggleValue(false);
-        //         AudioService.MuteSound();
-        //     }
-        //     else
-        //     {
-        //         _soundButton.ToggleValue(true);
-        //         AudioService.UnmuteSound();
-        //     }
-        //
-        //     if (PlayerPrefs.GetInt("Music") == 0)
-        //     {
-        //         //_musicButton.ToggleValue(false);
-        //         AudioService.MuteMusic();
-        //     }
-        //     else
-        //     {
-        //         //_musicButton.ToggleValue(true);
-        //         AudioService.UnmuteMusic();
-        //     }
-        // }
-
+        
         public override void Hide()
         {
-            _soundButton.ValueChanged -= AmendSound;
-            // _musicSlider.ValueChanged -= AmendMusic;
             _continueGameButton.Remove(ContinueGame);
             _restartButton.Remove(Hide);
+            _restartButton.Deactivate();
+            _moreGamesButton.Deactivate();
 
             Time.timeScale = 1;
 

@@ -46,7 +46,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _gameFactory.DestroyPlayers();
             _audioService.PlayWinSound();
             SetRecordInLeaderboard();
-            _windowService.Show(WindowId.Win);
+            yield return _windowService.Show(WindowId.Win);
             IExitableState state = _gameLoopState.FromState;
 
             if (state is RestartLevelState or ContinueLevelState or LoadLevelState)

@@ -1,6 +1,5 @@
 using System;
 using _Project.Scripts.Infrastructure.Services.Audio;
-using NaughtyAttributes;
 using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +10,7 @@ namespace _Project.Scripts.UI.Buttons
     public class CustomToggle : MonoBehaviour
     {
         [Inject] private AudioService _audioService;
-        
+
         [SerializeField] private Sprite _isOnSprite;
         [SerializeField] private Sprite _isOffSprite;
 
@@ -25,11 +24,18 @@ namespace _Project.Scripts.UI.Buttons
             _toggle.onValueChanged.AddListener(ToggleValue);
         }
 
-        public void ToggleValue(bool value)
+        private void OnDestroy()
+        {
+            _toggle.onValueChanged.RemoveListener(ToggleValue);
+        }
+
+        public void SetValue(bool value) => _toggle.isOn = value;
+
+        private void ToggleValue(bool value)
         {
             _audioService.PlayClickSound();
             _toggle.image.sprite = value ? _isOnSprite : _isOffSprite;
-            ValueChanged?.Invoke(_toggle.isOn);
+            ValueChanged?.Invoke(value);
         }
     }
 }

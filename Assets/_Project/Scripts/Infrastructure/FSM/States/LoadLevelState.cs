@@ -71,11 +71,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
 
-        private void TryShowTutorial()
+        private async void TryShowTutorial()
         {
             if (_levelResourceService.ObservableValue.Value == 1)
             {
-                _windowService.Show(WindowId.Tutorial);
+                await _windowService.Show(WindowId.Tutorial);
             }
         }
 

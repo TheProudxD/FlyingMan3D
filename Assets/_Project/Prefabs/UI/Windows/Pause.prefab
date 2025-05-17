@@ -1040,7 +1040,6 @@ MonoBehaviour:
   _continueGameButton: {fileID: 2842252415534484530}
   _restartButton: {fileID: 4690845652559766220}
   _moreGamesButton: {fileID: 0}
-  _soundButton: {fileID: 4486439697559766573}
 --- !u!114 &6480855688390435187
 MonoBehaviour:
   m_ObjectHideFlags: 0

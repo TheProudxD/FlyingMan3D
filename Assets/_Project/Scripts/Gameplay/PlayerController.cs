@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
@@ -139,7 +140,9 @@ public class PlayerController : MonoBehaviour
 
         if (_levelResourceService.ObservableValue.Value == 1)
         {
-            (_windowService.Show(WindowId.Tutorial) as TutorialWindow)?.AnimateHandMovementCursor();
+            Task<UIContainer> tutorialTask = _windowService.Show(WindowId.Tutorial);
+            yield return tutorialTask;
+            (tutorialTask.Result as TutorialWindow)?.AnimateHandMovementCursor();
         }
 
         Destroy(_joint);

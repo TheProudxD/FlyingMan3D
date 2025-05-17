@@ -1,5 +1,7 @@
 using System;
 using _Project.Scripts.UI.Windows;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace _Project.Scripts.Infrastructure.Services.Config
 {
@@ -7,6 +9,6 @@ namespace _Project.Scripts.Infrastructure.Services.Config
     public class WindowConfig
     {
         public WindowId Id;
-        public UIContainer Prefab;
+        public AssetReferenceGameObject Prefab;
     }
 }

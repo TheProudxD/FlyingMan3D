@@ -8,6 +8,6 @@ namespace _Project.Scripts.UI.Buttons
     {
         [Inject] private WindowService _windowService;
 
-        protected override void OnClick() => _windowService.Show(WindowId.Leaderboard);
+        protected override async void OnClick() => await _windowService.Show(WindowId.Leaderboard);
     }
 }

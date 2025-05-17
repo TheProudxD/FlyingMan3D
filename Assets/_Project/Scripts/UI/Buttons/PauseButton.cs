@@ -9,10 +9,10 @@ namespace _Project.Scripts.UI.Buttons
         [Inject] private WindowService _windowService;
         [Inject] private AdsService _adsService;
 
-        protected override void OnClick()
+        protected override async void OnClick()
         {
             _adsService.PlayInterstitial();
-            _windowService.Show(WindowId.Pause);
+            await _windowService.Show(WindowId.Pause);
         }
     }
 }

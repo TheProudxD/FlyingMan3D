@@ -14,6 +14,7 @@ using _Project.Scripts.UI.Windows;
 using Reflex.Core;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityUtils;
 using Object = UnityEngine.Object;
 
@@ -44,21 +45,23 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public async Task<CameraSetup> CreateCameraSetup() =>
             await Instantiate<CameraSetup>(AssetPath.CAMERA_SETUP, overrideTransform: false);
 
-        public UIContainer Instantiate(WindowId windowId, Transform uiRoot)
+        public async Task<UIContainer> Instantiate(WindowId windowId, Transform uiRoot)
         {
             WindowConfig windowConfig = _configService.ForWindow(windowId);
-            windowConfig.Prefab.gameObject.SetActive(false);
-            UIContainer component = Object.Instantiate(windowConfig.Prefab, uiRoot);
-            _container.Inject(component);
+            // windowConfig.Prefab.gameObject.SetActive(false);
+            AsyncOperationHandle<GameObject> asyncOperationHandle = windowConfig.Prefab.LoadAssetAsync<GameObject>();
+            Task<GameObject> task = asyncOperationHandle.Task;
+            await task;
+            
+            var component = Instantiate<UIContainer>(task.Result, parent: uiRoot);
+
             component.gameObject.SetActive(true);
-            windowConfig.Prefab.gameObject.SetActive(true);
+            // windowConfig.Prefab.gameObject.SetActive(true);
             return component;
         }
 
-        public Task<ConfigContainer> GetConfigContainer()
-        {
-            return Load<ConfigContainer>(AssetPath.CONFIG_CONTAINER);
-        }
+        public Task<ConfigContainer> GetConfigContainer() =>
+            Load<ConfigContainer>(AssetPath.CONFIG_CONTAINER);
 
         public Task<GraphicsPreset> GetMobileGraphicsPreset() =>
             Load<GraphicsPreset>(AssetPath.MOBILE_GRAPHICS_PRESET);

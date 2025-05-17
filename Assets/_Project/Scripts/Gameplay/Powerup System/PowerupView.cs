@@ -1,7 +1,4 @@
 using System;
-using _Project.Scripts.Infrastructure.Services.Localization;
-using _Project.Scripts.Infrastructure.Services.Localization.UI;
-using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
