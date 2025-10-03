@@ -65,10 +65,10 @@ namespace Obi
             Oni.SetDistanceFieldData(headers.GetIntPtr(), nodes.GetIntPtr());
         }
 
-        public void SetHeightFieldData(ObiNativeHeightFieldHeaderList headers, ObiNativeFloatList samples)
-        {
-            Oni.SetHeightFieldData(headers.GetIntPtr(), samples.GetIntPtr());
-        }
+        // public void SetHeightFieldData(ObiNativeHeightFieldHeaderList headers, ObiNativeFloatList samples)
+        // {
+        //     Oni.SetHeightFieldData(headers.GetIntPtr(), samples.GetIntPtr());
+        // }
     }
 
 }
