@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
+#if UNITY_IOS && UNITY_EDITOR
 using UnityEditor.iOS.Xcode;
+#endif
 using System.IO;
 using System.Xml;
 
@@ -12,6 +14,7 @@ public static class GooglePostProcessBuild
     [PostProcessBuild]
     public static void OnPostProcessBuild(BuildTarget target, string buildPath)
     {
+#if UNITY_IOS && UNITY_EDITOR
         if (target == BuildTarget.iOS)
         {
             string appKey = "";
@@ -49,5 +52,6 @@ public static class GooglePostProcessBuild
                 Debug.LogWarning("GADApplicationIdentifier was not set before build.");
             }
         }
+#endif
     }
 }

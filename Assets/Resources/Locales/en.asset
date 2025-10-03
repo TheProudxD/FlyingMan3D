@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5f21c316dc78354383759b662a96069, type: 3}
+  m_Name: en
+  m_EditorClassIdentifier: 
+  _keys:
+  - settingsTitle
+  - gameOver
+  - about
+  - continue
+  - review
+  - restart
+  - leaderboard
+  - feedback
+  - sound
+  - gamesPlayed
+  - richestScore
+  - statistics
+  - Loading
+  - moreGames
+  - free
+  - timeOut
+  - gift
+  - LevelPassed
+  - Level
+  - LevelFail
+  - flyingControl
+  - moveSpeed
+  - health
+  - forAd
+  - tapToThrow
+  - skipLevel
+  - claim
+  - holdAndDrag
+  - music
+  _values:
+  - Settings
+  - Game Over
+  - After watching an ad you can continue the level with 60 seconds!
+  - Continue
+  - Leave a Review
+  - Restart
+  - Leaderboard
+  - Feedback\n<i><size=75%>platypusGames@yandex.ru</i>
+  - Sound
+  - Games Played
+  - Highest Score
+  - Statistics
+  - Loading...
+  - More Games
+  - Free
+  - Time's Up!
+  - Gift
+  - Awesome!
+  - Level
+  - Try Again
+  - Flight Control
+  - Move Speed
+  - Max Health
+  - Watch Ad
+  - Tap to Throw
+  - Skip Level
+  - Claim
+  - Hold and drag
+  - Music

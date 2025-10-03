@@ -2,6 +2,7 @@ using System;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class PlayerFinishMover : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private AudioService _audioService;
+    [Inject] private IPersistentProgressService _persistentProgressService;
 
     private static readonly int IsGround = Animator.StringToHash("IsGround");
 
@@ -47,8 +49,8 @@ public class PlayerFinishMover : MonoBehaviour
     {
         enabled = true;
         _stopDistance = _gameFactory.GetCurrentLevel().StopDistance;
-        _moveSpeed = YG2.saves.movingSpeed;
-        Health = Random.Range(1, YG2.saves.health + 1);
+        _moveSpeed = _persistentProgressService.PowerupProgress.movingSpeed;
+        Health = Random.Range(1, _persistentProgressService.PowerupProgress.health + 1);
         _healthCanvas.gameObject.SetActive(true);
     }
 

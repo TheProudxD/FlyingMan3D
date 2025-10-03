@@ -53,9 +53,18 @@ namespace _Project.Scripts.Infrastructure.Services
             }
         }
 
-        private bool IsMobileDevice() => YG2.envir.isMobile || YG2.envir.isTablet;
+        private bool IsMobileDevice()
+        {
+            return true;
+            // return YG2.envir.isMobile || YG2.envir.isTablet;
+        }
 
-        private bool IsDesktop() => YG2.envir.isDesktop;
+        private bool IsDesktop()
+        {
+            return false;
+
+            // return YG2.envir.isDesktop;
+        }
 
         private bool PerformanceIsLow() => 1.0f / Time.deltaTime < 30; // FPS ниже 30
 

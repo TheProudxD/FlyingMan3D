@@ -51,7 +51,10 @@ namespace _Project.Scripts.Infrastructure.Services
                 .WithEase(ease)
                 .WithLoops(loops, LoopType.Yoyo)
                 .WithOnComplete(callback)
-                .Bind(x => modifierTransform.localScale = new Vector3(x, x, x));
+                .Bind(x =>
+                {
+                    if (modifierTransform != null) modifierTransform.localScale = new Vector3(x, x, x);
+                });
 
             AddMotionHandle(mh, modifierTransform.gameObject, compositeMotionHandle);
         }

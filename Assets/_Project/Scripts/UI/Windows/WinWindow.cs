@@ -124,8 +124,7 @@ namespace _Project.Scripts.UI.Windows
             _nextLevelButton.Activate();
 
             _animationService.ShakingScale(_multiplierButton.transform, _animationsConfig.FromScale,
-                _animationsConfig.ToScale, _animationsConfig.Duration, -1, Ease.OutSine,
-                compositeMotionHandle: _compositeMotionHandle);
+                _animationsConfig.ToScale, _animationsConfig.Duration, -1, Ease.OutSine);
         }
 
         private IEnumerator ShowNextLevelButtonCoroutine()

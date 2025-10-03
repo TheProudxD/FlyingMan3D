@@ -1,6 +1,8 @@
 using UnityEditor;
+#if UNITY_IOS && UNITY_EDITOR
 using UnityEditor.iOS.Xcode;
 using UnityEditor.iOS.Xcode.Extensions;
+#endif
 using UnityEditor.Callbacks;
 using System.IO;
 using UnityEngine;
@@ -10,7 +12,8 @@ public class PostProcessBuildAppLovin
     [PostProcessBuild]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string pathToBuiltProject)
     {
-         var version = "13.3.1";
+        var version = "13.3.1";
+#if UNITY_IOS && UNITY_EDITOR
         if (buildTarget == BuildTarget.iOS)
         {
             string frameworkName = "AppLovinSDK.xcframework";
@@ -34,5 +37,6 @@ public class PostProcessBuildAppLovin
             
             File.WriteAllText(projPath, proj.WriteToString());
         }
+#endif
     }
 }

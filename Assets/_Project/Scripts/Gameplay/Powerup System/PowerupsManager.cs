@@ -39,14 +39,9 @@ namespace UI
 
         private void OnEnable()
         {
-            YG2.onGetSDKData += GetPowerupData;
-
-            if (YG2.isSDKEnabled)
-                GetPowerupData();
+            GetPowerupData();
         }
-
-        private void OnDisable() => YG2.onGetSDKData -= GetPowerupData;
-
+        
         private void GetPowerupData()
         {
             foreach (PowerupView powerupData in _powerupData)

@@ -1,6 +1,8 @@
 using UnityEditor;
+#if UNITY_IOS && UNITY_EDITOR
 using UnityEditor.iOS.Xcode;
 using UnityEditor.iOS.Xcode.Extensions;
+#endif
 using UnityEditor.Callbacks;
 using System.IO;
 using UnityEngine;
@@ -10,6 +12,7 @@ public class PostProcessBuildBigoAds
     [PostProcessBuild]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string pathToBuiltProject)
     {
+#if UNITY_IOS && UNITY_EDITOR
         if (buildTarget == BuildTarget.iOS)
         {
             string frameworkName = "BigoADS.xcframework";
@@ -33,5 +36,6 @@ public class PostProcessBuildBigoAds
             
             File.WriteAllText(projPath, proj.WriteToString());
         }
+#endif
     }
 }

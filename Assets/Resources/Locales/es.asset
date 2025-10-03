@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5f21c316dc78354383759b662a96069, type: 3}
+  m_Name: es
+  m_EditorClassIdentifier: 
+  _keys:
+  - settingsTitle
+  - gameOver
+  - about
+  - continue
+  - review
+  - restart
+  - leaderboard
+  - feedback
+  - sound
+  - gamesPlayed
+  - richestScore
+  - statistics
+  - Loading
+  - moreGames
+  - free
+  - timeOut
+  - gift
+  - LevelPassed
+  - Level
+  - LevelFail
+  - flyingControl
+  - moveSpeed
+  - health
+  - forAd
+  - tapToThrow
+  - skipLevel
+  - claim
+  - holdAndDrag
+  - music
+  _values:
+  - "Configuraci\xF3n"
+  - Juego Terminado
+  - "\xA1Despu\xE9s de ver un anuncio puedes continuar el nivel con 60 segundos!"
+  - Continuar
+  - "Dejar una Rese\xF1a"
+  - Reiniciar
+  - "Clasificaci\xF3n"
+  - Comentarios\n<i><size=75%>platypusGames@yandex.ru</i>
+  - Sonido
+  - Partidas Jugadas
+  - "Puntuaci\xF3n M\xE1s Alta"
+  - "Estad\xEDsticas"
+  - Cargando...
+  - "M\xE1s Juegos"
+  - Gratis
+  - "\xA1Se Acab\xF3 el Tiempo!"
+  - Regalo
+  - "\xA1Incre\xEDble!"
+  - Nivel
+  - "Int\xE9ntalo de Nuevo"
+  - Control de vuelo
+  - Velocidad de Movimiento
+  - "Salud m\xE1xima"
+  - Ver Anuncio
+  - Toca para Lanzar
+  - Saltar Nivel
+  - Reclamar
+  - "Mant\xE9n y arrastra"
+  - "M\xFAsica"

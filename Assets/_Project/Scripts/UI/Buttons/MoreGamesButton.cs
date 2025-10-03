@@ -10,7 +10,7 @@ namespace _Project.Scripts.UI.Buttons
         
         protected override void OnClick()
         {
-            YG2.OnDeveloperURL();
+            // YG2.OnDeveloperURL();
             _metricService.OpenedMoreGames();
         }
     }

@@ -5,6 +5,7 @@ using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools;
 using _Project.Scripts.UI;
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour
     [Inject] private AudioService _audioService;
     [Inject] private WindowService _windowService;
     [Inject] private LevelResourceService _levelResourceService;
+    [Inject] private IPersistentProgressService _persistentProgressService;
 
     private const float DIE_HEIGHT = -5;
 
@@ -50,7 +52,7 @@ public class PlayerController : MonoBehaviour
     {
         _enabled = true;
         _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
-        _movementSpeed = YG.YG2.saves.flyingControl;
+        _movementSpeed = _persistentProgressService.PowerupProgress.flyingControl;
     }
 
     public void Disable() => _enabled = false;
@@ -111,7 +113,7 @@ public class PlayerController : MonoBehaviour
         hud.Show();
         hud.DeactivateStartText();
         _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
-        _movementSpeed = YG.YG2.saves.flyingControl;
+        _movementSpeed = _persistentProgressService.PowerupProgress.flyingControl;
 
         _audioService.PlayLaunchSound();
         Vector3 targetPos = _initialPos + new Vector3(0f, -1f, -4f) * factor;
@@ -138,12 +140,12 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
-        if (_levelResourceService.ObservableValue.Value == 1)
-        {
-            Task<UIContainer> tutorialTask = _windowService.Show(WindowId.Tutorial);
-            yield return tutorialTask;
-            (tutorialTask.Result as TutorialWindow)?.AnimateHandMovementCursor();
-        }
+        // if (_levelResourceService.ObservableValue.Value == 1)
+        // {
+        //     Task<UIContainer> tutorialTask = _windowService.Show(WindowId.Tutorial);
+        //     yield return tutorialTask;
+        //     (tutorialTask.Result as TutorialWindow)?.AnimateHandMovementCursor();
+        // }
 
         Destroy(_joint);
 
@@ -168,7 +170,7 @@ public class PlayerController : MonoBehaviour
     {
         IsDie = true;
         IsTarget = false;
-        await _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
+        if (transform != null) await _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
         _gameFactory.RemovePlayer(this);
     }
 }

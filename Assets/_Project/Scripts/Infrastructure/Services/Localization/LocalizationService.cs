@@ -21,10 +21,13 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
         public LocalizationService(AssetProvider assetProvider)
         {
             _assetProvider = assetProvider;
-            YG2.onSwitchLang += SwitchLanguage;
+            // YG2.onSwitchLang += SwitchLanguage;
         }
 
-        ~LocalizationService() => YG2.onSwitchLang -= SwitchLanguage;
+        ~LocalizationService()
+        {
+            // YG2.onSwitchLang -= SwitchLanguage;
+        }
 
         private async void SwitchLanguage(string lang)
         {
@@ -88,6 +91,10 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
             return string.IsNullOrEmpty(text) ? null : text.ToUpper();
         }
 
-        public void DefineLanguage() => SwitchLanguage(YG2.lang);
+        public void DefineLanguage()
+        {
+            SwitchLanguage("ru");
+            // SwitchLanguage(YG2.lang);
+        }
     }
 }

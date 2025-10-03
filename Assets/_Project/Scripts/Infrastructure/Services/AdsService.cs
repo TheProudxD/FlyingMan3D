@@ -7,10 +7,13 @@ namespace _Project.Scripts.Infrastructure.Services
     {
         public void PlayInterstitial()
         {
-            if (YG2.isTimerAdvCompleted)
-                YG2.InterstitialAdvShow();
+            // if (YG2.isTimerAdvCompleted)
+                // YG2.InterstitialAdvShow();
         }
 
-        public void PlayRewardedVideo(string id, Action onRewarded) => YG2.RewardedAdvShow(id, onRewarded);
+        public void PlayRewardedVideo(string id, Action onRewarded)
+        {
+            // YG2.RewardedAdvShow(id, onRewarded);
+        }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using _Project.Scripts.Infrastructure.Services.PersistentProgress;
+using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +10,9 @@ namespace UI
 {
     internal class PowerupView : MonoBehaviour
     {
+        [Inject] private IPersistentProgressService _progressService;
+        [Inject] private SaveLoadService _saveLoadService;
+        
         [field: SerializeField] public PowerupType Id { get; private set; }
         [SerializeField] private AnimationCurve _priceCurve;
 
@@ -28,9 +33,9 @@ namespace UI
             {
                 return Id switch
                 {
-                    PowerupType.Health => YG2.saves.healthProgress,
-                    PowerupType.MovingSpeed => YG2.saves.movingSpeedProgress,
-                    PowerupType.FlyingControl => YG2.saves.flyingControlProgress,
+                    PowerupType.Health => _progressService.PowerupProgress.healthProgress,
+                    PowerupType.MovingSpeed => _progressService.PowerupProgress.movingSpeedProgress,
+                    PowerupType.FlyingControl => _progressService.PowerupProgress.flyingControlProgress,
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }
@@ -42,19 +47,19 @@ namespace UI
                 switch (Id)
                 {
                     case PowerupType.Health:
-                        YG2.saves.healthProgress = value;
+                        _progressService.PowerupProgress.healthProgress = value;
                         break;
                     case PowerupType.MovingSpeed:
-                        YG2.saves.movingSpeedProgress = value;
+                        _progressService.PowerupProgress.movingSpeedProgress = value;
                         break;
                     case PowerupType.FlyingControl:
-                        YG2.saves.flyingControlProgress = value;
+                        _progressService.PowerupProgress.flyingControlProgress = value;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
-                YG2.SaveProgress();
+                _saveLoadService.Save();
                 LevelText.SetText(value.ToString());
             }
         }
@@ -92,19 +97,19 @@ namespace UI
             switch (Id)
             {
                 case PowerupType.Health:
-                    YG2.saves.health += YG2.saves.healthDelta;
+                    _progressService.PowerupProgress.health += SavesStatic.healthDelta;
                     break;
                 case PowerupType.MovingSpeed:
-                    YG2.saves.movingSpeed += YG2.saves.movingSpeedDelta;
+                    _progressService.PowerupProgress.movingSpeed += SavesStatic.movingSpeedDelta;
                     break;
                 case PowerupType.FlyingControl:
-                    YG2.saves.flyingControl += YG2.saves.flyingControlDelta;
+                    _progressService.PowerupProgress.flyingControl += SavesStatic.flyingControlDelta;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            YG2.SaveProgress();
+            _saveLoadService.Save();
 
             CheckCanInteract();
         }
@@ -121,9 +126,9 @@ namespace UI
         {
             Progress = Id switch
             {
-                PowerupType.Health => YG2.saves.health,
-                PowerupType.MovingSpeed => YG2.saves.movingSpeedProgress,
-                PowerupType.FlyingControl => YG2.saves.flyingControlProgress,
+                PowerupType.Health => _progressService.PowerupProgress.health,
+                PowerupType.MovingSpeed => _progressService.PowerupProgress.movingSpeedProgress,
+                PowerupType.FlyingControl => _progressService.PowerupProgress.flyingControlProgress,
                 _ => throw new ArgumentOutOfRangeException()
             };
 

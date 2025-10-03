@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Infrastructure.Services.Audio;
+﻿using System.Threading.Tasks;
+using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Localization;
 using Reflex.Attributes;
 using TMPro;
@@ -64,6 +65,10 @@ namespace _Project.Scripts.UI.Buttons
             _arrowAnimation.Disable();
         }
 
-        private void SetAmount(int amount) => _buttonText.SetText($"{_localizationService.Localize(LocalizationKeys.claim)} + {amount}");
+        private async void SetAmount(int amount)
+        {
+            string localized = await _localizationService.Localize(LocalizationKeys.claim);
+            _buttonText.SetText($"{localized} + {amount}");
+        }
     }
 }

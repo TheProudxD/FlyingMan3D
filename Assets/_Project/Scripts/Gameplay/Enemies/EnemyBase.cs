@@ -74,7 +74,7 @@ public abstract class EnemyBase : MonoBehaviour
         IsDie = true;
         GameFactory.RemoveEnemy(this);
         var ragdoll = await GameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
-        ragdoll.GetComponentInChildren<Rigidbody>().AddForce(-transform.forward * 300, ForceMode.Impulse);
+        ragdoll?.GetComponentInChildren<Rigidbody>()?.AddForce(-transform.forward * 300, ForceMode.Impulse);
         Destroy(gameObject);
     }
 

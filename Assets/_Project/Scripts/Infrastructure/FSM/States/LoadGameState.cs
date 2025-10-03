@@ -1,4 +1,5 @@
 using System.Collections;
+using _Project.Scripts.Data;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
@@ -36,7 +37,9 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         private async void LoadProgress()
         {
-            _progressService.Progress = _saveLoadService.LoadProgress();
+            var progress = _saveLoadService.LoadProgress();
+            _progressService.Progress = progress.Item1;
+            _progressService.PowerupProgress = progress.Item2;
 
             await _gameFactory.Initialize();
             await _uiFactory.Initialize(_windowService);
