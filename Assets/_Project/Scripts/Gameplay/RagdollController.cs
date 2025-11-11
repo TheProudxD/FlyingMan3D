@@ -24,7 +24,7 @@ namespace BhorGames
             foreach (Rigidbody item in rigids)
             {
                 // GetComponent<Animator>().enabled = true;
-                item.velocity = Vector3.zero;
+                item.linearVelocity = Vector3.zero;
                 item.isKinematic = true;
             }
         }
@@ -37,7 +37,7 @@ namespace BhorGames
                 // if(multiplyMass)
                 // item.drag = 1;
                 GetComponent<Animator>().enabled = false;
-                item.velocity = Vector3.zero;
+                item.linearVelocity = Vector3.zero;
                 item.isKinematic = false;
             }
         }

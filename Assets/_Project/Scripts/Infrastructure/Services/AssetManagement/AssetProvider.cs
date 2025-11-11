@@ -20,7 +20,7 @@ using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 {
-    public class AssetProvider : IService, IDisposable, IInitializable
+    public class AssetProvider : IService, IDisposable, ITaskInitializable
     {
         private readonly Container _container;
         private ConfigService _configService;

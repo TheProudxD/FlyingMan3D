@@ -8,7 +8,7 @@ using _Project.Scripts.UI.Windows;
 
 namespace _Project.Scripts.Infrastructure.Services.Config
 {
-    public class ConfigService : IService, IInitializable
+    public class ConfigService : IService, ITaskInitializable
     {
         private readonly AssetProvider _assetProvider;
         private ConfigContainer _configContainer;

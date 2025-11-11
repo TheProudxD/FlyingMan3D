@@ -28,7 +28,7 @@ namespace Obi
         public static JobHandle SortConstraints<T>(int particleCount,
                                                     NativeArray<T> constraints,
                                                     ref NativeArray<T> sortedConstraints,
-                                                    JobHandle handle) where T : struct, IConstraint
+                                                    JobHandle handle) where T : unmanaged, IConstraint
         {
             // Count the amount of digits in the largest particle index that can be referenced by a constraint:
             NativeArray<int> totalCountUpToDigit = new NativeArray<int>(particleCount + 1, Allocator.TempJob);
@@ -112,7 +112,7 @@ namespace Obi
 
         // Sorts slices of an array in parallel
         [BurstCompile]
-        public struct SortSubArraysJob<K> : IJobParallelFor where K : struct, IConstraint
+        public struct SortSubArraysJob<K> : IJobParallelFor where K : unmanaged, IConstraint
         {
             [NativeDisableContainerSafetyRestriction] public NativeArray<K> InOutArray;
 

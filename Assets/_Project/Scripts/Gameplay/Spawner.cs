@@ -12,7 +12,7 @@ using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools.Extensions;
 using Reflex.Attributes;
 
-public class Spawner : MonoBehaviour, IInitializable
+public class Spawner : MonoBehaviour, ITaskInitializable
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private AssetProvider _assetProvider;

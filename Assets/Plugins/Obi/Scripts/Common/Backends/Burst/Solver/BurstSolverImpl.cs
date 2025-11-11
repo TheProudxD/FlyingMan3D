@@ -299,7 +299,7 @@ namespace Obi
 
         public void SetSimplices(int[] simplices, SimplexCounts counts)
         {
-            this.simplices.CopyFrom(simplices);
+            // this.simplices.CopyFrom(simplices);
             this.simplexCounts = counts;
 
             if (simplexBounds.IsCreated)

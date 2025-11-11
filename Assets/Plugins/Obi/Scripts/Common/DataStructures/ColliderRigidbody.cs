@@ -20,7 +20,7 @@ namespace Obi
             bool kinematic = !Application.isPlaying || rb.isKinematic || kinematicForParticles;
 
             //rotation = source.rotation;
-            velocity = kinematicForParticles ? Vector3.zero : rb.velocity;
+            velocity = kinematicForParticles ? Vector3.zero : rb.linearVelocity;
             angularVelocity = kinematicForParticles ? Vector3.zero : rb.angularVelocity;
 
             // center of mass in unity is affected by local rotation and position, but not scale. We need it expressed in world space:

@@ -16,7 +16,7 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Infrastructure.Services.Factories
 {
-    public class GameFactory : IService, IInitializable
+    public class GameFactory : IService, ITaskInitializable
     {
         private readonly LevelResourceService _levelResourceService;
         private readonly SaveLoadService _saveLoadService;
@@ -79,7 +79,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
                 if (rb != null)
                 {
-                    rb.velocity = source.GetComponent<Rigidbody>().velocity;
+                    rb.linearVelocity = source.GetComponent<Rigidbody>().linearVelocity;
                 }
 
                 CopyTransformData(source, target);

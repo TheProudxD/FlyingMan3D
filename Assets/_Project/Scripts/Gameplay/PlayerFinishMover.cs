@@ -155,8 +155,9 @@ public class PlayerFinishMover : MonoBehaviour
             }
         }
 
-        if (gameObject.transform.root.gameObject.CompareTag("Enemy") ||
-            collision.gameObject.CompareTag("Platform") == false)
+        if (gameObject != null && gameObject.transform != null && gameObject.transform.root != null &&
+            gameObject.transform.root.gameObject != null && (gameObject.transform.root.gameObject.CompareTag("Enemy") ||
+                                                             collision.gameObject.CompareTag("Platform") == false))
             return;
 
         _playerController.Animator.SetBool(IsGround, true);

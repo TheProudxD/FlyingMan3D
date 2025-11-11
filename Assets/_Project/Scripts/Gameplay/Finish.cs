@@ -53,7 +53,7 @@ public class Finish : MonoBehaviour
 
         foreach (Rigidbody r in playerController.Bodies)
         {
-            r.velocity /= maxVelocity;
+            r.linearVelocity /= maxVelocity;
 
             // Utils.LerpFunction(1, x =>
             // {

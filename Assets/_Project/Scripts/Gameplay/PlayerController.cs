@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
 
         foreach (Rigidbody rb in Bodies)
         {
-            rb.velocity += new Vector3(_xValue, 0, 0) * (Time.deltaTime * _movementSpeed);
+            rb.linearVelocity += new Vector3(_xValue, 0, 0) * (Time.deltaTime * _movementSpeed);
         }
     }
 
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
         float newX = Mathf.Sign(xPos) * -3f;
 
-        SelfHips.velocity = new Vector3(newX, SelfHips.velocity.y, SelfHips.velocity.z);
+        SelfHips.linearVelocity = new Vector3(newX, SelfHips.linearVelocity.y, SelfHips.linearVelocity.z);
     }
 
     public void CheckForHeight()
@@ -156,13 +156,13 @@ public class PlayerController : MonoBehaviour
             if (rb == null)
                 continue;
 
-            rb.velocity = forceVector;
+            rb.linearVelocity = forceVector;
             rb.AddTorque(Vector3.forward);
         }
 
         if (factor > 0.1f)
         {
-            _gameFactory.GetSpawner()?.SpawnObjects(Bodies[0].velocity);
+            _gameFactory.GetSpawner()?.SpawnObjects(Bodies[0].linearVelocity);
         }
     }
 
@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour
     {
         IsDie = true;
         IsTarget = false;
-        if (transform != null) await _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
+        if (transform != null && transform.gameObject != null && transform.gameObject.activeInHierarchy) await _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
         _gameFactory.RemovePlayer(this);
     }
 }

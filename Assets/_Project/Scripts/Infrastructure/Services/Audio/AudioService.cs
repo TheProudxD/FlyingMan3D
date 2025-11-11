@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.Audio
 {
-    public class AudioService : IService, IInitializable
+    public class AudioService : IService, ITaskInitializable
     {
         private readonly AssetProvider _assetProvider;
         private readonly ConfigService _configService;

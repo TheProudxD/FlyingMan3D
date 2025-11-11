@@ -30,7 +30,7 @@ namespace Obi{
             if (unityRigidbody.isKinematic)
             {
                 // differentiate positions to obtain linear velocity:
-                unityRigidbody.velocity = (transform.position - prevPosition) / stepTime;
+                unityRigidbody.linearVelocity = (transform.position - prevPosition) / stepTime;
 
                 // differentiate rotations to obtain angular velocity:
                 Quaternion delta = transform.rotation * Quaternion.Inverse(prevRotation);
@@ -59,7 +59,7 @@ namespace Obi{
 			// kinematic rigidbodies are passed to Obi with zero velocity, so we must ignore the new velocities calculated by the solver:
 			if (Application.isPlaying && !(unityRigidbody.isKinematic || kinematicForParticles))
             {
-                unityRigidbody.velocity += linearDelta;
+                unityRigidbody.linearVelocity += linearDelta;
                 unityRigidbody.angularVelocity += angularDelta;
             }
         }

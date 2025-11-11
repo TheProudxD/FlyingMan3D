@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {
-    public class BootstrapState : IState, IInitializable
+    public class BootstrapState : IState, ITaskInitializable
     {
         private readonly SceneLoader _sceneLoader;
         private readonly LoadingCurtain _loadingCurtain;
@@ -23,6 +23,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly AssetProvider _assetProvider;
         private readonly AudioService _audioService;
         private readonly GameFactory _gameFactory;
+        private readonly AdsService _adsService;
         // private readonly AudioLoader _audioLoader;
 
         private StateMachine _stateMachine;
@@ -30,7 +31,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         public BootstrapState(SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
             MetricService metricService, LocalizationService localizationService,
             DeviceSpecificGraphics graphicsService, ConfigService configService, AssetProvider assetProvider,
-            AudioService audioService, GameFactory gameFactory)
+            AudioService audioService, GameFactory gameFactory, AdsService adsService)
         {
             _sceneLoader = sceneLoader;
             _loadingCurtain = loadingCurtain;
@@ -41,6 +42,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _assetProvider = assetProvider;
             _audioService = audioService;
             _gameFactory = gameFactory;
+            _adsService = adsService;
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
@@ -51,6 +53,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             _loadingCurtain.Show();
             Cursor.lockState = CursorLockMode.Confined;
+            _adsService.Initialize();
             await _assetProvider.Initialize();
             await _configService.Initialize();
             await _audioService.Initialize();
