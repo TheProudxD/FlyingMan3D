@@ -18,16 +18,5 @@ allprojects {
         mavenCentral()
         maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
-        
-        // For Yandex specifically
-        maven { url "https://dl.bintray.com/yandex/android" }
-        maven { url "https://android-sdk.is.com" }
-    }
-    
-    // Add TLS configurations
-    configurations.all {
-        resolutionStrategy {
-            force 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
-        }
-    }
+	}
 }
