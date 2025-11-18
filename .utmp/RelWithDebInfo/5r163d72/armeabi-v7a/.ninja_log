@@ -1,5 +1,5 @@
 # ninja log v5
-2	1170	7847800961461191	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	5decf7074cf86ef8
-1170	3845	7847800986387670	F:/My Games/FlyingMan3D/FlyingMan3D/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5r163d72/obj/armeabi-v7a/libswappywrapper.so	f78b571fa30ee861
-1	1542	7848284905924270	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	5decf7074cf86ef8
-1542	4836	7848284938537504	F:/My Games/FlyingMan3D/FlyingMan3D/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5r163d72/obj/armeabi-v7a/libswappywrapper.so	f78b571fa30ee861
+7712	14279	7848352691983260	F:/My Games/FlyingMan3D/FlyingMan3D/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5r163d72/obj/armeabi-v7a/libswappywrapper.so	f78b571fa30ee861
+244	7711	7848352626259024	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	5decf7074cf86ef8
+1	4727	7848356576320720	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	5decf7074cf86ef8
+4728	7369	7848356602443548	F:/My Games/FlyingMan3D/FlyingMan3D/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/5r163d72/obj/armeabi-v7a/libswappywrapper.so	f78b571fa30ee861

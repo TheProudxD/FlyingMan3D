@@ -7,12 +7,12 @@ dependencies {
 // Android Resolver Dependencies Start
     implementation 'androidx.lifecycle:lifecycle-process:2.4.1' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:12
     implementation 'com.yandex.android:mobileads:7.16.0' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:7
+    implementation 'com.yandex.android:mobileads-mediation:7.16.0.0' // Assets/YandexMobileAds/Editor/YandexMobileadsMediationDependencies.xml:13
 // Android Resolver Dependencies End
 **DEPS**}
 
 // Android Resolver Exclusions Start
 android {
-    ndkVersion "**NDKVERSION**"
   packaging {
       exclude ('/lib/armeabi/*' + '*')
       exclude ('/lib/mips/*' + '*')

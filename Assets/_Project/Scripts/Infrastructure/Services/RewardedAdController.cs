@@ -9,8 +9,6 @@ namespace _Project.Scripts.Infrastructure.Services
         private string _message = "";
         private RewardedAdLoader _rewardedAdLoader;
         private RewardedAd _rewardedAd;
-        private string _id;
-        private Action _onRewarded;
 
         public void Initialize()
         {
@@ -39,28 +37,36 @@ namespace _Project.Scripts.Infrastructure.Services
             DisplayMessage("Rewarded Ad is requested");
         }
 
-        public void Show(string id, Action onRewarded)
+        public void Show(Action onRewarded)
         {
-            _id = id;
-            _onRewarded = onRewarded;
-
             if (_rewardedAd == null)
             {
                 DisplayMessage("RewardedAd is not ready yet");
                 return;
             }
+
+            _rewardedAd.OnRewarded += RewardedAdOnOnRewarded(onRewarded);
             _rewardedAd.Show();
         }
-        
+
+        private EventHandler<Reward> RewardedAdOnOnRewarded(Action onRewarded) =>
+            (x, y) =>
+            {
+                if (_rewardedAd != null)
+                    _rewardedAd.OnRewarded -= RewardedAdOnOnRewarded(onRewarded);
+
+                onRewarded?.Invoke();
+            };
+
         private AdRequestConfiguration CreateAdRequest(string adUnitId) =>
             new AdRequestConfiguration.Builder(adUnitId).Build();
-        
+
         private void DestroyAd()
         {
             _rewardedAd?.Destroy();
             _rewardedAd = null;
         }
-        
+
         private void DisplayMessage(string message)
         {
             _message = message + (_message.Length == 0 ? "" : "\n--------\n" + _message);
@@ -85,6 +91,7 @@ namespace _Project.Scripts.Infrastructure.Services
         {
             DisplayMessage(
                 $"HandleAdFailedToLoad event received with message: {args.Message}");
+
             DestroyAd();
             RequestRewardedAd();
         }
@@ -115,11 +122,6 @@ namespace _Project.Scripts.Infrastructure.Services
         private void HandleRewarded(object sender, Reward args)
         {
             DisplayMessage($"HandleRewarded event received: amout = {args.amount}, type = {args.type}");
-
-            if (_id == args.type)
-            {
-                _onRewarded?.Invoke();
-            }
         }
 
         private void HandleAdFailedToShow(object sender, AdFailureEventArgs args)
@@ -127,6 +129,7 @@ namespace _Project.Scripts.Infrastructure.Services
             DisplayMessage(
                 $"HandleAdFailedToShow event received with message: {args.Message}");
         }
+
         #endregion
     }
 }

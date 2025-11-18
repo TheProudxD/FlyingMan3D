@@ -22,7 +22,7 @@ namespace _Project.Scripts.Infrastructure.Services
 
         public void PlayRewardedVideo(string id, Action onRewarded)
         {
-            _rewardedAdController.Show(id, onRewarded);
+            _rewardedAdController.Show(onRewarded);
         }
     }
 }
