@@ -1,1 +1,0 @@
-F:\My Games\FlyingMan3D\FlyingMan3D\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\FramePacing\UnitySwappyWrapper.h
