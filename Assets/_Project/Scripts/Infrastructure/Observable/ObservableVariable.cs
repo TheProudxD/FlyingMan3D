@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace _Project.Scripts.Infrastructure.Observable
 {
@@ -7,6 +8,7 @@ namespace _Project.Scripts.Infrastructure.Observable
         public event Action<T> Changed;
         public event Action<T, T> ChangedWithOld;
 
+        private readonly IEqualityComparer<T> _equalityComparer;
         private T _current;
         private T _old;
 
@@ -17,11 +19,21 @@ namespace _Project.Scripts.Infrastructure.Observable
             {
                 _old = _current;
                 _current = value;
-                Invoke();
+
+                if (_equalityComparer?.Equals(_old, _current) == false)
+                    Invoke();
             }
         }
 
-        public ObservableVariable(T value = default) => Value = value;
+        public ObservableVariable() : this(default(T)) { }
+
+        public ObservableVariable(T value) : this(value, EqualityComparer<T>.Default) { }
+
+        public ObservableVariable(T value, IEqualityComparer<T> equalityComparer)
+        {
+            Value = value;
+            _equalityComparer = equalityComparer;
+        }
 
         public override string ToString() => _current.ToString();
 
@@ -31,6 +43,6 @@ namespace _Project.Scripts.Infrastructure.Observable
             Changed?.Invoke(_current);
         }
 
-        public ObservableVariable<TT> Clone<TT>() => (ObservableVariable<TT>)MemberwiseClone();
+        // public ObservableVariable<TT> Clone<TT>() => (ObservableVariable<TT>)MemberwiseClone();
     }
 }

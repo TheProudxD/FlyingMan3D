@@ -39,7 +39,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private IEnumerator WinCoroutine()
         {
             ParticleSystem winParticle = _gameFactory.GetSpawner().WinParticle;
-            winParticle.transform.position = Object.FindObjectOfType<Finish>().transform.position;
+            winParticle.transform.position = Object.FindAnyObjectByType<PlayerController>(FindObjectsInactive.Include).transform.position;
             winParticle.Play();
             yield return new WaitForSeconds(2);
 

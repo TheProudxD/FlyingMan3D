@@ -86,11 +86,11 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             }
         }
 
-        public Platform GetPlatform() => Object.FindObjectOfType<Platform>();
+        public Platform GetPlatform() => Object.FindAnyObjectByType<Platform>(FindObjectsInactive.Include);
 
         public PlayerController GetMainPlayer() => _mainPlayer;
 
-        public Spawner GetSpawner() => Object.FindObjectOfType<Spawner>();
+        public Spawner GetSpawner() => Object.FindAnyObjectByType<Spawner>(FindObjectsInactive.Include);
 
         public void DestroyPlayers()
         {
@@ -173,7 +173,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         {
             var startPosition = new Vector3(0, 1.75f, -1);
             _mainPlayer = await _assetProvider.CreatePlayer(startPosition);
-            Rigidbody capsule = Object.FindObjectOfType<Slingshot>().Capsule;
+            Rigidbody capsule = Object.FindAnyObjectByType<Slingshot>(FindObjectsInactive.Include).Capsule;
             var fixedJoint = _mainPlayer.SelfHips.gameObject.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = capsule;
             _mainPlayer.SetInitial(fixedJoint, capsule.transform);
@@ -229,7 +229,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _levelHolder.Add(slingshot.gameObject);
         }
 
-        public Indicator GetIndicator() => Object.FindObjectOfType<Indicator>();
+        public Indicator GetIndicator() => Object.FindAnyObjectByType<Indicator>(FindObjectsInactive.Include);
 
         public void ClearLevelHolder()
         {
@@ -260,7 +260,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         {
             var offset = new Vector3(0, 7, -14);
 
-            var cameraSetup = Object.FindObjectOfType<CameraSetup>();
+            var cameraSetup = Object.FindAnyObjectByType<CameraSetup>(FindObjectsInactive.Include);
             CameraFollow follow = cameraSetup.CameraFollow;
             follow.transform.position = _mainPlayer.SelfHips.transform.position + offset;
             follow.enabled = true;
@@ -282,7 +282,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public void SetFinishCamera(float finishZPosition)
         {
-            var cameraSetup = Object.FindObjectOfType<CameraSetup>();
+            var cameraSetup = Object.FindAnyObjectByType<CameraSetup>(FindObjectsInactive.Include);
             CameraFollow follow = cameraSetup.CameraFollow;
             cameraSetup.MainCamera.fieldOfView = 90;
             follow.SetMoveSpeed(-1);

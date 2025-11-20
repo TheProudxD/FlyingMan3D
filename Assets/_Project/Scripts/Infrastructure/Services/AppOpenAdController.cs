@@ -65,7 +65,7 @@ namespace _Project.Scripts.Infrastructure.Services
 
         private void DisplayMessage(string message)
         {
-            this._message = message + (this._message.Length == 0 ? "" : "\n--------\n" + this._message);
+            _message = message + (_message.Length == 0 ? "" : "\n--------\n" + _message);
             UnityEngine.Debug.Log(message);
         }
 

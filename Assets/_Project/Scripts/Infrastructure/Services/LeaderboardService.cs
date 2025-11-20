@@ -8,7 +8,9 @@ namespace _Project.Scripts.Infrastructure.Services
         private readonly SaveLoadService _saveLoadService;
         private readonly IPersistentProgressService _progressService;
 
+#pragma warning disable CS0414 // Field is assigned but its value is never used
         private readonly string _leaderboardName = "highestLevel";
+#pragma warning restore CS0414 // Field is assigned but its value is never used
 
         public LeaderboardService(SaveLoadService saveLoadService, IPersistentProgressService progressService)
         {

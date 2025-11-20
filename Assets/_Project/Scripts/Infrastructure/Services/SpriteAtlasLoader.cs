@@ -8,7 +8,9 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 {
     public class SpriteAtlasLoader : IService
     {
+#pragma warning disable CS0414 // Field is assigned but its value is never used
         private readonly string _atlasPathInStreamingAssets = "Atlases/Game.spriteatlas";
+#pragma warning restore CS0414 // Field is assigned but its value is never used
 
         private SpriteAtlas _loadedAtlas;
 

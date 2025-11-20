@@ -18,7 +18,7 @@ namespace _Project.Scripts.Infrastructure.DI
 
         private void InjectLocalizedLabel(Container container)
         {
-            LocalizedLabel[] labels = FindObjectsOfType<LocalizedLabel>();
+            LocalizedLabel[] labels = FindObjectsByType<LocalizedLabel>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
             foreach (LocalizedLabel label in labels)
             {

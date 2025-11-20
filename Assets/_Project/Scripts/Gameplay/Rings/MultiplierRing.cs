@@ -19,7 +19,7 @@ public class MultiplierRing : RingBase
 
         if (!_firstPlayer)
         {
-            _playerCount = FindObjectsOfType<PlayerController>().Length;
+            _playerCount = FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length;
             _firstPlayer = true;
         }
 
