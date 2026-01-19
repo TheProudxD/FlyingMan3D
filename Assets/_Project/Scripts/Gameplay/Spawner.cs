@@ -10,6 +10,7 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools.Extensions;
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 
 public class Spawner : MonoBehaviour, ITaskInitializable
@@ -39,7 +40,7 @@ public class Spawner : MonoBehaviour, ITaskInitializable
     private float _zPos;
     private int _index;
 
-    public Task Initialize()
+    public UniTask Initialize()
     {
         int level = _levelResourceService.Current.Value;
         _index = level % _colorArray.Length;
@@ -47,7 +48,7 @@ public class Spawner : MonoBehaviour, ITaskInitializable
         _gameFactory.GetPlatform().GetComponent<Renderer>().sharedMaterial.color = _colorArray[_index].PlatformColor;
 
         _playerTransform = _gameFactory.GetMainPlayer().transform;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
     public async void SpawnObjects(Vector3 velocity)

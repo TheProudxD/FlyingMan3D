@@ -73,7 +73,7 @@ public class PlayerFinishMover : MonoBehaviour
         {
             _target = NearestTarget();
         }
-        else
+        else if (_target != null)
         {
             _moveDistance = _target.transform.position - transform.position;
             _moveDistance.y = 0f;
@@ -102,9 +102,11 @@ public class PlayerFinishMover : MonoBehaviour
 
     private GameObject NearestTarget()
     {
+        if (_gameFactory.Enemies == null)
+            return null;
+
         float minDistance = float.MaxValue;
         int index = 0;
-
         for (int i = 1; i < _gameFactory.Enemies.Count; i++)
         {
             float distance = Distance(_gameFactory.Enemies[i].transform.position, transform.position);

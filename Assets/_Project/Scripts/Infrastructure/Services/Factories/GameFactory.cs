@@ -10,6 +10,7 @@ using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools.Camera;
 using BhorGames.Mechanics;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -48,12 +49,12 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         public ObservableVariable<int> EnemiesCounter { get; private set; }
         public ObservableVariable<int> PlayersCounter { get; private set; }
 
-        public Task Initialize()
+        public UniTask Initialize()
         {
             EnemiesCounter = new ObservableVariable<int>(Enemies.Count);
             PlayersCounter = new ObservableVariable<int>(Players.Count);
             _levelHolder = new List<GameObject>();
-            return Task.CompletedTask;
+            return UniTask.CompletedTask;
         }
 
         public Level CreateLevel() =>

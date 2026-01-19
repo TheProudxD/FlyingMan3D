@@ -2,6 +2,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Config;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.Audio
@@ -20,7 +21,7 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
             _configService = configService;
         }
 
-        public async Task Initialize()
+        public async UniTask Initialize()
         {
             _audioConfig = _configService.Get<AudioConfig>();
             _audioServiceView = await _assetProvider.CreateAudioServiceView();

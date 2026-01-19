@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.Config;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.UI.Windows;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
@@ -23,7 +24,7 @@ namespace _Project.Scripts.Infrastructure.Services
             _configService = configService;
         }
 
-        public async Task<UIContainer> Show(WindowId windowId)
+        public async UniTask<UIContainer> Show(WindowId windowId)
         {
             if (_openedWindows.ContainsKey(windowId))
             {

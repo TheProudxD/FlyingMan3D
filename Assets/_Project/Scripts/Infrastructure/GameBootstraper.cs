@@ -2,7 +2,6 @@ using _Project.Scripts.Infrastructure.FSM;
 using Reflex.Attributes;
 using Reflex.Core;
 using UnityEngine;
-using YG;
 
 namespace _Project.Scripts.Infrastructure
 {
@@ -10,14 +9,9 @@ namespace _Project.Scripts.Infrastructure
     {
         [Inject] private Container _container;
 
-        // private void OnEnable() => YG2.onGetSDKData += StartGame;
-
-        // private void OnDisable() => YG2.onGetSDKData -= StartGame;
-
         private void Start()
         {
-            // if (YG2.isSDKEnabled)
-                StartGame();
+            StartGame();
         }
 
         private void StartGame() => _container.Resolve<StateMachine>().Initialize();

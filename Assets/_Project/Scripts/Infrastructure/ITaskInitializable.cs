@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Infrastructure
 {
@@ -9,6 +10,6 @@ namespace _Project.Scripts.Infrastructure
     
     public interface ITaskInitializable
     {
-        Task Initialize();
+        UniTask Initialize();
     }
 }

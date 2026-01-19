@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Config;
 using _Project.Scripts.UI.Windows;
+using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Infrastructure.Services.Config
 {
@@ -20,7 +21,7 @@ namespace _Project.Scripts.Infrastructure.Services.Config
 
         public WindowConfig ForWindow(WindowId window) => _windowConfigs.GetValueOrDefault(window);
 
-        public async Task Initialize()
+        public async UniTask Initialize()
         {
             _configContainer = await _assetProvider.GetConfigContainer();
 

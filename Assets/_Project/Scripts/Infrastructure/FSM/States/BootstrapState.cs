@@ -8,6 +8,7 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Localization;
 using _Project.Scripts.Tools.Coroutine;
 using _Project.Scripts.UI;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
@@ -49,7 +50,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public async void Enter() => await Initialize();
 
-        public async Task Initialize()
+        public async UniTask Initialize()
         {
             _loadingCurtain.Show();
             Cursor.lockState = CursorLockMode.Confined;

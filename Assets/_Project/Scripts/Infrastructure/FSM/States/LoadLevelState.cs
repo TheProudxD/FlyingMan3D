@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
@@ -46,36 +47,50 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public async void Initialize()
         {
-            _gameFactory.ClearLevelHolder();
-            await _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
-            PlayerController player = await _gameFactory.CreateMainPlayer();
-            await _gameFactory.GetSpawner().Initialize();
+            try
+            {
+                _gameFactory.ClearLevelHolder();
+                await _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
+                PlayerController player = await _gameFactory.CreateMainPlayer();
+                await _gameFactory.GetSpawner().Initialize();
 
-            Hud hud = _uiFactory.GetHUD();
-            hud.Show();
-            hud.ActivateStartText();
+                Hud hud = _uiFactory.GetHUD();
+                hud.Show();
+                hud.ActivateStartText();
 
-            TryShowTutorial();
-            _statisticsService.IncreaseGamesPlayedNumberCounter();
-            _levelResourceService.Current.Value = _levelResourceService.ObservableValue.Value;
-            _gameFactory.CreateLevel();
-            player.Initialize();
-            _gameFactory.GetIndicator().Enable();
-            _gameFactory.SetPlayerCamera();
+                TryShowTutorial();
+                _statisticsService.IncreaseGamesPlayedNumberCounter();
+                _levelResourceService.Current.Value = _levelResourceService.ObservableValue.Value;
+                _gameFactory.CreateLevel();
+                player.Initialize();
+                _gameFactory.GetIndicator().Enable();
+                _gameFactory.SetPlayerCamera();
 
-            _metricService.LevelStarted(_levelResourceService.Current.Value);
-            _saveLoadService.InformAll();
-            _loadingCurtain.Hide();
-            _stateMachine.Enter<GameLoopState, IExitableState>(this);
+                _metricService.LevelStarted(_levelResourceService.Current.Value);
+                _saveLoadService.InformAll();
+                _loadingCurtain.Hide();
+                _stateMachine.Enter<GameLoopState, IExitableState>(this);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
 
         private async void TryShowTutorial()
         {
-            if (_levelResourceService.ObservableValue.Value == 1)
+            try
             {
-                await _windowService.Show(WindowId.Tutorial);
+                if (_levelResourceService.ObservableValue.Value == 1)
+                {
+                    await _windowService.Show(WindowId.Tutorial);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
             }
         }
 

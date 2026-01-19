@@ -7,6 +7,7 @@ using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Views;
 using _Project.Scripts.UI.Windows;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.Factories
@@ -21,7 +22,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public UIFactory(AssetProvider assetProvider) => _assetProvider = assetProvider;
 
-        public async Task Initialize(WindowService windowService)
+        public async UniTask Initialize(WindowService windowService)
         {
             _uiRoot = (await _assetProvider.CreateUIRoot()).transform;
             _hud = (Hud)await windowService.Show(WindowId.HUD);
@@ -32,21 +33,21 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public Hud GetHUD() => _hud;
 
-        public async Task<UIContainer> CreatePauseWindow() => await InstantiateRegistered(WindowId.Pause, _uiRoot);
+        public async UniTask<UIContainer> CreatePauseWindow() => await InstantiateRegistered(WindowId.Pause, _uiRoot);
 
-        public async Task<UIContainer> CreateLoseWindow() => await InstantiateRegistered(WindowId.Lose, _uiRoot);
+        public async UniTask<UIContainer> CreateLoseWindow() => await InstantiateRegistered(WindowId.Lose, _uiRoot);
 
-        public async Task<UIContainer> CreateTutorialWindow() =>
+        public async UniTask<UIContainer> CreateTutorialWindow() =>
             await InstantiateRegistered(WindowId.Tutorial, _uiRoot);
 
-        public async Task<UIContainer> CreateLeaderboardWindow() =>
+        public async UniTask<UIContainer> CreateLeaderboardWindow() =>
             await InstantiateRegistered(WindowId.Leaderboard, _uiRoot);
 
-        public async Task<UIContainer> CreateWinWindow() => await InstantiateRegistered(WindowId.Win, _uiRoot);
+        public async UniTask<UIContainer> CreateWinWindow() => await InstantiateRegistered(WindowId.Win, _uiRoot);
 
-        public async Task<UIContainer> CreateHUD() => await InstantiateRegistered(WindowId.HUD, _uiRoot);
+        public async UniTask<UIContainer> CreateHUD() => await InstantiateRegistered(WindowId.HUD, _uiRoot);
 
-        private Task<UIContainer> InstantiateRegistered(WindowId windowId, Transform parent) =>
+        private UniTask<UIContainer> InstantiateRegistered(WindowId windowId, Transform parent) =>
             _assetProvider.Instantiate(windowId, parent);
     }
 }
