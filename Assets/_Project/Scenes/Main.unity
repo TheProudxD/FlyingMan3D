@@ -1107,7 +1107,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7684570929312927772, guid: 1becbab37818e4e6d8fd52d089c95c9a, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -6918499410950713925, guid: 1becbab37818e4e6d8fd52d089c95c9a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1183,7 +1183,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2594496226916091078, guid: 1becbab37818e4e6d8fd52d089c95c9a, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -1183147580534522038, guid: 1becbab37818e4e6d8fd52d089c95c9a, type: 3}
       propertyPath: m_CastShadows
@@ -1199,7 +1199,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 1becbab37818e4e6d8fd52d089c95c9a, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -606911229048690366, guid: 1becbab37818e4e6d8fd52d089c95c9a, type: 3}
       propertyPath: m_LocalScale.x
