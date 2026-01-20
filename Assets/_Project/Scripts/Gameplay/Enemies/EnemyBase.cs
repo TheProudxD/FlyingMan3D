@@ -71,16 +71,19 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected async void Die()
     {
+        if (IsDie)
+            return;
+        
         IsDie = true;
         GameFactory.RemoveEnemy(this);
         var ragdoll = await GameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
         if (ragdoll != null)
         {
             var rb = ragdoll.GetComponentInChildren<Rigidbody>();
-            if (rb != null)
-                if (transform != null)
+            if (gameObject !=null && rb != null && transform)
                     rb.AddForce(-transform.forward * 300, ForceMode.Impulse);
         }
+
         Destroy(gameObject);
     }
 
