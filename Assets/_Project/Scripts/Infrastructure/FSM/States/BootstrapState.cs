@@ -48,7 +48,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
 
-        public async void Enter() => await Initialize();
+        public void Enter() => Initialize().Forget();
 
         public async UniTask Initialize()
         {
@@ -62,7 +62,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             // Coroutines.StartRoutine(_audioLoader.Load());
 
             _localizationService.DefineLanguage();
-            _graphicsService.DefineGraphicsSettings();
+            await _graphicsService.DefineGraphicsSettings();
             _metricService.GameLoaded();
             LoadGame();
         }

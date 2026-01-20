@@ -3,6 +3,7 @@ using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.UI;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
@@ -35,7 +36,9 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
 
-        public async void Enter()
+        public void Enter() => EnterAsync().Forget();
+
+        private async UniTask EnterAsync()
         {
             _gameFactory.ClearLevelHolder();
             await _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));

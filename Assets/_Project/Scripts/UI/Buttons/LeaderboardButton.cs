@@ -1,5 +1,6 @@
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.UI.Windows;
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 
 namespace _Project.Scripts.UI.Buttons
@@ -8,6 +9,8 @@ namespace _Project.Scripts.UI.Buttons
     {
         [Inject] private WindowService _windowService;
 
-        protected override async void OnClick() => await _windowService.Show(WindowId.Leaderboard);
+        protected override void OnClick() => OnClickAsync().Forget();
+
+        private async UniTask OnClickAsync() => await _windowService.Show(WindowId.Leaderboard);
     }
 }

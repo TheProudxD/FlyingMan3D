@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Localization.SO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YG;
 
@@ -29,10 +30,11 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
             // YG2.onSwitchLang -= SwitchLanguage;
         }
 
-        private async void SwitchLanguage(string lang)
+        private void SwitchLanguage(string lang) => SwitchLanguageAsync(lang).Forget();
+
+        private async UniTask SwitchLanguageAsync(string lang)
         {
             bool tryParse = Enum.TryParse(lang, out Locale @case);
-
             await SetLocale(tryParse ? @case : Locale.en);
         }
 

@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using YG;
 using Random = UnityEngine.Random;
+using Cysharp.Threading.Tasks;
 
 public class PlayerFinishMover : MonoBehaviour
 {
@@ -127,15 +128,15 @@ public class PlayerFinishMover : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Fight(collision);
+        FightAsync(collision).Forget();
     }
 
     private void OnCollisionStay(Collision other)
     {
-        Fight(other);
+        FightAsync(other).Forget();
     }
 
-    private async void Fight(Collision collision)
+    private async UniTask FightAsync(Collision collision)
     {
         if (collision.transform.root.TryGetComponent(out EnemyBase enemy) && !enemy.IsDie && !_playerController.IsDie)
         {

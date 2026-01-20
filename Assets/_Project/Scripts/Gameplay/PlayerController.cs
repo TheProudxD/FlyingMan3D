@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
@@ -166,11 +167,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public async void Die()
+    public void Die() => DieAsync().Forget();
+
+    private async UniTask DieAsync()
     {
         IsDie = true;
         IsTarget = false;
-        if (transform != null && transform.gameObject != null && transform.gameObject.activeInHierarchy) await _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
+
+        if (transform != null && transform.gameObject != null && transform.gameObject.activeInHierarchy)
+            await _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
+
         _gameFactory.RemovePlayer(this);
     }
 }

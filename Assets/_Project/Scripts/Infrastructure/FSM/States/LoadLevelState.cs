@@ -5,6 +5,7 @@ using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
@@ -42,10 +43,10 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             _loadingCurtain.Show();
 
-            Initialize();
+            InitializeAsync().Forget();
         }
 
-        public async void Initialize()
+        private async UniTask InitializeAsync()
         {
             try
             {
@@ -58,7 +59,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
                 hud.Show();
                 hud.ActivateStartText();
 
-                TryShowTutorial();
+                TryShowTutorialAsync().Forget();
                 _statisticsService.IncreaseGamesPlayedNumberCounter();
                 _levelResourceService.Current.Value = _levelResourceService.ObservableValue.Value;
                 _gameFactory.CreateLevel();
@@ -79,7 +80,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
 
-        private async void TryShowTutorial()
+        private async UniTask TryShowTutorialAsync()
         {
             try
             {

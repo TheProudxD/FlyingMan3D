@@ -51,7 +51,9 @@ public class Spawner : MonoBehaviour, ITaskInitializable
         return UniTask.CompletedTask;
     }
 
-    public async void SpawnObjects(Vector3 velocity)
+    public void SpawnObjects(Vector3 velocity) => SpawnObjectsAsync(velocity).Forget();
+
+    private async UniTask SpawnObjectsAsync(Vector3 velocity)
     {
         _velY = velocity.y;
         _velZ = velocity.z;
@@ -75,7 +77,7 @@ public class Spawner : MonoBehaviour, ITaskInitializable
             for (int j = 0; j < enemyData.Amount; j++)
             {
                 float rotation = angle * counter;
-                _gameFactory.AddEnemy(enemyData.Type, finishGo.transform.position, rotation);
+                await _gameFactory.AddEnemyAsync(enemyData.Type, finishGo.transform.position, rotation);
                 counter++;
             }
         }

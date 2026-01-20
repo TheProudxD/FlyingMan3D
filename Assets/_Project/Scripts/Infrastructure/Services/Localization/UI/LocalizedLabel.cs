@@ -1,12 +1,13 @@
 ﻿using System.Linq;
 using System.Reflection;
 using _Project.Scripts.Tools.Extensions;
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using TMPro;
 using TS.LocalizationSystem;
-using UnityEditor;
 using UnityEngine;
 #if UNITY_EDITOR
+using UnityEditor;
 #endif
 
 namespace _Project.Scripts.Infrastructure.Services.Localization.UI
@@ -67,7 +68,9 @@ namespace _Project.Scripts.Infrastructure.Services.Localization.UI
             UpdateLabel();
         }
 
-        public async void UpdateLabel()
+        public void UpdateLabel() => UpdateLabelAsync().Forget();
+
+        private async UniTask UpdateLabelAsync()
         {
             if (string.IsNullOrEmpty(_localizationKey))
             {

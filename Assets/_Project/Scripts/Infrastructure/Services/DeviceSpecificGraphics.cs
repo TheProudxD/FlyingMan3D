@@ -1,4 +1,5 @@
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YG;
 
@@ -10,7 +11,7 @@ namespace _Project.Scripts.Infrastructure.Services
 
         public DeviceSpecificGraphics(AssetProvider assetProvider) => _assetProvider = assetProvider;
 
-        public async void DefineGraphicsSettings()
+        public async UniTask DefineGraphicsSettings()
         {
             GraphicsPreset preset = await (IsMobileDevice()
                 ? _assetProvider.GetMobileGraphicsPreset()

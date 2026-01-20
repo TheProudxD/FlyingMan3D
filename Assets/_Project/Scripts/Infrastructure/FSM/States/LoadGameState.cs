@@ -5,6 +5,7 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Tools.Coroutine;
 using _Project.Scripts.UI.Views;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
@@ -29,13 +30,13 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _windowService = windowService;
         }
 
-        public void Enter() => LoadProgress();
+        public void Enter() => LoadProgressAsync().Forget();
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
 
         public void Exit() { }
 
-        private async void LoadProgress()
+        private async UniTask LoadProgressAsync()
         {
             var progress = _saveLoadService.LoadProgress();
             _progressService.Progress = progress.Item1;

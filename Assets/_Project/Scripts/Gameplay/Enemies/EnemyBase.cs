@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using UnityEngine;
 
@@ -69,19 +70,21 @@ public abstract class EnemyBase : MonoBehaviour
         return Target;
     }
 
-    protected async void Die()
+    protected void Die() => DieAsync().Forget();
+
+    private async UniTask DieAsync()
     {
         if (IsDie)
             return;
-        
+
         IsDie = true;
         GameFactory.RemoveEnemy(this);
         var ragdoll = await GameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
         if (ragdoll != null)
         {
             var rb = ragdoll.GetComponentInChildren<Rigidbody>();
-            if (gameObject !=null && rb != null && transform)
-                    rb.AddForce(-transform.forward * 300, ForceMode.Impulse);
+            if (gameObject != null && rb != null && transform)
+                rb.AddForce(-transform.forward * 300, ForceMode.Impulse);
         }
 
         Destroy(gameObject);

@@ -1,5 +1,6 @@
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.UI.Windows;
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ namespace _Project.Scripts.UI.Buttons
         
         [SerializeField] private WindowId _windowId;
 
-        protected override async void OnClick() => await _windowService.Show(_windowId);
+        protected override void OnClick() => OnClickAsync().Forget();
+
+        private async UniTask OnClickAsync() => await _windowService.Show(_windowId);
     }
 }

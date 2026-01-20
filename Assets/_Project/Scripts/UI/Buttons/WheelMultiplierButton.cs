@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Localization;
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using TMPro;
 using TS.LocalizationSystem;
@@ -65,7 +66,9 @@ namespace _Project.Scripts.UI.Buttons
             _arrowAnimation.Disable();
         }
 
-        private async void SetAmount(int amount)
+        private void SetAmount(int amount) => SetAmountAsync(amount).Forget();
+
+        private async UniTask SetAmountAsync(int amount)
         {
             string localized = await _localizationService.Localize(LocalizationKeys.claim);
             _buttonText.SetText($"{localized} + {amount}");

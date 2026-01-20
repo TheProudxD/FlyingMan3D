@@ -3,6 +3,7 @@ using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.UI.Windows;
+using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {
@@ -24,14 +25,14 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         public void Enter()
         {
             _gameFactory.DestroyPlayers();
-            LoseLevel();
+            LoseLevelAsync().Forget();
         }
 
         public void SetStateMachine(StateMachine value) { }
 
         public void Exit() { }
 
-        private async void LoseLevel()
+        private async UniTask LoseLevelAsync()
         {
             _audioService.PlayLoseSound();
             _timer.Stop();
