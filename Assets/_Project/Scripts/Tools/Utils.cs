@@ -5,9 +5,11 @@ using System.Linq;
 using System.Reflection;
 using Reflex.Core;
 using Reflex.Injectors;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace _Project.Scripts.Tools
 {

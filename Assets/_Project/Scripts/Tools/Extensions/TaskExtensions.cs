@@ -34,10 +34,13 @@ namespace UnityUtils {
                 await task;
             }
             catch (Exception exception) {
-                if (onException == null)
-                    throw exception;
+                if (onException != null) {
+                    onException(exception);
+                    return;
+                }
 
-                onException(exception);
+                // Default behavior: do not throw from async void. Log instead to avoid hard-to-debug crashes.
+                UnityEngine.Debug.LogException(exception);
             }
         }
     }
