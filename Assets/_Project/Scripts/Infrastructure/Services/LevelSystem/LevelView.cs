@@ -1,5 +1,6 @@
 using _Project.Scripts.Infrastructure.Services.Localization;
 using _Project.Scripts.Infrastructure.Services.Resources;
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using TS.LocalizationSystem;
 
@@ -25,7 +26,9 @@ namespace _Project.Scripts.UI.Views
 
         private void Localize(LocaleConfig config, int number) => Localize(_levelResourceService.Current.Value.ToString());
 
-        private async void Localize(string level)
+        private void Localize(string level) => LocalizeAsync(level).Forget();
+
+        private async UniTask LocalizeAsync(string level)
         {
             var localized = await _localizationService.Localize(LocalizationKeys.Level);
             string text = $"{localized} {level}";

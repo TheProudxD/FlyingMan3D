@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using _Project.Scripts.Tools.Camera;
 
 namespace _Project.Scripts.Infrastructure.Services
 {
@@ -8,7 +9,7 @@ namespace _Project.Scripts.Infrastructure.Services
         private const string LAYER_NAME = "Default";
         private readonly Camera _camera;
 
-        public InputReader(Camera camera) => _camera = camera;
+        public InputReader(CameraSetup cameraSetup) => _camera = cameraSetup.MainCamera;
 
         public Vector3 GetWorldPosition(Vector3 startMousePos) =>
             _camera.ViewportToWorldPoint(startMousePos);

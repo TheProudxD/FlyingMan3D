@@ -4,12 +4,12 @@ namespace _Project.Scripts.Data
 {
     public class PowerupProgress
     {
-        public int health = 1;
-        public int healthProgress = 1;
-        public float movingSpeed = 3.5f;
-        public int movingSpeedProgress = 1;
-        public float flyingControl = 65;
-        public int flyingControlProgress = 1;
+        public int health { get; private set; } = 1;
+        public int healthProgress { get; private set; } = 1;
+        public float movingSpeed { get; private set; } = 3.5f;
+        public int movingSpeedProgress { get; private set; } = 1;
+        public float flyingControl { get; private set; } = 65;
+        public int flyingControlProgress { get; private set; } = 1;
 
         public PowerupProgress(int health, int healthProgress, float movingSpeed, int movingSpeedProgress,
             float flyingControl, int flyingControlProgress)
@@ -21,6 +21,14 @@ namespace _Project.Scripts.Data
             this.flyingControl = flyingControl;
             this.flyingControlProgress = flyingControlProgress;
         }
+
+        public void SetHealthProgress(int value) => healthProgress = value;
+        public void SetMovingSpeedProgress(int value) => movingSpeedProgress = value;
+        public void SetFlyingControlProgress(int value) => flyingControlProgress = value;
+
+        public void AddHealth(int delta) => health += delta;
+        public void AddMovingSpeed(float delta) => movingSpeed += delta;
+        public void AddFlyingControl(float delta) => flyingControl += delta;
     }
 
     public class PlayerProgress

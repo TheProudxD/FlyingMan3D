@@ -47,13 +47,13 @@ namespace UI
                 switch (Id)
                 {
                     case PowerupType.Health:
-                        _progressService.PowerupProgress.healthProgress = value;
+                        _progressService.PowerupProgress.SetHealthProgress(value);
                         break;
                     case PowerupType.MovingSpeed:
-                        _progressService.PowerupProgress.movingSpeedProgress = value;
+                        _progressService.PowerupProgress.SetMovingSpeedProgress(value);
                         break;
                     case PowerupType.FlyingControl:
-                        _progressService.PowerupProgress.flyingControlProgress = value;
+                        _progressService.PowerupProgress.SetFlyingControlProgress(value);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -97,13 +97,13 @@ namespace UI
             switch (Id)
             {
                 case PowerupType.Health:
-                    _progressService.PowerupProgress.health += SavesStatic.healthDelta;
+                    _progressService.PowerupProgress.AddHealth(SavesStatic.healthDelta);
                     break;
                 case PowerupType.MovingSpeed:
-                    _progressService.PowerupProgress.movingSpeed += SavesStatic.movingSpeedDelta;
+                    _progressService.PowerupProgress.AddMovingSpeed(SavesStatic.movingSpeedDelta);
                     break;
                 case PowerupType.FlyingControl:
-                    _progressService.PowerupProgress.flyingControl += SavesStatic.flyingControlDelta;
+                    _progressService.PowerupProgress.AddFlyingControl(SavesStatic.flyingControlDelta);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -126,7 +126,7 @@ namespace UI
         {
             Progress = Id switch
             {
-                PowerupType.Health => _progressService.PowerupProgress.health,
+                PowerupType.Health => _progressService.PowerupProgress.healthProgress,
                 PowerupType.MovingSpeed => _progressService.PowerupProgress.movingSpeedProgress,
                 PowerupType.FlyingControl => _progressService.PowerupProgress.flyingControlProgress,
                 _ => throw new ArgumentOutOfRangeException()

@@ -1,8 +1,13 @@
+using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services.Debug;
+using _Project.Scripts.Infrastructure.Services.Scene;
 using _Project.Scripts.Infrastructure.Services.Localization.UI;
+using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Tools;
+using _Project.Scripts.Tools.Camera;
 using Reflex.Core;
 using UnityEngine;
+using BhorGames.Mechanics;
 
 namespace _Project.Scripts.Infrastructure.DI
 {
@@ -10,8 +15,21 @@ namespace _Project.Scripts.Infrastructure.DI
     {
         [SerializeField] private Indicator _indicator;
         [SerializeField] private Spawner _spawner;
-        
-        public void InstallBindings(ContainerBuilder builder) => builder.OnContainerBuilt += OnContainerBuilt;
+        [SerializeField] private Platform _platform;
+
+        public void InstallBindings(ContainerBuilder builder)
+        {
+            var sceneRefs = new LevelSceneReferences(_indicator, _spawner, _platform);
+            builder.AddSingleton(_ => sceneRefs);
+
+            builder.OnContainerBuilt += container =>
+            {
+                var gameFactory = container.Resolve<GameFactory>();
+                gameFactory.SetSceneReferences(sceneRefs);
+                
+                OnContainerBuilt(container);
+            };
+        }
 
         private void OnContainerBuilt(Container container)
         {
@@ -21,6 +39,7 @@ namespace _Project.Scripts.Infrastructure.DI
             
             container.Inject(_indicator);
             container.Inject(_spawner);
+            container.Inject(_platform);
             InjectLocalizedLabel(container);
         }
 

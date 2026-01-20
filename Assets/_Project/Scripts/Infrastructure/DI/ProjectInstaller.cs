@@ -39,6 +39,7 @@ namespace _Project.Scripts.Infrastructure.DI
             BindLocalization(builder);
             BindLoadingBar(builder);
             BindCamera(builder);
+            BindCameraService(builder);
             BindInput(builder);
             BindFactories(builder);
             BindAudio(builder);
@@ -136,14 +137,18 @@ namespace _Project.Scripts.Infrastructure.DI
         private void BindCamera(ContainerBuilder builder) => builder.AddSingleton(c =>
         {
             CameraSetup cameraSetup = c.Resolve<AssetProvider>().Instantiate<CameraSetup>(_cameraSetup.gameObject);
-            return cameraSetup.MainCamera;
+            return cameraSetup;
         });
+        
+        private void BindCameraService(ContainerBuilder builder) =>
+            builder.AddSingleton(typeof(CameraService));
 
         private void BindLoadingBar(ContainerBuilder builder)
         {
             builder.AddSingleton(c =>
             {
-                LoadingCurtain loadingCurtain = c.Resolve<AssetProvider>().Instantiate<LoadingCurtain>(_loadingCurtain.gameObject);
+                LoadingCurtain loadingCurtain =
+                    c.Resolve<AssetProvider>().Instantiate<LoadingCurtain>(_loadingCurtain.gameObject);
                 return loadingCurtain;
             });
             // builder.AddSingleton(async c => await c.Resolve<AssetProvider>().CreateLoadingCurtain());

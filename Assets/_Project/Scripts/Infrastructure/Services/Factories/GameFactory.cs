@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using _Project.Scripts.Gameplay;
@@ -8,7 +7,7 @@ using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
-using _Project.Scripts.Tools.Camera;
+using _Project.Scripts.Infrastructure.Services.Scene;
 using BhorGames.Mechanics;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -23,6 +22,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private readonly SaveLoadService _saveLoadService;
         private readonly LeaderboardService _leaderboardService;
         private readonly AssetProvider _assetProvider;
+        private readonly CameraService _cameraService;
 
         private readonly List<PlayerController> _players = new();
         private readonly List<EnemyBase> _enemies = new();
@@ -35,15 +35,17 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private PlayerController _mainPlayer;
         private List<GameObject> _levelHolder;
         private Finish _finish;
+        private LevelSceneReferences _sceneRefs;
 
         public GameFactory(SaveLoadService saveLoadService,
             LeaderboardService leaderboardService, AssetProvider assetProvider,
-            LevelResourceService levelResourceService)
+            LevelResourceService levelResourceService, CameraService cameraService)
         {
             _saveLoadService = saveLoadService;
             _leaderboardService = leaderboardService;
             _assetProvider = assetProvider;
             _levelResourceService = levelResourceService;
+            _cameraService = cameraService;
         }
 
         public ObservableVariable<int> EnemiesCounter { get; private set; }
@@ -56,6 +58,8 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _levelHolder = new List<GameObject>();
             return UniTask.CompletedTask;
         }
+
+        public void SetSceneReferences(LevelSceneReferences sceneRefs) => _sceneRefs = sceneRefs;
 
         public Level CreateLevel() =>
             _gameLevel = _assetProvider.CreateLevel(_levelResourceService.Current.Value);
@@ -86,12 +90,12 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
                 CopyTransformData(source, target);
             }
         }
-
-        public Platform GetPlatform() => Object.FindAnyObjectByType<Platform>(FindObjectsInactive.Include);
-
+        
         public PlayerController GetMainPlayer() => _mainPlayer;
+        
+        public Platform GetPlatform() => _sceneRefs?.Platform;
 
-        public Spawner GetSpawner() => Object.FindAnyObjectByType<Spawner>(FindObjectsInactive.Include);
+        public Spawner GetSpawner() => _sceneRefs?.Spawner;
 
         public void DestroyPlayers()
         {
@@ -120,7 +124,10 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             EnemiesCounter.Value = _enemies.Count;
         }
 
-        public async void AddEnemy(EnemyType enemyType, Vector3 position, float rotation)
+        public void AddEnemy(EnemyType enemyType, Vector3 position, float rotation) =>
+            AddEnemyAsync(enemyType, position, rotation).Forget();
+
+        public async UniTask<EnemyBase> AddEnemyAsync(EnemyType enemyType, Vector3 position, float rotation)
         {
             EnemyBase enemy = enemyType switch
             {
@@ -136,6 +143,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _enemies.Add(enemy);
             _levelHolder.Add(enemy.gameObject);
             EnemiesCounter.Value = _enemies.Count;
+            return enemy;
         }
 
         public void RemovePlayer(PlayerController player)
@@ -170,11 +178,11 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             return player;
         }
 
-        public async Task<PlayerController> CreateMainPlayer()
+        public async UniTask<PlayerController> CreateMainPlayer()
         {
             var startPosition = new Vector3(0, 1.75f, -1);
             _mainPlayer = await _assetProvider.CreatePlayer(startPosition);
-            Rigidbody capsule = Object.FindAnyObjectByType<Slingshot>(FindObjectsInactive.Include).Capsule;
+            Rigidbody capsule = _sceneRefs?.Slingshot?.Capsule;
             var fixedJoint = _mainPlayer.SelfHips.gameObject.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = capsule;
             _mainPlayer.SetInitial(fixedJoint, capsule.transform);
@@ -185,52 +193,54 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             return _mainPlayer;
         }
 
-        public async Task<Finish> CreateFinish(Vector3 vector3, Quaternion identity)
+        public async UniTask<Finish> CreateFinish(Vector3 vector3, Quaternion identity)
         {
             _finish = await _assetProvider.GetFinish(vector3, identity);
             _levelHolder.Add(_finish.gameObject);
             return _finish;
         }
 
-        public async Task<GameObject> GetEnemyRagdoll(Vector3 transformPosition, Quaternion identity)
+        public async UniTask<GameObject> GetEnemyRagdoll(Vector3 transformPosition, Quaternion identity)
         {
             var a = await _assetProvider.CreateEnemyRagdoll(transformPosition, identity);
             _levelHolder.Add(a);
             return a;
         }
 
-        public async Task GetPlayerRagdoll(Vector3 transformPosition, Quaternion identity)
+        public async UniTask GetPlayerRagdoll(Vector3 transformPosition, Quaternion identity)
         {
             var a = await _assetProvider.CreatePlayerRagdoll(transformPosition, identity);
             _levelHolder.Add(a);
         }
 
-        public async Task GetSmoke(Vector3 vector3, Quaternion euler)
+        public async UniTask GetSmoke(Vector3 vector3, Quaternion euler)
         {
             var s = await _assetProvider.CreateSmoke(vector3, euler);
             _levelHolder.Add(s);
         }
 
-        public async Task CreateBarrel(Vector3 randomPosition)
+        public async UniTask CreateBarrel(Vector3 randomPosition)
         {
             ExplosionBarrel barrel = await _assetProvider.CreateBarrel(randomPosition);
             _levelHolder.Add(barrel.gameObject);
         }
 
-        public async Task<RingHolder> GetRing(Vector3 calculateRingPosition, Spawner.Colors[] colorArray, int index)
+        public async UniTask<RingHolder> GetRing(Vector3 calculateRingPosition, Spawner.Colors[] colorArray, int index)
         {
             RingHolder ringHolder = await _assetProvider.CreateRing(calculateRingPosition, colorArray, index);
             _levelHolder.Add(ringHolder.gameObject);
             return ringHolder;
         }
 
-        public async Task CreateSlingshot(Vector3 position)
+        public async UniTask CreateSlingshot(Vector3 position)
         {
-            GameObject slingshot = await _assetProvider.CreateSlingshot(position);
-            _levelHolder.Add(slingshot.gameObject);
+            GameObject slingshotGo = await _assetProvider.CreateSlingshot(position);
+            // _levelHolder.Add(slingshotGo);
+            if (_sceneRefs != null)
+                _sceneRefs.Slingshot = slingshotGo.GetComponent<Slingshot>();
         }
 
-        public Indicator GetIndicator() => Object.FindAnyObjectByType<Indicator>(FindObjectsInactive.Include);
+        public Indicator GetIndicator() => _sceneRefs?.Indicator;
 
         public void ClearLevelHolder()
         {
@@ -257,39 +267,8 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _enemies.Clear();
         }
 
-        public void SetPlayerCamera()
-        {
-            var offset = new Vector3(0, 7, -14);
+        public void SetPlayerCamera() => _cameraService.SetPlayerCamera(_mainPlayer);
 
-            var cameraSetup = Object.FindAnyObjectByType<CameraSetup>(FindObjectsInactive.Include);
-            CameraFollow follow = cameraSetup.CameraFollow;
-            follow.transform.position = _mainPlayer.SelfHips.transform.position + offset;
-            follow.enabled = true;
-            follow.transform.rotation = Quaternion.Euler(new Vector3(10, 0, 0));
-            cameraSetup.MainCamera.fieldOfView = 60;
-
-            follow.Setup(() =>
-            {
-                if (_mainPlayer != null && _mainPlayer.SelfHips != null)
-                {
-                    follow.enabled = true;
-                    return _mainPlayer.SelfHips.transform.position + offset;
-                }
-
-                follow.enabled = false;
-                return Vector3.zero;
-            }, moveSpeed: 500f);
-        }
-
-        public void SetFinishCamera(float finishZPosition)
-        {
-            var cameraSetup = Object.FindAnyObjectByType<CameraSetup>(FindObjectsInactive.Include);
-            CameraFollow follow = cameraSetup.CameraFollow;
-            cameraSetup.MainCamera.fieldOfView = 90;
-            follow.SetMoveSpeed(-1);
-            follow.enabled = false;
-            follow.transform.position = new Vector3(0, 20, finishZPosition - 35f);
-            follow.transform.rotation = Quaternion.Euler(new Vector3(50, 0, 0));
-        }
+        public void SetFinishCamera(float finishZPosition) => _cameraService.SetFinishCamera(finishZPosition);
     }
 }

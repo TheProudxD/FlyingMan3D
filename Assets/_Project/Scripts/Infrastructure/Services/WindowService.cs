@@ -14,14 +14,23 @@ namespace _Project.Scripts.Infrastructure.Services
 {
     public class WindowService : IService
     {
-        private readonly UIFactory _uiFactory;
         private readonly ConfigService _configService;
         private readonly Dictionary<WindowId, UIContainer> _openedWindows = new();
+        private readonly Dictionary<UIContainer, WindowId> _openedWindowIds = new();
+        private readonly Dictionary<WindowId, Func<UniTask<UIContainer>>> _creators;
 
         public WindowService(UIFactory uiFactory, ConfigService configService)
         {
-            _uiFactory = uiFactory;
             _configService = configService;
+            _creators = new Dictionary<WindowId, Func<UniTask<UIContainer>>>
+            {
+                [WindowId.Pause] = uiFactory.CreatePauseWindow,
+                [WindowId.Lose] = uiFactory.CreateLoseWindow,
+                [WindowId.Tutorial] = uiFactory.CreateTutorialWindow,
+                [WindowId.Leaderboard] = uiFactory.CreateLeaderboardWindow,
+                [WindowId.Win] = uiFactory.CreateWinWindow,
+                [WindowId.HUD] = uiFactory.CreateHUD,
+            };
         }
 
         public async UniTask<UIContainer> Show(WindowId windowId)
@@ -32,17 +41,10 @@ namespace _Project.Scripts.Infrastructure.Services
             }
             else
             {
-                UIContainer window = windowId switch
-                {
-                    WindowId.Unknown => throw new ArgumentOutOfRangeException(nameof(windowId), windowId, null),
-                    WindowId.Pause => await _uiFactory.CreatePauseWindow(),
-                    WindowId.Lose => await _uiFactory.CreateLoseWindow(),
-                    WindowId.Tutorial => await _uiFactory.CreateTutorialWindow(),
-                    WindowId.Leaderboard => await _uiFactory.CreateLeaderboardWindow(),
-                    WindowId.Win => await _uiFactory.CreateWinWindow(),
-                    WindowId.HUD => await _uiFactory.CreateHUD(),
-                    _ => throw new ArgumentOutOfRangeException(nameof(windowId), windowId, null)
-                };
+                if (!_creators.TryGetValue(windowId, out var creator))
+                    throw new ArgumentOutOfRangeException(nameof(windowId), windowId, null);
+
+                UIContainer window = await creator.Invoke();
 
                 if (window == null)
                 {
@@ -50,6 +52,7 @@ namespace _Project.Scripts.Infrastructure.Services
                 }
 
                 _openedWindows[windowId] = window;
+                _openedWindowIds[window] = windowId;
             }
 
             UIContainer windowBase = _openedWindows[windowId];
@@ -61,6 +64,7 @@ namespace _Project.Scripts.Infrastructure.Services
         {
             if (_openedWindows.Remove(windowId, out UIContainer window))
             {
+                _openedWindowIds.Remove(window);
                 Object.Destroy(window.gameObject);
                 _configService.ForWindow(windowId).Prefab.ReleaseAsset();
             }
@@ -72,9 +76,8 @@ namespace _Project.Scripts.Infrastructure.Services
 
         public void Hide(WindowBase windowBase)
         {
-            if (_openedWindows.ContainsValue(windowBase))
+            if (_openedWindowIds.TryGetValue(windowBase, out WindowId windowId))
             {
-                WindowId windowId = _openedWindows.First(w => w.Value == windowBase).Key;
                 Hide(windowId);
             }
             else
