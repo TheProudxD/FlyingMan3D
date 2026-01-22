@@ -2,7 +2,7 @@ using System;
 
 namespace _Project.Scripts.Infrastructure.Services
 {
-    public class AdsService : IInitializable
+    public class AdsService : IInitializable, IDisposable
     {
         private readonly AppOpenAdController _appOpenAdController = new();
         private readonly RewardedAdController _rewardedAdController = new();
@@ -13,6 +13,13 @@ namespace _Project.Scripts.Infrastructure.Services
             _appOpenAdController.Initialize();
             _interstitialAdController.Initialize();
             _rewardedAdController.Initialize();
+        }
+
+        public void Dispose()
+        {
+            _appOpenAdController.Dispose();
+            _rewardedAdController.Dispose();
+            _interstitialAdController.Dispose();
         }
 
         public void PlayInterstitial()

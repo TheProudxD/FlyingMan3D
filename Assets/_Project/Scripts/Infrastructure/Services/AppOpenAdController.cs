@@ -21,14 +21,56 @@ namespace _Project.Scripts.Infrastructure.Services
 
         public void Dispose()
         {
+            UnsubscribeEvents();
+            UnsubscribeLoaderEvents();
             AppStateObserver.OnAppStateChanged -= HandleAppStateChanged;
+            DestroyAd();
+            _appOpenAdLoader = null;
         }
 
         private void SetupLoader()
         {
             _appOpenAdLoader = new AppOpenAdLoader();
+            SubscribeLoaderEvents();
+        }
+
+        private void SubscribeLoaderEvents()
+        {
             _appOpenAdLoader.OnAdLoaded += HandleAdLoaded;
             _appOpenAdLoader.OnAdFailedToLoad += HandleAdFailedToLoad;
+        }
+
+        private void UnsubscribeLoaderEvents()
+        {
+            if (_appOpenAdLoader != null)
+            {
+                _appOpenAdLoader.OnAdLoaded -= HandleAdLoaded;
+                _appOpenAdLoader.OnAdFailedToLoad -= HandleAdFailedToLoad;
+            }
+        }
+
+        private void SubscribeEvents()
+        {
+            if (_appOpenAd != null)
+            {
+                _appOpenAd.OnAdClicked += HandleAdClicked;
+                _appOpenAd.OnAdShown += HandleAdShown;
+                _appOpenAd.OnAdFailedToShow += HandleAdFailedToShow;
+                _appOpenAd.OnAdImpression += HandleImpression;
+                _appOpenAd.OnAdDismissed += HandleAdDismissed;
+            }
+        }
+
+        private void UnsubscribeEvents()
+        {
+            if (_appOpenAd != null)
+            {
+                _appOpenAd.OnAdClicked -= HandleAdClicked;
+                _appOpenAd.OnAdShown -= HandleAdShown;
+                _appOpenAd.OnAdFailedToShow -= HandleAdFailedToShow;
+                _appOpenAd.OnAdImpression -= HandleImpression;
+                _appOpenAd.OnAdDismissed -= HandleAdDismissed;
+            }
         }
 
         private void RequestAd()
@@ -83,12 +125,11 @@ namespace _Project.Scripts.Infrastructure.Services
         {
             DisplayMessage("HandleAdLoaded event received");
 
+            // Unsubscribe from previous ad events if any
+            UnsubscribeEvents();
+
             _appOpenAd = args.AppOpenAd;
-            _appOpenAd.OnAdClicked += HandleAdClicked;
-            _appOpenAd.OnAdShown += HandleAdShown;
-            _appOpenAd.OnAdFailedToShow += HandleAdFailedToShow;
-            _appOpenAd.OnAdImpression += HandleImpression;
-            _appOpenAd.OnAdDismissed += HandleAdDismissed;
+            SubscribeEvents();
 
             if (!_isAdShownOcColdStart)
             {
@@ -116,6 +157,9 @@ namespace _Project.Scripts.Infrastructure.Services
         public void HandleAdDismissed(object sender, EventArgs args)
         {
             DisplayMessage("HandleAdDismissed event received");
+
+            // Clean up subscriptions and request new ad
+            UnsubscribeEvents();
             DestroyAd();
             RequestAd();
         }

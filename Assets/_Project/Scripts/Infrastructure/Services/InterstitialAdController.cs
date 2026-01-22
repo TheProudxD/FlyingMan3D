@@ -5,7 +5,7 @@ using YandexMobileAds.Base;
 
 namespace _Project.Scripts.Infrastructure.Services
 {
-    public sealed class InterstitialAdController
+    public sealed class InterstitialAdController : IDisposable
     {
         private string _message = "";
         private InterstitialAdLoader _interstitialAdLoader;
@@ -17,11 +17,57 @@ namespace _Project.Scripts.Infrastructure.Services
             RequestInterstitial();
         }
 
+        public void Dispose()
+        {
+            UnsubscribeEvents();
+            UnsubscribeLoaderEvents();
+            DestroyAd();
+            _interstitialAdLoader = null;
+        }
+
         private void SetupLoader()
         {
             _interstitialAdLoader = new InterstitialAdLoader();
+            SubscribeLoaderEvents();
+        }
+
+        private void SubscribeLoaderEvents()
+        {
             _interstitialAdLoader.OnAdLoaded += HandleAdLoaded;
             _interstitialAdLoader.OnAdFailedToLoad += HandleAdFailedToLoad;
+        }
+
+        private void UnsubscribeLoaderEvents()
+        {
+            if (_interstitialAdLoader != null)
+            {
+                _interstitialAdLoader.OnAdLoaded -= HandleAdLoaded;
+                _interstitialAdLoader.OnAdFailedToLoad -= HandleAdFailedToLoad;
+            }
+        }
+
+        private void SubscribeEvents()
+        {
+            if (_interstitial != null)
+            {
+                _interstitial.OnAdClicked += HandleAdClicked;
+                _interstitial.OnAdShown += HandleAdShown;
+                _interstitial.OnAdFailedToShow += HandleAdFailedToShow;
+                _interstitial.OnAdImpression += HandleImpression;
+                _interstitial.OnAdDismissed += HandleAdDismissed;
+            }
+        }
+
+        private void UnsubscribeEvents()
+        {
+            if (_interstitial != null)
+            {
+                _interstitial.OnAdClicked -= HandleAdClicked;
+                _interstitial.OnAdShown -= HandleAdShown;
+                _interstitial.OnAdFailedToShow -= HandleAdFailedToShow;
+                _interstitial.OnAdImpression -= HandleImpression;
+                _interstitial.OnAdDismissed -= HandleAdDismissed;
+            }
         }
 
         private void RequestInterstitial()
@@ -48,12 +94,7 @@ namespace _Project.Scripts.Infrastructure.Services
                 return;
             }
 
-            _interstitial.OnAdClicked += HandleAdClicked;
-            _interstitial.OnAdShown += HandleAdShown;
-            _interstitial.OnAdFailedToShow += HandleAdFailedToShow;
-            _interstitial.OnAdImpression += HandleImpression;
-            _interstitial.OnAdDismissed += HandleAdDismissed;
-
+            SubscribeEvents();
             _interstitial.Show();
         }
 
@@ -71,6 +112,9 @@ namespace _Project.Scripts.Infrastructure.Services
         private void HandleAdLoaded(object sender, InterstitialAdLoadedEventArgs args)
         {
             DisplayMessage("HandleAdLoaded event received");
+
+            // Unsubscribe from previous ad events if any
+            UnsubscribeEvents();
 
             _interstitial = args.Interstitial;
         }
@@ -94,8 +138,18 @@ namespace _Project.Scripts.Infrastructure.Services
         {
             DisplayMessage("HandleAdDismissed event received");
 
-            _interstitial.Destroy();
-            _interstitial = null;
+            // Clean up subscriptions and destroy ad
+            UnsubscribeEvents();
+            DestroyAd();
+        }
+
+        private void DestroyAd()
+        {
+            if (_interstitial != null)
+            {
+                _interstitial.Destroy();
+                _interstitial = null;
+            }
         }
 
         private void HandleImpression(object sender, ImpressionData impressionData)
