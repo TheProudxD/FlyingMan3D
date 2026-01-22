@@ -13,36 +13,23 @@ namespace _Project.Scripts.Infrastructure.FSM
 
         private IExitableState _currentState;
 
-        public StateMachine(BootstrapState bootstrapState, LoadLevelState loadLevelState,
-            LoadGameState loadGameState, GameLoopState gameLoopState, WinLevelState winLevelState,
-            LoseLevelState loseLevelState, RestartLevelState restartLevelState, ReplayLevelState replayLevelState,
-            ContinueLevelState continueLevelState)
+        public StateMachine(params IExitableState[] states)
         {
-            /*IExitableState[] states = { bootstrapState, loadLevelState, loadProgressState, gameLoopState, gameOverState };
+            RegisterStates(states);
+        }
+        
+        public void RegisterStates(IEnumerable<IExitableState> states)
+        {
             foreach (IExitableState state in states)
             {
-                state.SetStateMachine(this);
-                _states.Add(state.GetType(), state);
-            }*/
+                RegisterState(state);
+            }
+        }
 
-            bootstrapState.SetStateMachine(this);
-            _states.Add(bootstrapState.GetType(), bootstrapState);
-            loadLevelState.SetStateMachine(this);
-            _states.Add(loadLevelState.GetType(), loadLevelState);
-            loadGameState.SetStateMachine(this);
-            _states.Add(loadGameState.GetType(), loadGameState);
-            gameLoopState.SetStateMachine(this);
-            _states.Add(gameLoopState.GetType(), gameLoopState);
-            winLevelState.SetStateMachine(this);
-            _states.Add(winLevelState.GetType(), winLevelState);
-            loseLevelState.SetStateMachine(this);
-            _states.Add(loseLevelState.GetType(), loseLevelState);
-            restartLevelState.SetStateMachine(this);
-            _states.Add(restartLevelState.GetType(), restartLevelState);
-            replayLevelState.SetStateMachine(this);
-            _states.Add(replayLevelState.GetType(), replayLevelState);
-            continueLevelState.SetStateMachine(this);
-            _states.Add(continueLevelState.GetType(), continueLevelState);
+        public void RegisterState(IExitableState state)
+        {
+            state.SetStateMachine(this);
+            _states[state.GetType()] = state;
         }
 
         public void Enter<TState>() where TState : class, IState

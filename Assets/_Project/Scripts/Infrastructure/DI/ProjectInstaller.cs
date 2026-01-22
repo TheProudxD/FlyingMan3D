@@ -113,13 +113,22 @@ namespace _Project.Scripts.Infrastructure.DI
             builder.AddSingleton(typeof(SceneLoader));
             builder.AddSingleton(typeof(HeartTracker));
 
-            builder.AddSingleton(c => new StateMachine(
-                c.Resolve<BootstrapState>(),
-                c.Resolve<LoadLevelState>(),
-                c.Resolve<LoadGameState>(),
-                c.Resolve<GameLoopState>(),
-                c.Resolve<WinLevelState>(), c.Resolve<LoseLevelState>(), c.Resolve<RestartLevelState>(),
-                c.Resolve<ReplayLevelState>(), c.Resolve<ContinueLevelState>()));
+            builder.AddSingleton(c =>
+            {
+                var states = new IExitableState[]
+                {
+                    c.Resolve<BootstrapState>(),
+                    c.Resolve<LoadLevelState>(),
+                    c.Resolve<LoadGameState>(),
+                    c.Resolve<GameLoopState>(),
+                    c.Resolve<WinLevelState>(),
+                    c.Resolve<LoseLevelState>(),
+                    c.Resolve<RestartLevelState>(),
+                    c.Resolve<ReplayLevelState>(),
+                    c.Resolve<ContinueLevelState>()
+                };
+                return new StateMachine(states);
+            });
         }
 
         private void BindAudio(ContainerBuilder builder) => builder.AddSingleton(typeof(AudioService));
