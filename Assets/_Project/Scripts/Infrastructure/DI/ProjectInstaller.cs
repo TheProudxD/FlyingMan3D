@@ -12,6 +12,7 @@ using _Project.Scripts.Infrastructure.Services.Logger;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Infrastructure.Services.Review;
+using _Project.Scripts.Infrastructure.Services.Windows;
 using _Project.Scripts.Tools.Camera;
 using _Project.Scripts.UI;
 using Reflex.Core;
@@ -52,7 +53,11 @@ namespace _Project.Scripts.Infrastructure.DI
 
             // builder.AddScoped(typeof(AudioLoader));
 
-            builder.OnContainerBuilt += c => c.Resolve<ConfigService>();
+            builder.OnContainerBuilt += c =>
+            {
+                c.Resolve<ConfigService>();
+                c.Resolve<UIFactory>();
+            };
         }
 
         private void BindLogger(ContainerBuilder builder) =>
@@ -90,8 +95,12 @@ namespace _Project.Scripts.Infrastructure.DI
         private void BindDeviceGraphics(ContainerBuilder builder) =>
             builder.AddSingleton(typeof(DeviceSpecificGraphics));
 
-        private void BindWindows(ContainerBuilder builder) =>
+        private void BindWindows(ContainerBuilder builder)
+        {
+            builder.AddSingleton(typeof(WindowRegistry));
+            builder.AddSingleton(typeof(WindowResourceManager));
             builder.AddSingleton(typeof(WindowService));
+        }
 
         private void BindInput(ContainerBuilder builder) =>
             builder.AddSingleton(typeof(InputReader));

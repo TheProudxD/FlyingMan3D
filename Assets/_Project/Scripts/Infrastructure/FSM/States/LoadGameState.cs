@@ -1,7 +1,10 @@
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
+using _Project.Scripts.Infrastructure.Services.Windows;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Views;
+using _Project.Scripts.UI.Windows;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -40,7 +43,12 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _progressService.PowerupProgress = progress.Item2;
 
             await _gameFactory.Initialize();
-            await _uiFactory.Initialize(_windowService);
+            await _uiFactory.Initialize();
+
+            // Initialize HUD
+            var hudContainer = await _windowService.Show(WindowId.HUD);
+            var hud = hudContainer as Hud;
+            hud?.Initialize();
 
             foreach (ScoreBaseView view in Object.FindObjectsByType<ScoreBaseView>(FindObjectsInactive.Include,
                          FindObjectsSortMode.None))
