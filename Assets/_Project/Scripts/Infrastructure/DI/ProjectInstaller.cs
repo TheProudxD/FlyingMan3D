@@ -6,6 +6,7 @@ using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Config;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.Level;
 using _Project.Scripts.Infrastructure.Services.Localization;
 using _Project.Scripts.Infrastructure.Services.Logger;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
@@ -47,6 +48,7 @@ namespace _Project.Scripts.Infrastructure.DI
             BindStates(builder);
             BindAssets(builder);
             BindGameplayServices(builder);
+            builder.AddSingleton(typeof(LevelLifecycleService));
 
             // builder.AddScoped(typeof(AudioLoader));
 
@@ -116,6 +118,9 @@ namespace _Project.Scripts.Infrastructure.DI
         private void BindFactories(ContainerBuilder builder)
         {
             builder.AddSingleton(typeof(UIFactory));
+            builder.AddSingleton(typeof(PlayerFactory));
+            builder.AddSingleton(typeof(EnemyFactory));
+            builder.AddSingleton(typeof(FxFactory));
             builder.AddSingleton(typeof(GameFactory));
         }
 

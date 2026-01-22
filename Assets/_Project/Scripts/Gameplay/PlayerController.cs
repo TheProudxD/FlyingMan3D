@@ -1,22 +1,21 @@
 using UnityEngine;
 using System.Collections;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services;
-using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Tools;
 using _Project.Scripts.UI;
-using _Project.Scripts.UI.Windows;
 using Reflex.Attributes;
 
 public class PlayerController : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private UIFactory _uiFactory;
+    [Inject] private FxFactory _fxFactory;
+    [Inject] private PlayerFactory _playerFactory;
     [Inject] private AudioService _audioService;
     [Inject] private WindowService _windowService;
     [Inject] private LevelResourceService _levelResourceService;
@@ -175,8 +174,8 @@ public class PlayerController : MonoBehaviour
         IsTarget = false;
 
         if (transform != null && transform.gameObject != null && transform.gameObject.activeInHierarchy)
-            await _gameFactory.GetPlayerRagdoll(transform.position, Quaternion.identity);
+            await _fxFactory.CreatePlayerRagdoll(transform.position, Quaternion.identity);
 
-        _gameFactory.RemovePlayer(this);
+        _playerFactory.RemovePlayer(this);
     }
 }

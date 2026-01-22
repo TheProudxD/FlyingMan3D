@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MultiplierRing : RingBase
 {
+    [Inject] private PlayerFactory _playerFactory;
     private bool _firstPlayer;
     private int _playerCount;
 
@@ -32,7 +33,7 @@ public class MultiplierRing : RingBase
 
         for (int i = 0; i < Effect - 1; i++)
         {
-            GameFactory.GetNewPlayer();
+            _playerFactory.GetNewPlayer();
         }
 
         _playerCount--;

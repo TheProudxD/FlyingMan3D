@@ -1,7 +1,11 @@
+using _Project.Scripts.Infrastructure.Services.Factories;
+using Reflex.Attributes;
 using UnityEngine;
 
 public class ReducerRing : RingBase
 {
+    [Inject] private PlayerFactory _playerFactory;
+    
     private bool _reductionHappened;
 
     protected override string Key => "-";
@@ -14,9 +18,11 @@ public class ReducerRing : RingBase
 
         if (_reductionHappened) return;
 
-        for (int i = 0; i < Effect && GameFactory.Players.Count > 1; i++)
+        var players = _playerFactory.GetAllPlayers();
+
+        for (int i = 0; i < Effect && players.Count > 1; i++)
         {
-            GameFactory.DestroyLastPlayer();
+            _playerFactory.DestroyLastPlayer();
         }
 
         _reductionHappened = true;

@@ -15,6 +15,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
     {
         private readonly WindowService _windowService;
         private readonly GameFactory _gameFactory;
+        private readonly PlayerFactory _playerFactory;
         private readonly LeaderboardService _leaderboardService;
         private readonly LevelResourceService _levelResourceService;
         private readonly AudioService _audioService;
@@ -23,7 +24,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         public WinLevelState(WindowService windowService, GameFactory gameFactory,
             LeaderboardService leaderboardService, LevelResourceService levelResourceService, AudioService audioService,
-            GameLoopState gameLoopState, ReviewShowService reviewShowService)
+            GameLoopState gameLoopState, ReviewShowService reviewShowService, PlayerFactory playerFactory)
         {
             _windowService = windowService;
             _gameFactory = gameFactory;
@@ -32,6 +33,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _audioService = audioService;
             _gameLoopState = gameLoopState;
             _reviewShowService = reviewShowService;
+            _playerFactory = playerFactory;
         }
 
         public void Enter() => Coroutines.StartRoutine(WinCoroutine());
@@ -39,13 +41,13 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private IEnumerator WinCoroutine()
         {
             ParticleSystem winParticle = _gameFactory.GetSpawner().WinParticle;
-            PlayerController player = _gameFactory.GetMainPlayer();
+            PlayerController player = _playerFactory.GetMainPlayer();
             if (player != null)
                 winParticle.transform.position = player.transform.position;
             winParticle.Play();
             yield return new WaitForSeconds(2);
 
-            _gameFactory.DestroyPlayers();
+            _playerFactory.DestroyPlayers();
             _audioService.PlayWinSound();
             SetRecordInLeaderboard();
             yield return _windowService.Show(WindowId.Win);

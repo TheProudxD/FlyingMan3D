@@ -96,7 +96,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public UniTask<LargeEnemy> CreateLargeEnemy(Vector3 position, Quaternion rotation)
             => Instantiate<LargeEnemy>(AssetPath.LARGE_ENEMY, position, rotation);
 
-        public UniTask<Finish> GetFinish(Vector3 position, Quaternion rotation) =>
+        public UniTask<Finish> CreateFinish(Vector3 position, Quaternion rotation) =>
             Instantiate<Finish>(AssetPath.FINISH, position, rotation);
 
         public async UniTask<RingHolder> CreateRing(Vector3 position, Spawner.Colors[] colors, int level)
@@ -135,11 +135,14 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public UniTask<PlayerController> CreatePlayer(Vector3 position) =>
             Instantiate<PlayerController>(AssetPath.PLAYER, position);
 
-        public Level CreateLevel(int levelId)
+        public LevelSystem.Level CreateLevel(int levelId)
         {
             var levelContainer = _configService.Get<LevelContainer>();
             return levelContainer[levelId];
         }
+
+        public UniTask<ExplosionBarrel> CreateBarrel(Vector3 transformPosition) =>
+            Instantiate<ExplosionBarrel>(AssetPath.BARREL, transformPosition);
 
         public void GetRingByType(RingData ringData, GameObject currentChildGo)
         {
@@ -162,9 +165,6 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             ring.MovementAxis = ringData.MovementAxis;
             _container.Inject(ring);
         }
-
-        public UniTask<ExplosionBarrel> CreateBarrel(Vector3 transformPosition) =>
-            Instantiate<ExplosionBarrel>(AssetPath.BARREL, transformPosition);
 
         private GameObject Instantiate(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
             Transform parent = null, bool isActivateGameObject = true)

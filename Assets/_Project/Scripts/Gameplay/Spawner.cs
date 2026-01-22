@@ -16,6 +16,8 @@ using Reflex.Attributes;
 public class Spawner : MonoBehaviour, ITaskInitializable
 {
     [Inject] private GameFactory _gameFactory;
+    [Inject] private EnemyFactory _enemyFactory;
+    [Inject] private PlayerFactory _playerFactory;
     [Inject] private AssetProvider _assetProvider;
     [Inject] private LevelResourceService _levelResourceService;
 
@@ -47,7 +49,7 @@ public class Spawner : MonoBehaviour, ITaskInitializable
 
         _gameFactory.GetPlatform().GetComponent<Renderer>().sharedMaterial.color = _colorArray[_index].PlatformColor;
 
-        _playerTransform = _gameFactory.GetMainPlayer().transform;
+        _playerTransform = _playerFactory.GetMainPlayer().transform;
         return UniTask.CompletedTask;
     }
 
@@ -77,7 +79,7 @@ public class Spawner : MonoBehaviour, ITaskInitializable
             for (int j = 0; j < enemyData.Amount; j++)
             {
                 float rotation = angle * counter;
-                await _gameFactory.AddEnemyAsync(enemyData.Type, finishGo.transform.position, rotation);
+                await _enemyFactory.CreateEnemy(enemyData.Type, finishGo.transform.position, rotation);
                 counter++;
             }
         }

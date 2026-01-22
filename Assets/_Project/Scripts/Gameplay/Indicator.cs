@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 public class Indicator : MonoBehaviour
 {
     [Inject] private StateMachine _stateMachine;
-    [Inject] private GameFactory _gameFactory;
+    [Inject] private PlayerFactory  _playerFactory;
     [Inject] private UIFactory _uiFactory;
 
     [SerializeField] private Needle _needle;
@@ -32,7 +32,7 @@ public class Indicator : MonoBehaviour
         if (Utils.IsPointerOverUI() == false && Input.GetMouseButtonDown(0))
         {
             float launchFactor = CreateLaunchForce();
-            StartCoroutine(_gameFactory.GetMainPlayer().ApplyLaunchForce(launchFactor));
+            StartCoroutine(_playerFactory.GetMainPlayer().ApplyLaunchForce(launchFactor));
 
             Disable();
         }

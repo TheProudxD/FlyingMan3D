@@ -14,6 +14,8 @@ public class PlayerFinishMover : MonoBehaviour
 {
     [Inject] private GameFactory _gameFactory;
     [Inject] private AudioService _audioService;
+    [Inject] private EnemyFactory _enemyFactory;
+    [Inject] private FxFactory  _fxFactory;
     [Inject] private IPersistentProgressService _persistentProgressService;
 
     private static readonly int IsGround = Animator.StringToHash("IsGround");
@@ -103,14 +105,15 @@ public class PlayerFinishMover : MonoBehaviour
 
     private GameObject NearestTarget()
     {
-        if (_gameFactory.Enemies == null)
+        var enemies = _enemyFactory.GetAllEnemies();
+        if (enemies == null)
             return null;
 
         float minDistance = float.MaxValue;
         int index = 0;
-        for (int i = 1; i < _gameFactory.Enemies.Count; i++)
+        for (int i = 1; i < enemies.Count; i++)
         {
-            float distance = Distance(_gameFactory.Enemies[i].transform.position, transform.position);
+            float distance = Distance(enemies[i].transform.position, transform.position);
 
             if (minDistance <= distance)
                 continue;
@@ -119,7 +122,7 @@ public class PlayerFinishMover : MonoBehaviour
             index = i;
         }
 
-        _target = _gameFactory.Enemies.Count > 0 ? _gameFactory.Enemies[index].gameObject : null;
+        _target = enemies.Count > 0 ? enemies[index].gameObject : null;
 
         return _target;
     }
@@ -145,7 +148,7 @@ public class PlayerFinishMover : MonoBehaviour
             if (_canSmoke)
             {
                 _canSmoke = false;
-                await _gameFactory.GetSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
+                await _fxFactory.CreateSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
             }
 
             enemy.TakeDamage(_damage);

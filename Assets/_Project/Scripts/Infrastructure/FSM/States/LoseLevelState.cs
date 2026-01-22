@@ -12,19 +12,19 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly Timer _timer;
         private readonly WindowService _windowService;
         private readonly AudioService _audioService;
-        private readonly GameFactory _gameFactory;
+        private readonly PlayerFactory _playerFactory;
 
-        public LoseLevelState(WindowService windowService, Timer timer, AudioService audioService, GameFactory gameFactory)
+        public LoseLevelState(WindowService windowService, Timer timer, AudioService audioService, PlayerFactory playerFactory)
         {
             _windowService = windowService;
             _timer = timer;
             _audioService = audioService;
-            _gameFactory = gameFactory;
+            _playerFactory = playerFactory;
         }
 
         public void Enter()
         {
-            _gameFactory.DestroyPlayers();
+            _playerFactory.DestroyPlayers();
             LoseLevelAsync().Forget();
         }
 

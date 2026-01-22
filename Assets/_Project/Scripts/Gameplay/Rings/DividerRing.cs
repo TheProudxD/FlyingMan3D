@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿using _Project.Scripts.Infrastructure.Services.Factories;
+using Reflex.Attributes;
+using UnityEngine;
 
 public class DividerRing : RingBase
 {
+    [Inject] private PlayerFactory _playerFactory;
+    
     private bool _reductionHappened;
 
     protected override string Key => "/";
@@ -14,11 +18,12 @@ public class DividerRing : RingBase
 
         if (_reductionHappened) return;
 
-        int players = GameFactory.Players.Count / Effect;
+        var allPlayers = _playerFactory.GetAllPlayers();
+        int players = allPlayers.Count / Effect;
 
-        for (int i = 0; i < players && GameFactory.Players.Count > 1; i++)
+        for (int i = 0; i < players && allPlayers.Count > 1; i++)
         {
-            GameFactory.DestroyLastPlayer();
+            _playerFactory.DestroyLastPlayer();
         }
 
         _reductionHappened = true;

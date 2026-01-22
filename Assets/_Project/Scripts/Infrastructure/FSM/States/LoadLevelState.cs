@@ -20,6 +20,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly LevelResourceService _levelResourceService;
         private readonly WindowService _windowService;
         private readonly MetricService _metricService;
+        private readonly PlayerFactory _playerFactory;
 
         private StateMachine _stateMachine;
         private string _sceneName;
@@ -27,7 +28,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         public LoadLevelState(LoadingCurtain loadingCurtain,
             SaveLoadService saveLoadService, GameFactory gameFactory, StatisticsService statisticsService,
             LevelResourceService levelResourceService, WindowService windowService, UIFactory uiFactory,
-            MetricService metricService)
+            MetricService metricService, PlayerFactory playerFactory)
         {
             _loadingCurtain = loadingCurtain;
             _saveLoadService = saveLoadService;
@@ -37,6 +38,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _windowService = windowService;
             _uiFactory = uiFactory;
             _metricService = metricService;
+            _playerFactory = playerFactory;
         }
 
         public void Enter()
@@ -52,7 +54,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             {
                 _gameFactory.ClearLevelHolder();
                 await _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
-                PlayerController player = await _gameFactory.CreateMainPlayer();
+                PlayerController player = await _playerFactory.CreateMainPlayer();
                 await _gameFactory.GetSpawner().Initialize();
 
                 Hud hud = _uiFactory.GetHUD();

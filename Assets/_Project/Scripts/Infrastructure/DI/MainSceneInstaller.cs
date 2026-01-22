@@ -1,10 +1,9 @@
-using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services.Debug;
-using _Project.Scripts.Infrastructure.Services.Scene;
-using _Project.Scripts.Infrastructure.Services.Localization.UI;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.Level;
+using _Project.Scripts.Infrastructure.Services.Scene;
+using _Project.Scripts.Infrastructure.Services.Localization.UI; 
 using _Project.Scripts.Tools;
-using _Project.Scripts.Tools.Camera;
 using Reflex.Core;
 using UnityEngine;
 using BhorGames.Mechanics;
@@ -25,7 +24,10 @@ namespace _Project.Scripts.Infrastructure.DI
             builder.OnContainerBuilt += container =>
             {
                 var gameFactory = container.Resolve<GameFactory>();
-                gameFactory.SetSceneReferences(sceneRefs);
+                gameFactory.SetSceneRef(sceneRefs);                
+                
+                var levelLifecycleService = container.Resolve<LevelLifecycleService>();
+                levelLifecycleService.SetSceneRef(sceneRefs);
                 
                 OnContainerBuilt(container);
             };

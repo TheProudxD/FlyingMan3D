@@ -8,6 +8,9 @@ using UnityEngine;
 public abstract class EnemyBase : MonoBehaviour
 {
     [Inject] protected GameFactory GameFactory;
+    [Inject] protected PlayerFactory PlayerFactory;
+    [Inject] protected EnemyFactory EnemyFactory;
+    [Inject] protected FxFactory FxFactory;
 
     [field: SerializeField] public Animator Animator { get; private set; }
 
@@ -41,16 +44,17 @@ public abstract class EnemyBase : MonoBehaviour
         _index = 0;
         _minDistance = float.MaxValue;
 
-        if (GameFactory.Players == null ||
-            GameFactory.Players.Any(p => p?.Animator?.enabled == false) ||
-            GameFactory.Players.Count == 0)
+        var players = PlayerFactory.GetAllPlayers();
+        if (players == null ||
+            players.Any(p => p?.Animator?.enabled == false) ||
+            players.Count == 0)
         {
             return null;
         }
 
-        for (int i = 1; i < GameFactory.Players.Count; i++)
+        for (int i = 1; i < players.Count; i++)
         {
-            PlayerController player = GameFactory.Players[i];
+            PlayerController player = players[i];
 
             if (player.IsTarget)
                 continue;
@@ -64,7 +68,7 @@ public abstract class EnemyBase : MonoBehaviour
             _index = i;
         }
 
-        PlayerController p = GameFactory.Players[_index];
+        PlayerController p = players[_index];
         Target = p.gameObject;
         p.IsTarget = true;
         return Target;
@@ -78,8 +82,8 @@ public abstract class EnemyBase : MonoBehaviour
             return;
 
         IsDie = true;
-        GameFactory.RemoveEnemy(this);
-        var ragdoll = await GameFactory.GetEnemyRagdoll(transform.position, Quaternion.identity);
+        EnemyFactory.RemoveEnemy(this);
+        var ragdoll = await FxFactory.CreateEnemyRagdoll(transform.position, Quaternion.identity);
         if (ragdoll != null)
         {
             var rb = ragdoll.GetComponentInChildren<Rigidbody>();

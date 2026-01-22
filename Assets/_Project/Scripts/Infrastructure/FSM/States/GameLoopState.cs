@@ -14,15 +14,19 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         private readonly GameFactory _gameFactory;
         private readonly UIFactory _uiFactory;
+        private readonly PlayerFactory _playerFactory;
+        private readonly EnemyFactory _enemyFactory;
 
         private StateMachine _stateMachine;
         private Hud _hud;
         private Level _level;
 
-        public GameLoopState(GameFactory gameFactory, UIFactory uiFactory)
+        public GameLoopState(GameFactory gameFactory, UIFactory uiFactory, PlayerFactory playerFactory, EnemyFactory enemyFactory)
         {
             _gameFactory = gameFactory;
             _uiFactory = uiFactory;
+            _playerFactory = playerFactory;
+            _enemyFactory = enemyFactory;
         }
 
         public IExitableState FromState { get; set; }
@@ -39,9 +43,11 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         private void CheckEntitiesCount(int count)
         {
-            if (_gameFactory.Players.Count == 0 && _gameFactory.Enemies.Count >= 0)
+            var players = _playerFactory.GetAllPlayers();
+            var enemies = _enemyFactory.GetAllEnemies();
+            if (players.Count == 0 && enemies.Count >= 0)
             {
-                foreach (EnemyBase item in _gameFactory.Enemies)
+                foreach (EnemyBase item in enemies)
                 {
                     if (item == null)
                         continue;
@@ -52,12 +58,12 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
                 _stateMachine.Enter<LoseLevelState>();
             }
-            else if (_gameFactory.Enemies.Count == 0 &&
-                     _gameFactory.Players.Count > 0 &&
+            else if (enemies.Count == 0 &&
+                     players.Count > 0 &&
                      _gameFactory.GetFinish() != null &&
-                     _gameFactory.GetIndicator().Enabled == false)
+                     !_gameFactory.GetIndicator().Enabled)
             {
-                foreach (PlayerController item in _gameFactory.Players)
+                foreach (PlayerController item in players)
                 {
                     if (item == null)
                         continue;

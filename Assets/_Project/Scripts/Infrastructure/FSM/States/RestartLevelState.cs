@@ -17,13 +17,14 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly LoadingCurtain _loadingCurtain;
         private readonly LevelResourceService _levelResourceService;
         private readonly WindowService _windowService;
+        private readonly PlayerFactory _playerFactory;
 
         private StateMachine _stateMachine;
 
         public RestartLevelState(GameFactory gameFactory,
             AudioService audioService, UIFactory uiFactory, StatisticsService statisticsService,
             LoadingCurtain loadingCurtain,
-            LevelResourceService levelResourceService, WindowService windowService)
+            LevelResourceService levelResourceService, WindowService windowService, PlayerFactory playerFactory)
         {
             _gameFactory = gameFactory;
             _audioService = audioService;
@@ -32,6 +33,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             _loadingCurtain = loadingCurtain;
             _levelResourceService = levelResourceService;
             _windowService = windowService;
+            _playerFactory = playerFactory;
         }
 
         public void SetStateMachine(StateMachine value) => _stateMachine = value;
@@ -42,7 +44,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         {
             _gameFactory.ClearLevelHolder();
             await _gameFactory.CreateSlingshot(new Vector3(0, 4.5f, 0));
-            PlayerController player = await _gameFactory.CreateMainPlayer();
+            PlayerController player = await _playerFactory.CreateMainPlayer();
             await _gameFactory.GetSpawner().Initialize();
             
             Hud hud = _uiFactory.GetHUD();

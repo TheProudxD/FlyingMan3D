@@ -13,7 +13,7 @@ namespace _Project.Scripts.UI.Buttons
         [Inject] private MetricService _metricService;
         [Inject] private StateMachine _stateMachine;
         [Inject] private AdsService _adsService;
-        [Inject] private GameFactory _gameFactory;
+        [Inject] private PlayerFactory _playerFactory;
         [Inject] private LevelResourceService _levelResourceService;
 
         protected override void OnClick()
@@ -23,7 +23,7 @@ namespace _Project.Scripts.UI.Buttons
                 gameObject.Deactivate();
                 _levelResourceService.Increase(this);
                 _metricService.LevelSkippedForAd();
-                _gameFactory.DestroyPlayers();
+                _playerFactory.DestroyPlayers();
                 _stateMachine.Enter<LoadLevelState>();
             });
         }

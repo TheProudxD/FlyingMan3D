@@ -9,6 +9,7 @@ public class Finish : MonoBehaviour
 {
     [Inject] private StateMachine _stateMachine;
     [Inject] private GameFactory _gameFactory;
+    [Inject] private EnemyFactory _enemyFactory;
     [Inject] private AudioService _audioService;
 
     private bool _attack;
@@ -35,7 +36,7 @@ public class Finish : MonoBehaviour
         _attack = true;
         _gameFactory.SetFinishCamera(transform.position.z);
 
-        foreach (EnemyBase e in _gameFactory.Enemies)
+        foreach (EnemyBase e in _enemyFactory.GetAllEnemies())
         {
             if (e.gameObject.activeInHierarchy)
                 e.Initialize();
