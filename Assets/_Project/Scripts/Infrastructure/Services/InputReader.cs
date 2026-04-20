@@ -11,6 +11,12 @@ namespace _Project.Scripts.Infrastructure.Services
 
         public InputReader(CameraSetup cameraSetup) => _camera = cameraSetup.MainCamera;
 
+        public bool GetMouseButton(int button) => Input.GetMouseButton(button);
+
+        public bool GetMouseButtonDown(int button) => Input.GetMouseButtonDown(button);
+
+        public float GetAxis(string axisName) => Input.GetAxis(axisName);
+
         public Vector3 GetWorldPosition(Vector3 startMousePos) =>
             _camera.ViewportToWorldPoint(startMousePos);
 

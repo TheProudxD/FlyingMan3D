@@ -1,5 +1,7 @@
 using UnityEngine;
+using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Tools;
+using Reflex.Attributes;
 
 namespace _Project.Scripts.Gameplay
 {
@@ -9,6 +11,8 @@ namespace _Project.Scripts.Gameplay
     /// </summary>
     public class PlayerMovementController : MonoBehaviour
     {
+        [Inject] private InputReader _inputReader;
+
         [SerializeField] private Rigidbody _hipsRigidbody;
         [SerializeField] private float _boundaryLimit = 40f;
         [SerializeField] private float _boundaryCorrectionSpeed = 3f;
@@ -46,10 +50,10 @@ namespace _Project.Scripts.Gameplay
             if (Utils.IsPointerOverUI())
                 return;
 
-            if (!Input.GetMouseButton(0))
+            if (!_inputReader.GetMouseButton(0))
                 return;
 
-            float xValue = Input.GetAxis("Mouse X");
+            float xValue = _inputReader.GetAxis("Mouse X");
 
             foreach (Rigidbody rb in _bodies)
             {

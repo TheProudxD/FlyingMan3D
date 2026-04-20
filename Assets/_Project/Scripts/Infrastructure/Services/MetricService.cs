@@ -31,11 +31,11 @@ namespace _Project.Scripts.Infrastructure.Services
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             if (string.IsNullOrEmpty(key))
             {
-                Debug.Log($"{StubPrefix} {eventName}");
+                UnityEngine.Debug.Log($"{StubPrefix} {eventName}");
                 return;
             }
 
-            Debug.Log($"{StubPrefix} {eventName} ({key}: {value})");
+            UnityEngine.Debug.Log($"{StubPrefix} {eventName} ({key}: {value})");
 #endif
         }
     }

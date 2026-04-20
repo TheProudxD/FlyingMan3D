@@ -15,7 +15,7 @@ namespace _Project.Scripts.Infrastructure.Services.Review
             _onReviewSentAction = onReviewSent;
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"{StubPrefix} Review flow is not integrated yet.");
+            UnityEngine.Debug.Log($"{StubPrefix} Review flow is not integrated yet.");
 #endif
 
             Complete(false);

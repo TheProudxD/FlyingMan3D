@@ -24,7 +24,7 @@ namespace _Project.Scripts.Infrastructure.Services
             _saveLoadService.Save();
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"{StubPrefix} Saved local best score {current} for '{_leaderboardName}'. Remote submit is not integrated.");
+            UnityEngine.Debug.Log($"{StubPrefix} Saved local best score {current} for '{_leaderboardName}'. Remote submit is not integrated.");
 #endif
         }
     }

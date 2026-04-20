@@ -20,6 +20,7 @@ namespace _Project.Scripts.UI.Windows
         [Inject] private UIFactory _uiFactory;
         [Inject] private MetricService _metricService;
         [Inject] private AnimationService _animationService;
+        [Inject] private InputReader _inputReader;
 
         [SerializeField] private RectTransform _cursor;
         [SerializeField] private Image _slider;
@@ -46,7 +47,7 @@ namespace _Project.Scripts.UI.Windows
 
         private void Update()
         {
-            if (Input.GetMouseButton(0))
+            if (_inputReader.GetMouseButton(0))
             {
                 if (_closeTutorialCoroutine != null)
                     StopCoroutine(_closeTutorialCoroutine);

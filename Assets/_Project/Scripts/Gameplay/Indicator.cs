@@ -1,4 +1,5 @@
 using _Project.Scripts.Infrastructure.FSM;
+using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Tools;
 using Reflex.Attributes;
@@ -10,6 +11,7 @@ public class Indicator : MonoBehaviour
     [Inject] private StateMachine _stateMachine;
     [Inject] private PlayerFactory  _playerFactory;
     [Inject] private UIFactory _uiFactory;
+    [Inject] private InputReader _inputReader;
 
     [SerializeField] private Needle _needle;
 
@@ -29,7 +31,7 @@ public class Indicator : MonoBehaviour
         if (Enabled == false)
             return;
 
-        if (Utils.IsPointerOverUI() == false && Input.GetMouseButtonDown(0))
+        if (Utils.IsPointerOverUI() == false && _inputReader.GetMouseButtonDown(0))
         {
             float launchFactor = CreateLaunchForce();
             StartCoroutine(_playerFactory.GetMainPlayer().ApplyLaunchForce(launchFactor));
