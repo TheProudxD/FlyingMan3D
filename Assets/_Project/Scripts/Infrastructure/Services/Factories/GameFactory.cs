@@ -1,3 +1,4 @@
+using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Observable;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Level;
@@ -28,7 +29,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         }
 
         public async UniTask Initialize() => await _levelLifecycle.Initialize();
-        
+
         public void SetSceneRef(LevelSceneReferences sceneRefs)
         {
             _sceneRefs = sceneRefs;
@@ -38,11 +39,11 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public LevelSystem.Level CreateLevel() =>
             _gameLevel = _assetProvider.CreateLevel(_levelResourceService.Current.Value);
-        
+
         public LevelSystem.Level GetCurrentLevel() => _gameLevel;
 
         public Finish GetFinish() => _levelLifecycle.GetFinish();
-        
+
         public async UniTask<Finish> CreateFinish(Vector3 vector3, Quaternion identity) =>
             await _levelLifecycle.CreateFinish(vector3, identity);
 
@@ -55,7 +56,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public async UniTask CreateSlingshot(Vector3 position) =>
             await _levelLifecycle.CreateSlingshot(position);
-        
+
         public Platform GetPlatform() => _sceneRefs.Platform;
 
         public Spawner GetSpawner() => _sceneRefs.Spawner;
@@ -69,7 +70,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
             _cameraService.SetFinishCamera(finishZPosition);
 
         public ObservableVariable<int> EnemiesCounter => _levelLifecycle.EnemiesCounter;
-        
+
         public ObservableVariable<int> PlayersCounter => _levelLifecycle.PlayersCounter;
     }
 }

@@ -1,173 +1,176 @@
-using System;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
 using YG;
 using Random = UnityEngine.Random;
-using Cysharp.Threading.Tasks;
-using _Project.Scripts.Gameplay;
 
-public class PlayerFinishMover : MonoBehaviour
+namespace _Project.Scripts.Gameplay
 {
-    [Inject] private GameFactory _gameFactory;
-    [Inject] private AudioService _audioService;
-    [Inject] private EnemyFactory _enemyFactory;
-    [Inject] private FxFactory  _fxFactory;
-    [Inject] private IPersistentProgressService _persistentProgressService;
-
-    private static readonly int IsGround = Animator.StringToHash("IsGround");
-
-    [SerializeField] private PlayerController _playerController;
-    [SerializeField] private TextMeshProUGUI _healthText;
-    [SerializeField] private Canvas _healthCanvas;
-    [SerializeField] private LayerMask _groundLayer;
-
-    private float _raycastDistance = 100;
-    private readonly RaycastHit[] _raycastHits = new RaycastHit[2];
-
-    private float _moveSpeed;
-    private float _stopDistance;
-    private GameObject _target;
-    private Vector3 _moveDistance;
-    private bool _canSmoke = true;
-    private bool _canMove;
-    private float _rotationSpeed = 100;
-    private int _health;
-    private int _damage = 1;
-
-    public int Health
+    public class PlayerFinishMover : MonoBehaviour
     {
-        get => _health;
-        set
+        [Inject] private GameFactory _gameFactory;
+        [Inject] private AudioService _audioService;
+        [Inject] private EnemyFactory _enemyFactory;
+        [Inject] private FxFactory _fxFactory;
+        [Inject] private IPersistentProgressService _persistentProgressService;
+
+        private static readonly int IsGround = Animator.StringToHash("IsGround");
+
+        [SerializeField] private PlayerController _playerController;
+        [SerializeField] private TextMeshProUGUI _healthText;
+        [SerializeField] private Canvas _healthCanvas;
+        [SerializeField] private LayerMask _groundLayer;
+
+        private float _raycastDistance = 100;
+        private readonly RaycastHit[] _raycastHits = new RaycastHit[2];
+
+        private float _moveSpeed;
+        private float _stopDistance;
+        private GameObject _target;
+        private Vector3 _moveDistance;
+        private bool _canSmoke = true;
+        private bool _canMove;
+        private float _rotationSpeed = 100;
+        private int _health;
+        private int _damage = 1;
+
+        public int Health
         {
-            _health = value;
-            _healthText.SetText(_health.ToString());
+            get => _health;
+            set
+            {
+                _health = value;
+                _healthText.SetText(_health.ToString());
+            }
         }
-    }
 
-    public void Initialize()
-    {
-        enabled = true;
-        _stopDistance = _gameFactory.GetCurrentLevel().StopDistance;
-        _moveSpeed = _persistentProgressService.PowerupProgress.movingSpeed;
-        Health = Random.Range(1, _persistentProgressService.PowerupProgress.health + 1);
-        _healthCanvas.gameObject.SetActive(true);
-    }
-
-    private void Start()
-    {
-        if (gameObject.CompareTag("Enemy"))
+        public void Initialize()
         {
-            _canMove = true;
+            enabled = true;
+            _stopDistance = _gameFactory.GetCurrentLevel().StopDistance;
+            _moveSpeed = _persistentProgressService.PowerupProgress.movingSpeed;
+            Health = Random.Range(1, _persistentProgressService.PowerupProgress.health + 1);
+            _healthCanvas.gameObject.SetActive(true);
         }
-    }
 
-    private void Update()
-    {
-        _playerController.CheckForHeight();
-
-        if (!_canMove)
-            return;
-
-        if (_target == null)
+        private void Start()
         {
-            _target = NearestTarget();
+            if (gameObject.CompareTag("Enemy"))
+            {
+                _canMove = true;
+            }
         }
-        else if (_target != null)
-        {
-            _moveDistance = _target.transform.position - transform.position;
-            _moveDistance.y = 0f;
 
-            if (_moveDistance.magnitude <= _stopDistance)
+        private void Update()
+        {
+            _playerController.CheckForHeight();
+
+            if (!_canMove)
                 return;
 
-            Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
-            transform.Translate(Vector3.forward * (_moveSpeed * Time.deltaTime));
-        }
-    }
-
-    public bool IsGrounded()
-    {
-        int hitsCount = Physics.RaycastNonAlloc(
-            _playerController.SelfHips.position,
-            Vector3.down,
-            _raycastHits,
-            _raycastDistance,
-            _groundLayer
-        );
-
-        return hitsCount > 0;
-    }
-
-    private GameObject NearestTarget()
-    {
-        var enemies = _enemyFactory.GetAllEnemies();
-        if (enemies == null)
-            return null;
-
-        float minDistance = float.MaxValue;
-        int index = 0;
-        for (int i = 1; i < enemies.Count; i++)
-        {
-            float distance = Distance(enemies[i].transform.position, transform.position);
-
-            if (minDistance <= distance)
-                continue;
-
-            minDistance = distance;
-            index = i;
-        }
-
-        _target = enemies.Count > 0 ? enemies[index].gameObject : null;
-
-        return _target;
-    }
-
-    private float Distance(Vector3 v1, Vector3 v2) => (v1 - v2).magnitude;
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        FightAsync(collision).Forget();
-    }
-
-    private void OnCollisionStay(Collision other)
-    {
-        FightAsync(other).Forget();
-    }
-
-    private async UniTask FightAsync(Collision collision)
-    {
-        if (collision.transform.root.TryGetComponent(out EnemyBase enemy) && !enemy.IsDie && !_playerController.IsDie)
-        {
-            _audioService.PlayHitSound();
-
-            if (_canSmoke)
+            if (_target == null)
             {
-                _canSmoke = false;
-                await _fxFactory.CreateSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
+                _target = NearestTarget();
             }
-
-            enemy.TakeDamage(_damage);
-            Health--;
-
-            if (Health <= 0)
+            else if (_target != null)
             {
-                _audioService.PlayDieSound();
-                _playerController.Die();
+                _moveDistance = _target.transform.position - transform.position;
+                _moveDistance.y = 0f;
+
+                if (_moveDistance.magnitude <= _stopDistance)
+                    return;
+
+                Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+                transform.Translate(Vector3.forward * (_moveSpeed * Time.deltaTime));
             }
         }
 
-        if (gameObject != null && gameObject.transform != null && gameObject.transform.root != null &&
-            gameObject.transform.root.gameObject != null && (gameObject.transform.root.gameObject.CompareTag("Enemy") ||
-                                                             collision.gameObject.CompareTag("Platform") == false))
-            return;
+        public bool IsGrounded()
+        {
+            int hitsCount = Physics.RaycastNonAlloc(
+                _playerController.SelfHips.position,
+                Vector3.down,
+                _raycastHits,
+                _raycastDistance,
+                _groundLayer
+            );
 
-        _playerController.Animator.SetBool(IsGround, true);
-        _canMove = true;
+            return hitsCount > 0;
+        }
+
+        private GameObject NearestTarget()
+        {
+            var enemies = _enemyFactory.GetAllEnemies();
+            if (enemies == null)
+                return null;
+
+            float minDistance = float.MaxValue;
+            int index = 0;
+            for (int i = 1; i < enemies.Count; i++)
+            {
+                float distance = Distance(enemies[i].transform.position, transform.position);
+
+                if (minDistance <= distance)
+                    continue;
+
+                minDistance = distance;
+                index = i;
+            }
+
+            _target = enemies.Count > 0 ? enemies[index].gameObject : null;
+
+            return _target;
+        }
+
+        private float Distance(Vector3 v1, Vector3 v2) => (v1 - v2).magnitude;
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            FightAsync(collision).Forget();
+        }
+
+        private void OnCollisionStay(Collision other)
+        {
+            FightAsync(other).Forget();
+        }
+
+        private async UniTask FightAsync(Collision collision)
+        {
+            if (collision.transform.root.TryGetComponent(out EnemyBase enemy) && !enemy.IsDie && !_playerController.IsDie)
+            {
+                _audioService.PlayHitSound();
+
+                if (_canSmoke)
+                {
+                    _canSmoke = false;
+                    await _fxFactory.CreateSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
+                }
+
+                enemy.TakeDamage(_damage);
+                Health--;
+
+                if (Health <= 0)
+                {
+                    _audioService.PlayDieSound();
+                    _playerController.Die();
+                }
+            }
+
+            if (gameObject != null && gameObject.transform != null && gameObject.transform.root != null &&
+                gameObject.transform.root.gameObject != null && (gameObject.transform.root.gameObject.CompareTag("Enemy") ||
+                                                                 collision.gameObject.CompareTag("Platform") == false))
+            {
+                return;
+            }
+
+            _playerController.Animator.SetBool(IsGround, true);
+            _canMove = true;
+        }
     }
 }

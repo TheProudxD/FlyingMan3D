@@ -3,51 +3,55 @@ using _Project.Scripts.Infrastructure.Services.Audio;
 using LitMotion;
 using Reflex.Attributes;
 using UnityEngine;
-using _Project.Scripts.Gameplay;
 
-public class ExplosionBarrel : MonoBehaviour
+namespace _Project.Scripts.Gameplay
 {
-    [Inject] private AnimationService _animationService;
-    [Inject] private AudioService _audioService;
-
-    [SerializeField] private float _force;
-    [SerializeField] private float _radiusDamage;
-    [SerializeField] private LayerMask _layerMask;
-    [SerializeField] private ParticleSystem _splashParticle;
-    private readonly Collider[] _results = new Collider[30];
-
-    private void OnCollisionEnter(Collision other)
+    public class ExplosionBarrel : MonoBehaviour
     {
-        if (!other.gameObject.TryGetComponent(out PlayerFinishMover _) &&
-            !other.gameObject.TryGetComponent(out EnemyBase _) &&
-            !other.gameObject.TryGetComponent(out PlayerController _))
-            return;
+        [Inject] private AnimationService _animationService;
+        [Inject] private AudioService _audioService;
 
-        _animationService.ShakingScale(transform, 0.95f, 1.5f, 0.3f, 2, Ease.InBounce, () =>
+        [SerializeField] private float _force;
+        [SerializeField] private float _radiusDamage;
+        [SerializeField] private LayerMask _layerMask;
+        [SerializeField] private ParticleSystem _splashParticle;
+        private readonly Collider[] _results = new Collider[30];
+
+        private void OnCollisionEnter(Collision other)
         {
-            PushObjects();
-            _audioService?.PlayHitSound();
-            _splashParticle?.Play();
+            if (!other.gameObject.TryGetComponent(out PlayerFinishMover _) &&
+                !other.gameObject.TryGetComponent(out EnemyBase _) &&
+                !other.gameObject.TryGetComponent(out PlayerController _))
+            {
+                return;
+            }
 
-            _animationService.Scale(transform, Vector3.one, Vector3.zero, 0.5f, 1, Ease.OutBounce,
-                callback: () => Destroy(gameObject));
-        });
-    }
+            _animationService.ShakingScale(transform, 0.95f, 1.5f, 0.3f, 2, Ease.InBounce, () =>
+            {
+                PushObjects();
+                _audioService?.PlayHitSound();
+                _splashParticle?.Play();
 
-    private void PushObjects()
-    {
-        Physics.OverlapSphereNonAlloc(transform.position, _radiusDamage, _results, _layerMask);
+                _animationService.Scale(transform, Vector3.one, Vector3.zero, 0.5f, 1, Ease.OutBounce,
+                    callback: () => Destroy(gameObject));
+            });
+        }
 
-        foreach (Collider col in _results)
+        private void PushObjects()
         {
-            if (col == null)
-                continue;
+            Physics.OverlapSphereNonAlloc(transform.position, _radiusDamage, _results, _layerMask);
 
-            if (!col.TryGetComponent(out Rigidbody rg))
-                continue;
+            foreach (Collider col in _results)
+            {
+                if (col == null)
+                    continue;
 
-            Vector3 direction = (col.transform.position - transform.position).normalized;
-            rg.AddForce(direction * _force, ForceMode.Impulse);
+                if (!col.TryGetComponent(out Rigidbody rg))
+                    continue;
+
+                Vector3 direction = (col.transform.position - transform.position).normalized;
+                rg.AddForce(direction * _force, ForceMode.Impulse);
+            }
         }
     }
 }

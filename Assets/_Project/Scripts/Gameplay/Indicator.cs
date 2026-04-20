@@ -6,68 +6,71 @@ using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Indicator : MonoBehaviour
+namespace _Project.Scripts.Gameplay
 {
-    [Inject] private StateMachine _stateMachine;
-    [Inject] private PlayerFactory  _playerFactory;
-    [Inject] private UIFactory _uiFactory;
-    [Inject] private InputReader _inputReader;
-
-    [SerializeField] private Needle _needle;
-
-    private readonly float _startPos = -50f;
-    private readonly float _endPos = -130f;
-    private float _desiredPos;
-    private float _speed;
-    private bool _up;
-    public bool Enabled { get; private set; }
-
-    public void Enable() => Enabled = true;
-
-    public void Disable() => Enabled = false;
-
-    private void Update()
+    public class Indicator : MonoBehaviour
     {
-        if (Enabled == false)
-            return;
+        [Inject] private StateMachine _stateMachine;
+        [Inject] private PlayerFactory _playerFactory;
+        [Inject] private UIFactory _uiFactory;
+        [Inject] private InputReader _inputReader;
 
-        if (Utils.IsPointerOverUI() == false && _inputReader.GetMouseButtonDown(0))
-        {
-            float launchFactor = CreateLaunchForce();
-            StartCoroutine(_playerFactory.GetMainPlayer().ApplyLaunchForce(launchFactor));
+        [SerializeField] private Needle _needle;
 
-            Disable();
-        }
-        else
+        private readonly float _startPos = -50f;
+        private readonly float _endPos = -130f;
+        private float _desiredPos;
+        private float _speed;
+        private bool _up;
+        public bool Enabled { get; private set; }
+
+        public void Enable() => Enabled = true;
+
+        public void Disable() => Enabled = false;
+
+        private void Update()
         {
-            if (_up)
+            if (Enabled == false)
+                return;
+
+            if (Utils.IsPointerOverUI() == false && _inputReader.GetMouseButtonDown(0))
             {
-                _speed += Time.deltaTime * 150f;
-                if (_speed > 179f) _up = false;
+                float launchFactor = CreateLaunchForce();
+                StartCoroutine(_playerFactory.GetMainPlayer().ApplyLaunchForce(launchFactor));
+
+                Disable();
             }
             else
             {
-                _speed -= Time.deltaTime * 150f;
-                if (_speed < 1f) _up = true;
+                if (_up)
+                {
+                    _speed += Time.deltaTime * 150f;
+                    if (_speed > 179f) _up = false;
+                }
+                else
+                {
+                    _speed -= Time.deltaTime * 150f;
+                    if (_speed < 1f) _up = true;
+                }
+
+                _desiredPos = _startPos - _endPos;
+                float temp = _speed / 180;
+                _needle.transform.localEulerAngles = new Vector3(_startPos - temp * _desiredPos, 0, 0);
             }
-
-            _desiredPos = _startPos - _endPos;
-            float temp = _speed / 180;
-            _needle.transform.localEulerAngles = new Vector3(_startPos - temp * _desiredPos, 0, 0);
         }
-    }
 
-    private float CreateLaunchForce()
-    {
-        _speed = Mathf.Abs(90f - _speed);
-
-        return _speed switch
+        private float CreateLaunchForce()
         {
-            > 70 => 0.1f,
-            > 50 => 0.65f,
-            > 30 => 0.75f,
-            > 10 => 0.85f,
-            _ => 1.0f
-        };
+            _speed = Mathf.Abs(90f - _speed);
+
+            return _speed switch
+            {
+                > 70 => 0.1f,
+                > 50 => 0.65f,
+                > 30 => 0.75f,
+                > 10 => 0.85f,
+                _ => 1.0f
+            };
+        }
     }
 }

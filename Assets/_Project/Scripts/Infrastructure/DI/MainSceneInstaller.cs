@@ -1,12 +1,13 @@
+using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services.Debug;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Level;
+using _Project.Scripts.Infrastructure.Services.Localization.UI;
 using _Project.Scripts.Infrastructure.Services.Scene;
-using _Project.Scripts.Infrastructure.Services.Localization.UI; 
 using _Project.Scripts.Tools;
+using BhorGames.Mechanics;
 using Reflex.Core;
 using UnityEngine;
-using BhorGames.Mechanics;
 
 namespace _Project.Scripts.Infrastructure.DI
 {
@@ -24,11 +25,11 @@ namespace _Project.Scripts.Infrastructure.DI
             builder.OnContainerBuilt += container =>
             {
                 var gameFactory = container.Resolve<GameFactory>();
-                gameFactory.SetSceneRef(sceneRefs);                
-                
+                gameFactory.SetSceneRef(sceneRefs);
+
                 var levelLifecycleService = container.Resolve<LevelLifecycleService>();
                 levelLifecycleService.SetSceneRef(sceneRefs);
-                
+
                 OnContainerBuilt(container);
             };
         }
@@ -38,7 +39,7 @@ namespace _Project.Scripts.Infrastructure.DI
 #if UNITY_EDITOR
             InjectDebug(container);
 #endif
-            
+
             container.Inject(_indicator);
             container.Inject(_spawner);
             container.Inject(_platform);

@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public class RingHolder : MonoBehaviour
+namespace _Project.Scripts.Gameplay
 {
-    [field: SerializeField] public Renderer Renderers { get; private set; }
-    [field: SerializeField] public Renderer TransRenderers { get; private set; }
+    public class RingHolder : MonoBehaviour
+    {
+        [field: SerializeField] public Renderer Renderers { get; private set; }
+        [field: SerializeField] public Renderer TransRenderers { get; private set; }
+    }
 }

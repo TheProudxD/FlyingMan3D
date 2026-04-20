@@ -2,31 +2,36 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 using UnityEngine;
 
-public class ReducerRing : RingBase
+namespace _Project.Scripts.Gameplay
 {
-    [Inject] private PlayerFactory _playerFactory;
-    
-    private bool _reductionHappened;
-
-    protected override string Key => "-";
-
-    private void OnTriggerEnter(Collider other)
+    public class ReducerRing : RingBase
     {
-        GameObject root = other.transform.root.gameObject;
+        [Inject] private PlayerFactory _playerFactory;
 
-        if (!root.CompareTag("Player")) return;
+        private bool _reductionHappened;
 
-        if (_reductionHappened) return;
+        protected override string Key => "-";
 
-        var players = _playerFactory.GetAllPlayers();
-
-        for (int i = 0; i < Effect && players.Count > 1; i++)
+        private void OnTriggerEnter(Collider other)
         {
-            _playerFactory.DestroyLastPlayer();
+            GameObject root = other.transform.root.gameObject;
+
+            if (!root.CompareTag("Player"))
+                return;
+
+            if (_reductionHappened)
+                return;
+
+            var players = _playerFactory.GetAllPlayers();
+
+            for (int i = 0; i < Effect && players.Count > 1; i++)
+            {
+                _playerFactory.DestroyLastPlayer();
+            }
+
+            _reductionHappened = true;
+
+            AudioService.PlayRingCollideSound();
         }
-
-        _reductionHappened = true;
-
-        AudioService.PlayRingCollideSound();
     }
 }

@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 
-[Serializable]
-public class EnemyData
+namespace _Project.Scripts.Gameplay
 {
-    public EnemyType Type;
-    public int Amount;
+    [Serializable]
+    public class EnemyData
+    {
+        public EnemyType Type;
+        public int Amount;
+    }
 }

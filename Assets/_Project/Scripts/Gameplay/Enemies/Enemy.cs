@@ -1,55 +1,58 @@
 using UnityEngine;
 
-public class Enemy : EnemyBase
+namespace _Project.Scripts.Gameplay
 {
-    private static readonly int CanAttack = Animator.StringToHash("CanAttack");
-    private Vector3 _moveDistance;
-    private Collider[] _colliders;
-
-    protected override float StopDistance => 0.2f;
-    protected override float MoveSpeed => 5f;
-    protected override int MaxHealth => 1;
-
-    public override void Initialize()
+    public class Enemy : EnemyBase
     {
-        Enabled = true;
-        Animator.SetBool(CanAttack, true);
-        Health = MaxHealth;
-    }
+        private static readonly int CanAttack = Animator.StringToHash("CanAttack");
+        private Vector3 _moveDistance;
+        private Collider[] _colliders;
 
-    private void Awake()
-    {
-        _colliders = GetComponentsInChildren<Collider>();
+        protected override float StopDistance => 0.2f;
+        protected override float MoveSpeed => 5f;
+        protected override int MaxHealth => 1;
 
-        for (int i = 1; i < _colliders.Length; i++)
+        public override void Initialize()
         {
-            Destroy(_colliders[i]);
-        }
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        if (Target == null)
-        {
-            Animator.SetBool(CanAttack, false);
-            Target = NearestTarget();
-        }
-        else
-        {
+            Enabled = true;
             Animator.SetBool(CanAttack, true);
-            _moveDistance = Target.transform.position - transform.position;
-            _moveDistance.y = 0f;
+            Health = MaxHealth;
+        }
 
-            if (_moveDistance.magnitude <= StopDistance)
-                return;
+        private void Awake()
+        {
+            _colliders = GetComponentsInChildren<Collider>();
 
-            transform.position += _moveDistance.normalized * (MoveSpeed * Time.deltaTime);
-            Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
+            for (int i = 1; i < _colliders.Length; i++)
+            {
+                Destroy(_colliders[i]);
+            }
+        }
 
-            transform.rotation =
-                Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * 120f);
+        protected override void Update()
+        {
+            base.Update();
+
+            if (Target == null)
+            {
+                Animator.SetBool(CanAttack, false);
+                Target = NearestTarget();
+            }
+            else
+            {
+                Animator.SetBool(CanAttack, true);
+                _moveDistance = Target.transform.position - transform.position;
+                _moveDistance.y = 0f;
+
+                if (_moveDistance.magnitude <= StopDistance)
+                    return;
+
+                transform.position += _moveDistance.normalized * (MoveSpeed * Time.deltaTime);
+                Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
+
+                transform.rotation =
+                    Quaternion.RotateTowards(transform.rotation, targetRotation, Time.deltaTime * 120f);
+            }
         }
     }
 }

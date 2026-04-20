@@ -1,32 +1,37 @@
-﻿using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 using UnityEngine;
 
-public class DividerRing : RingBase
+namespace _Project.Scripts.Gameplay
 {
-    [Inject] private PlayerFactory _playerFactory;
-    
-    private bool _reductionHappened;
-
-    protected override string Key => "/";
-
-    private void OnTriggerEnter(Collider other)
+    public class DividerRing : RingBase
     {
-        GameObject root = other.transform.root.gameObject;
+        [Inject] private PlayerFactory _playerFactory;
 
-        if (!root.CompareTag("Player")) return;
+        private bool _reductionHappened;
 
-        if (_reductionHappened) return;
+        protected override string Key => "/";
 
-        var allPlayers = _playerFactory.GetAllPlayers();
-        int players = allPlayers.Count / Effect;
-
-        for (int i = 0; i < players && allPlayers.Count > 1; i++)
+        private void OnTriggerEnter(Collider other)
         {
-            _playerFactory.DestroyLastPlayer();
-        }
+            GameObject root = other.transform.root.gameObject;
 
-        _reductionHappened = true;
-        AudioService.PlayRingCollideSound();
+            if (!root.CompareTag("Player"))
+                return;
+
+            if (_reductionHappened)
+                return;
+
+            var allPlayers = _playerFactory.GetAllPlayers();
+            int players = allPlayers.Count / Effect;
+
+            for (int i = 0; i < players && allPlayers.Count > 1; i++)
+            {
+                _playerFactory.DestroyLastPlayer();
+            }
+
+            _reductionHappened = true;
+            AudioService.PlayRingCollideSound();
+        }
     }
 }

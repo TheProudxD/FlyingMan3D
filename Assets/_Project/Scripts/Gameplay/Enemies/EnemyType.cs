@@ -1,8 +1,11 @@
-﻿public enum EnemyType
+namespace _Project.Scripts.Gameplay
 {
-    Simple,
-    Big,
-    Large,
-    WithGun,
-    WithGunAndShield
+    public enum EnemyType
+    {
+        Simple,
+        Big,
+        Large,
+        WithGun,
+        WithGunAndShield
+    }
 }

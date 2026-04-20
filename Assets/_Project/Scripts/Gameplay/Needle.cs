@@ -1,3 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class Needle : MonoBehaviour { }
+namespace _Project.Scripts.Gameplay
+{
+    public class Needle : MonoBehaviour { }
+}

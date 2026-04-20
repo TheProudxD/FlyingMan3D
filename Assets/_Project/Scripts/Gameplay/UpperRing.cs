@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using UnityEngine.Serialization;
 
-[Serializable]
-public class UpperRing
+namespace _Project.Scripts.Gameplay
 {
-    [FormerlySerializedAs("insideRings")] public RingData[] InsideRings = new RingData[2];
+    [Serializable]
+    public class UpperRing
+    {
+        [FormerlySerializedAs("insideRings")] public RingData[] InsideRings = new RingData[2];
+    }
 }

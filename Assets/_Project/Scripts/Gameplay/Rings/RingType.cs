@@ -1,7 +1,10 @@
-﻿public enum RingType
+namespace _Project.Scripts.Gameplay
 {
-    Additive,
-    Multiplier,
-    Reducer,
-    Divider
+    public enum RingType
+    {
+        Additive,
+        Multiplier,
+        Reducer,
+        Divider
+    }
 }

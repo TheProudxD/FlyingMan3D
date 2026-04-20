@@ -2,62 +2,64 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
-using _Project.Scripts.Gameplay;
 
-public class MultiplierRing : RingBase
+namespace _Project.Scripts.Gameplay
 {
-    [Inject] private PlayerFactory _playerFactory;
-    private bool _firstPlayer;
-    private int _playerCount;
-
-    protected override string Key => "x";
-
-    private void OnTriggerEnter(Collider other)
+    public class MultiplierRing : RingBase
     {
-        GameObject root = other.transform.root.gameObject;
+        [Inject] private PlayerFactory _playerFactory;
+        private bool _firstPlayer;
+        private int _playerCount;
 
-        if (!root.CompareTag("Player"))
-            return;
+        protected override string Key => "x";
 
-        if (!_firstPlayer)
+        private void OnTriggerEnter(Collider other)
         {
-            _playerCount = FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length;
-            _firstPlayer = true;
-        }
+            GameObject root = other.transform.root.gameObject;
 
-        var playerController = root.GetComponent<PlayerController>();
+            if (!root.CompareTag("Player"))
+                return;
 
-        if (playerController.IsPassed || _playerCount <= 0)
-            return;
-
-        playerController.IsPassed = true;
-
-        for (int i = 0; i < Effect - 1; i++)
-        {
-            _playerFactory.GetNewPlayer();
-        }
-
-        _playerCount--;
-
-        AudioService.PlayRingCollideSound();
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        GameObject root = other.transform.root.gameObject;
-
-        if (root.CompareTag("Player"))
-        {
-            if (root.GetComponent<PlayerController>().IsPassed)
+            if (!_firstPlayer)
             {
-                root.GetComponent<PlayerController>().IsPassed = false;
+                _playerCount = FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length;
+                _firstPlayer = true;
             }
+
+            var playerController = root.GetComponent<PlayerController>();
+
+            if (playerController.IsPassed || _playerCount <= 0)
+                return;
+
+            playerController.IsPassed = true;
+
+            for (int i = 0; i < Effect - 1; i++)
+            {
+                _playerFactory.GetNewPlayer();
+            }
+
+            _playerCount--;
+
+            AudioService.PlayRingCollideSound();
         }
 
-        // if (!other.transform.root.TryGetComponent(out PlayerController player))
-        //     return;
-        //
-        // if (player.IsPassed)
-        //     player.IsPassed = false;
+        private void OnTriggerExit(Collider other)
+        {
+            GameObject root = other.transform.root.gameObject;
+
+            if (root.CompareTag("Player"))
+            {
+                if (root.GetComponent<PlayerController>().IsPassed)
+                {
+                    root.GetComponent<PlayerController>().IsPassed = false;
+                }
+            }
+
+            // if (!other.transform.root.TryGetComponent(out PlayerController player))
+            //     return;
+            //
+            // if (player.IsPassed)
+            //     player.IsPassed = false;
+        }
     }
 }
