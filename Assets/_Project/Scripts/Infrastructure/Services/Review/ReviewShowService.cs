@@ -1,24 +1,33 @@
 using System;
-using YG;
+using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.Review
 {
     public class ReviewShowService : IService
     {
+        private const string StubPrefix = "[ReviewShowService:STUB]";
         private Action<bool> _onReviewSentAction;
-        
-        // public ReviewShowService() => YG2.onReviewSent += OnReviewSent;
 
-        // ~ReviewShowService() => YG2.onReviewSent -= OnReviewSent;
-        
-        private void OnReviewSent(bool obj) => _onReviewSentAction?.Invoke(obj);
+        private void OnReviewSent(bool success) => Complete(success);
 
         public void Show(Action<bool> onReviewSent = null)
         {
             _onReviewSentAction = onReviewSent;
-            // YG2.ReviewShow();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"{StubPrefix} Review flow is not integrated yet.");
+#endif
+
+            Complete(false);
         }
 
         public bool CanShow() => false;
+
+        private void Complete(bool success)
+        {
+            Action<bool> callback = _onReviewSentAction;
+            _onReviewSentAction = null;
+            callback?.Invoke(success);
+        }
     }
 }

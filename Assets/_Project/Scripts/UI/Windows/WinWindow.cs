@@ -9,6 +9,7 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Infrastructure.Services.Review;
 using _Project.Scripts.Tools.Extensions;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Buttons;
 using LitMotion;
 using Reflex.Attributes;
@@ -39,7 +40,7 @@ namespace _Project.Scripts.UI.Windows
         [SerializeField] private Button _nextLevelButton;
         [SerializeField] private ReplayGameButton _replayLevelButton;
         [SerializeField] private WheelMultiplierButton _multiplierButton;
-        // [SerializeField] private CoinRewardAnimation _coinRewardAnimation;
+        [SerializeField] private CoinRewardAnimation _coinRewardAnimation;
         [SerializeField] private Image _emojiImage;
 
         private readonly CompositeMotionHandle _compositeMotionHandle = new();
@@ -73,11 +74,10 @@ namespace _Project.Scripts.UI.Windows
             _multiplierButton.Add(MultiplyMoney);
             UpdateMoneyRewardText();
 
-            _nextLevelButton.Add(LoadNextLevel);
+            _nextLevelButton.Add(PlayMoneyFX);
             _replayLevelButton.Add(Restart);
             _replayLevelButton.Activate();
-
-            // _coinRewardAnimation.OnAnimationFinished += LoadNextLevel;
+            SubscribeRewardFx();
 
             StartCoroutine(ShowNextLevelButtonCoroutine());
 
@@ -96,7 +96,30 @@ namespace _Project.Scripts.UI.Windows
             _nextLevelButton.Deactivate();
             _multiplierButton.Deactivate();
 
-            // _coinRewardAnimation.CountCoins();
+            if (_coinRewardAnimation == null)
+            {
+                LoadNextLevel();
+                return;
+            }
+
+            _coinRewardAnimation.CountCoins();
+        }
+
+        private void SubscribeRewardFx()
+        {
+            if (_coinRewardAnimation == null)
+                return;
+
+            _coinRewardAnimation.OnAnimationFinished -= LoadNextLevel;
+            _coinRewardAnimation.OnAnimationFinished += LoadNextLevel;
+        }
+
+        private void UnsubscribeRewardFx()
+        {
+            if (_coinRewardAnimation == null)
+                return;
+
+            _coinRewardAnimation.OnAnimationFinished -= LoadNextLevel;
         }
 
         private void UpdateTitleText()
@@ -152,12 +175,10 @@ namespace _Project.Scripts.UI.Windows
 
         public override void Hide()
         {
-            _nextLevelButton.Remove(LoadNextLevel);
+            _nextLevelButton.Remove(PlayMoneyFX);
             _replayLevelButton.Remove(Restart);
             _multiplierButton.Remove(MultiplyMoney);
-            // _coinRewardAnimation.OnAnimationFinished -= LoadNextLevel;
-            // _sendReviewButton.Deactivate();
-            // _moreGamesButton.Deactivate();
+            UnsubscribeRewardFx();
 
             _animationService.FadeIn(_popup.gameObject, _animationsConfig.HideDuration, callback: () =>
             {

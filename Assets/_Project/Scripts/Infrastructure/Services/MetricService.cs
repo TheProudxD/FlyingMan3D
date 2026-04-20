@@ -1,57 +1,42 @@
-using YG;
+using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services
 {
     public class MetricService : IService
     {
-        public void GameLoaded()
-        {
-            //YG2.MetricaSend("gameLoaded");
-        }
+        private const string StubPrefix = "[MetricService:STUB]";
 
-        public void LevelStarted(int level)
-        {
-            //YG2.MetricaSend("levelStarted", "level", level.ToString());
-        }
+        public void GameLoaded() => Track("gameLoaded");
 
-        public void LevelPassed(int level)
-        {
-            //YG2.MetricaSend("levelPassed", "level", level.ToString());
-        }
+        public void LevelStarted(int level) => Track("levelStarted", "level", level.ToString());
 
-        public void LevelLost(int level)
-        {
-            //YG2.MetricaSend("levelLost", "level", level.ToString());
-        }
+        public void LevelPassed(int level) => Track("levelPassed", "level", level.ToString());
 
-        public void GameContinuedForAd()
-        {
-            //YG2.MetricaSend("gameContinuedForAd");
-        }
+        public void LevelLost(int level) => Track("levelLost", "level", level.ToString());
 
-        public void StatisticsViewed()
-        {
-            //YG2.MetricaSend("statisticsViewed");
-        }
+        public void GameContinuedForAd() => Track("gameContinuedForAd");
 
-        public void ReviewSent()
-        {
-            //YG2.MetricaSend("sentReview");
-        }
+        public void StatisticsViewed() => Track("statisticsViewed");
 
-        public void OpenedMoreGames()
-        {
-            //YG2.MetricaSend("openedMoreGames");
-        }
+        public void ReviewSent() => Track("sentReview");
 
-        public void TutorialPassed()
-        {
-            //YG2.MetricaSend("tutorialPassed");
-        }
+        public void OpenedMoreGames() => Track("openedMoreGames");
 
-        public void LevelSkippedForAd()
+        public void TutorialPassed() => Track("tutorialPassed");
+
+        public void LevelSkippedForAd() => Track("levelSkippedForAd");
+
+        private void Track(string eventName, string key = null, string value = null)
         {
-            //YG2.MetricaSend("levelSkippedForAd");
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (string.IsNullOrEmpty(key))
+            {
+                Debug.Log($"{StubPrefix} {eventName}");
+                return;
+            }
+
+            Debug.Log($"{StubPrefix} {eventName} ({key}: {value})");
+#endif
         }
     }
 }

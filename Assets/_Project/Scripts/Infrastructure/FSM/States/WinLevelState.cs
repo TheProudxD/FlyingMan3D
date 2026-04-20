@@ -60,7 +60,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
                 _levelResourceService.Increase(this);
             }
 
-            if (_levelResourceService.Current.Value > 3)
+            if (_levelResourceService.Current.Value > 3 && _reviewShowService.CanShow())
             {
                 _reviewShowService.Show();
             }
