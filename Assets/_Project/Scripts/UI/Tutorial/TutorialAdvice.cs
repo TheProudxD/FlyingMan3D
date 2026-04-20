@@ -1,4 +1,5 @@
-using System;
+using _Project.Scripts.Infrastructure.Services;
+using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
 
@@ -6,12 +7,17 @@ namespace _Project.Scripts.UI.Windows
 {
     public class TutorialAdvice : MonoBehaviour
     {
+        [Inject] private InputReader _inputReader;
+
         [SerializeField] private TextMeshProUGUI _titleText;
         [SerializeField] private TextMeshProUGUI _adviceText;
         
-        void Update()
+        private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (_inputReader == null)
+                return;
+
+            if (_inputReader.GetMouseButtonDown(0))
             {
                 gameObject.SetActive(false);
             }

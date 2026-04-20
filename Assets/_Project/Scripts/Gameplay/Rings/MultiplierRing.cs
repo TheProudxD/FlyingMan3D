@@ -1,6 +1,5 @@
 using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
-using TMPro;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay
@@ -22,11 +21,12 @@ namespace _Project.Scripts.Gameplay
 
             if (!_firstPlayer)
             {
-                _playerCount = FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length;
+                _playerCount = _playerFactory.GetAllPlayers().Count;
                 _firstPlayer = true;
             }
 
-            var playerController = root.GetComponent<PlayerController>();
+            if (!root.TryGetComponent(out PlayerController playerController))
+                return;
 
             if (playerController.IsPassed || _playerCount <= 0)
                 return;
@@ -47,19 +47,11 @@ namespace _Project.Scripts.Gameplay
         {
             GameObject root = other.transform.root.gameObject;
 
-            if (root.CompareTag("Player"))
-            {
-                if (root.GetComponent<PlayerController>().IsPassed)
-                {
-                    root.GetComponent<PlayerController>().IsPassed = false;
-                }
-            }
+            if (!root.CompareTag("Player"))
+                return;
 
-            // if (!other.transform.root.TryGetComponent(out PlayerController player))
-            //     return;
-            //
-            // if (player.IsPassed)
-            //     player.IsPassed = false;
+            if (root.TryGetComponent(out PlayerController player) && player.IsPassed)
+                player.IsPassed = false;
         }
     }
 }

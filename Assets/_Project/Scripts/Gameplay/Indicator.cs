@@ -1,10 +1,8 @@
 using _Project.Scripts.Infrastructure.FSM;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Factories;
-using _Project.Scripts.Tools;
 using Reflex.Attributes;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace _Project.Scripts.Gameplay
 {
@@ -33,7 +31,7 @@ namespace _Project.Scripts.Gameplay
             if (Enabled == false)
                 return;
 
-            if (Utils.IsPointerOverUI() == false && _inputReader.GetMouseButtonDown(0))
+            if (!_inputReader.IsPointerOverUI() && _inputReader.GetMouseButtonDown(0))
             {
                 float launchFactor = CreateLaunchForce();
                 StartCoroutine(_playerFactory.GetMainPlayer().ApplyLaunchForce(launchFactor));

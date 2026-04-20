@@ -1632,6 +1632,11 @@ CapsuleCollider:
   m_Height: 0.85895973
   m_Direction: 2
   m_Center: {x: -0.000000011175873, y: -0.000000029802326, z: -0.42947987}
+--- !u!95 &4349076610751951640 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
+  m_PrefabInstance: {fileID: 7868232251066338953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4381292147829248025 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5907854602648608400, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}
@@ -2335,6 +2340,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6905923dc4866f8448f27cdc610e5b5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _movementController: {fileID: -8036922864640587598}
+  _launchController: {fileID: -1795803471702380212}
+  _deathHandler: {fileID: -7086498004900797085}
+  _initializer: {fileID: -1436203082616704617}
 --- !u!114 &-8036922864640587598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2391,6 +2400,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hipsRigidbody: {fileID: 4189387454735673703}
   _trailRenderer: {fileID: 1001970537107957870}
+  _bodies:
+  - {fileID: 4189387454735673703}
+  - {fileID: 5713802279348073491}
+  - {fileID: 6331926472770313645}
+  - {fileID: 3674872948579798973}
+  - {fileID: 2977128785977863810}
+  - {fileID: 3173385206856349423}
+  - {fileID: 2314704696929540345}
+  - {fileID: 5490179139002508594}
+  - {fileID: 6799782673299130100}
+  - {fileID: 5143756487989303521}
+  - {fileID: 8116041119909949801}
+  - {fileID: 1045847958566547811}
+  - {fileID: 3994422491600677545}
+  - {fileID: 3677413015033713262}
+  - {fileID: 7155504132618363448}
+  _animator: {fileID: 4349076610751951640}
 --- !u!114 &4083061613587488995
 MonoBehaviour:
   m_ObjectHideFlags: 0

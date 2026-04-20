@@ -12,15 +12,18 @@ namespace _Project.Scripts.Gameplay
     {
         [SerializeField] private Rigidbody _hipsRigidbody;
         [SerializeField] private TrailRenderer _trailRenderer;
+        [SerializeField] private Rigidbody[] _bodies;
+        [SerializeField] private Animator _animator;
 
         private GameFactory _gameFactory;
         private UIFactory _uiFactory;
         private PlayerFactory _playerFactory;
         private PlayerController _playerController;
-
-        private Rigidbody[] _bodies;
-        private Animator _animator;
         private bool _isInitialized;
+
+        private void Awake() => CacheReferences();
+
+        private void OnValidate() => CacheReferences();
 
         public void Initialize(
             GameFactory gameFactory,
@@ -35,10 +38,6 @@ namespace _Project.Scripts.Gameplay
             _uiFactory = uiFactory;
             _playerFactory = playerFactory;
             _playerController = playerController;
-
-            // Get required components
-            _animator = GetComponent<Animator>();
-            _bodies = GetComponentsInChildren<Rigidbody>(true);
 
             _isInitialized = true;
         }
@@ -63,7 +62,10 @@ namespace _Project.Scripts.Gameplay
             {
                 if (_hipsRigidbody == null)
                 {
-                    _hipsRigidbody = GetComponentInChildren<Rigidbody>(true);
+                    CacheReferences();
+
+                    if (_hipsRigidbody == null)
+                        _hipsRigidbody = GetComponentInChildren<Rigidbody>(true);
                 }
 
                 return _hipsRigidbody;
@@ -72,5 +74,16 @@ namespace _Project.Scripts.Gameplay
         public TrailRenderer TrailRenderer => _trailRenderer;
         public Rigidbody[] Bodies => _bodies;
         public Animator Animator => _animator;
+
+        private void CacheReferences()
+        {
+            _animator ??= GetComponent<Animator>();
+
+            if (_bodies == null || _bodies.Length == 0)
+                _bodies = GetComponentsInChildren<Rigidbody>(true);
+
+            if (_hipsRigidbody == null)
+                _hipsRigidbody = GetComponentInChildren<Rigidbody>(true);
+        }
     }
 }

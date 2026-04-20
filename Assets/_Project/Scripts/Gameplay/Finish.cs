@@ -50,7 +50,8 @@ namespace _Project.Scripts.Gameplay
             Transform root = other.gameObject.transform.root;
             root.tag = "FreePlayer";
 
-            var playerController = root.GetComponent<PlayerController>();
+            if (!root.TryGetComponent(out PlayerController playerController))
+                yield break;
 
             float maxVelocity = 4;
 
@@ -80,10 +81,13 @@ namespace _Project.Scripts.Gameplay
 
             var rg = root.gameObject.AddComponent<Rigidbody>();
             rg.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            PlayerFinishMover playerFinishMover = root.GetComponent<PlayerFinishMover>();
+            if (!root.TryGetComponent(out PlayerFinishMover playerFinishMover))
+                yield break;
+
             playerFinishMover.Initialize();
 
-            root.GetComponent<CapsuleCollider>().enabled = true;
+            if (root.TryGetComponent(out CapsuleCollider capsuleCollider))
+                capsuleCollider.enabled = true;
 
             playerController.Animator.enabled = true;
 

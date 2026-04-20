@@ -1,6 +1,5 @@
 using UnityEngine;
 using _Project.Scripts.Infrastructure.Services;
-using _Project.Scripts.Tools;
 using Reflex.Attributes;
 
 namespace _Project.Scripts.Gameplay
@@ -47,7 +46,7 @@ namespace _Project.Scripts.Gameplay
 
             CheckForBoundaries();
 
-            if (Utils.IsPointerOverUI())
+            if (_inputReader.IsPointerOverUI())
                 return;
 
             if (!_inputReader.GetMouseButton(0))

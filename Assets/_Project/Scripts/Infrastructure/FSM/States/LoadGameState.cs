@@ -49,11 +49,14 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             var hudContainer = await _windowService.Show(WindowId.HUD);
             var hud = hudContainer as Hud;
             hud?.Initialize();
+            _uiFactory.RegisterHud(hud);
 
-            foreach (ScoreBaseView view in Object.FindObjectsByType<ScoreBaseView>(FindObjectsInactive.Include,
-                         FindObjectsSortMode.None))
+            if (hud != null)
             {
-                view.Initialize();
+                foreach (ScoreBaseView view in hud.GetComponentsInChildren<ScoreBaseView>(true))
+                {
+                    view.Initialize();
+                }
             }
 
             _stateMachine.Enter<LoadLevelState>();

@@ -25,10 +25,10 @@ namespace _Project.Scripts.Gameplay
         [Inject] private AudioService _audioService;
         [Inject] private IPersistentProgressService _persistentProgressService;
 
-        private PlayerMovementController _movementController;
-        private PlayerLaunchController _launchController;
-        private PlayerDeathHandler _deathHandler;
-        private PlayerInitializer _initializer;
+        [SerializeField] private PlayerMovementController _movementController;
+        [SerializeField] private PlayerLaunchController _launchController;
+        [SerializeField] private PlayerDeathHandler _deathHandler;
+        [SerializeField] private PlayerInitializer _initializer;
 
         private bool _enabled;
         private float _maxLaunchSpeed;
@@ -46,13 +46,9 @@ namespace _Project.Scripts.Gameplay
         public bool IsTarget { get; set; }
         public bool IsDie { get; private set; }
 
-        private void Awake()
-        {
-            _movementController = GetComponent<PlayerMovementController>();
-            _launchController = GetComponent<PlayerLaunchController>();
-            _deathHandler = GetComponent<PlayerDeathHandler>();
-            _initializer = GetComponent<PlayerInitializer>();
-        }
+        private void Awake() => CacheComponentReferences();
+
+        private void OnValidate() => CacheComponentReferences();
 
         private void Start()
         {
@@ -232,6 +228,14 @@ namespace _Project.Scripts.Gameplay
         {
             IsDie = true;
             IsTarget = false;
+        }
+
+        private void CacheComponentReferences()
+        {
+            _movementController ??= GetComponent<PlayerMovementController>();
+            _launchController ??= GetComponent<PlayerLaunchController>();
+            _deathHandler ??= GetComponent<PlayerDeathHandler>();
+            _initializer ??= GetComponent<PlayerInitializer>();
         }
     }
 }

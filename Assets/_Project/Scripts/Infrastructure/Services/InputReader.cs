@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using _Project.Scripts.Tools.Camera;
+using System.Collections.Generic;
 
 namespace _Project.Scripts.Infrastructure.Services
 {
@@ -8,6 +9,7 @@ namespace _Project.Scripts.Infrastructure.Services
     {
         private const string LAYER_NAME = "Default";
         private readonly Camera _camera;
+        private readonly List<RaycastResult> _uiRaycastResults = new(8);
 
         public InputReader(CameraSetup cameraSetup) => _camera = cameraSetup.MainCamera;
 
@@ -16,6 +18,25 @@ namespace _Project.Scripts.Infrastructure.Services
         public bool GetMouseButtonDown(int button) => Input.GetMouseButtonDown(button);
 
         public float GetAxis(string axisName) => Input.GetAxis(axisName);
+
+        public Vector3 GetPointerScreenPosition() => Input.mousePosition;
+
+        public bool IsPointerOverUI()
+        {
+            EventSystem eventSystem = EventSystem.current;
+
+            if (eventSystem == null)
+                return false;
+
+            var eventData = new PointerEventData(eventSystem)
+            {
+                position = GetPointerScreenPosition()
+            };
+
+            _uiRaycastResults.Clear();
+            eventSystem.RaycastAll(eventData, _uiRaycastResults);
+            return _uiRaycastResults.Count > 0;
+        }
 
         public Vector3 GetWorldPosition(Vector3 startMousePos) =>
             _camera.ViewportToWorldPoint(startMousePos);

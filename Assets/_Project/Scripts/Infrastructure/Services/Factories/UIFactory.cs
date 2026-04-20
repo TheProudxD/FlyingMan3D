@@ -36,7 +36,9 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 
         public Transform GetUIRoot() => _uiRoot;
 
-        public Hud GetHUD() => _hud ??= Object.FindAnyObjectByType<Hud>(FindObjectsInactive.Include);
+        public Hud GetHUD() => _hud;
+
+        public void RegisterHud(Hud hud) => _hud = hud;
         
         private async UniTask RegisterWindowFactories()
         {
