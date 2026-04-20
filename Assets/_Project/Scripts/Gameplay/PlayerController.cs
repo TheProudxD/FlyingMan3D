@@ -1,182 +1,243 @@
 using UnityEngine;
 using System.Collections;
-using Cysharp.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
-using _Project.Scripts.Infrastructure.Services.Resources;
-using _Project.Scripts.Infrastructure.Services.Windows;
-using _Project.Scripts.Tools;
 using _Project.Scripts.UI;
 using Reflex.Attributes;
 
-public class PlayerController : MonoBehaviour
+namespace _Project.Scripts.Gameplay
 {
-    [Inject] private GameFactory _gameFactory;
-    [Inject] private UIFactory _uiFactory;
-    [Inject] private FxFactory _fxFactory;
-    [Inject] private PlayerFactory _playerFactory;
-    [Inject] private AudioService _audioService;
-    [Inject] private WindowService _windowService;
-    [Inject] private LevelResourceService _levelResourceService;
-    [Inject] private IPersistentProgressService _persistentProgressService;
-
-    private const float DIE_HEIGHT = -5;
-
-    [field: SerializeField] public Rigidbody SelfHips { get; private set; }
-    [field: SerializeField] public TrailRenderer TrailRenderer { get; private set; }
-
-    public Rigidbody[] Bodies { get; private set; }
-    private Vector3 _initialPos;
-    private float _xValue;
-    private float _time;
-    private bool _enabled;
-    private float _maxLaunchSpeed;
-    private float _movementSpeed;
-    private FixedJoint _joint;
-    private Transform _capsule;
-
-    public Animator Animator { get; private set; }
-    public bool IsPassed { get; set; }
-    public bool IsTarget { get; set; }
-    public bool IsDie { get; private set; }
-
-    private void Start()
+    /// <summary>
+    /// Main player controller that orchestrates player behavior through specialized components.
+    /// Acts as a facade for movement, launch, death, and initialization logic.
+    /// </summary>
+    public class PlayerController : MonoBehaviour
     {
-        // Input.simulateMouseWithTouches = true;
-        Animator = GetComponent<Animator>();
-        Bodies = GetComponentsInChildren<Rigidbody>();
-    }
+        [Inject] private GameFactory _gameFactory;
+        [Inject] private UIFactory _uiFactory;
+        [Inject] private FxFactory _fxFactory;
+        [Inject] private PlayerFactory _playerFactory;
+        [Inject] private AudioService _audioService;
+        [Inject] private IPersistentProgressService _persistentProgressService;
 
-    public void Initialize()
-    {
-        _enabled = true;
-        _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
-        _movementSpeed = _persistentProgressService.PowerupProgress.flyingControl;
-    }
+        // Component references
+        private PlayerMovementController _movementController;
+        private PlayerLaunchController _launchController;
+        private PlayerDeathHandler _deathHandler;
+        private PlayerInitializer _initializer;
+        private Rigidbody _fallbackHips;
+        private Rigidbody[] _fallbackBodies;
+        private Animator _fallbackAnimator;
+        private TrailRenderer _fallbackTrailRenderer;
 
-    public void Disable() => _enabled = false;
+        // State
+        private bool _enabled;
+        private float _maxLaunchSpeed;
+        private float _movementSpeed;
+        private Transform _launchCapsule;
+        private Vector3 _launchInitialPosition;
 
-    public void SetInitial(FixedJoint joint, Transform capsule)
-    {
-        _capsule = capsule;
-        _joint = joint;
-        _initialPos = capsule.position;
-    }
+        // Public properties for backward compatibility
+        public Rigidbody SelfHips => _initializer?.HipsRigidbody ?? (_fallbackHips ??= GetComponentInChildren<Rigidbody>(true));
+        public TrailRenderer TrailRenderer =>
+            _initializer?.TrailRenderer ?? (_fallbackTrailRenderer ??= GetComponentInChildren<TrailRenderer>(true));
+        public Rigidbody[] Bodies => _initializer?.Bodies ?? (_fallbackBodies ??= GetComponentsInChildren<Rigidbody>(true));
+        public Animator Animator => _initializer?.Animator ?? (_fallbackAnimator ??= GetComponent<Animator>());
 
-    private void Update()
-    {
-        if (_enabled == false)
-            return;
+        public bool IsPassed { get; set; }
+        public bool IsTarget { get; set; }
+        public bool IsDie { get; private set; }
 
-        CheckForBoundaries();
-        CheckForHeight();
-
-        if (Utils.IsPointerOverUI())
-            return;
-
-        if (!Input.GetMouseButton(0))
-            return;
-
-        _xValue = Input.GetAxis("Mouse X");
-
-        foreach (Rigidbody rb in Bodies)
+        public void MarkAsDead()
         {
-            rb.linearVelocity += new Vector3(_xValue, 0, 0) * (Time.deltaTime * _movementSpeed);
-        }
-    }
-
-    private void CheckForBoundaries()
-    {
-        float xPos = SelfHips.transform.position.x;
-        const float DELTA = 40f;
-
-        if (xPos is < DELTA and > -DELTA)
-            return;
-
-        float newX = Mathf.Sign(xPos) * -3f;
-
-        SelfHips.linearVelocity = new Vector3(newX, SelfHips.linearVelocity.y, SelfHips.linearVelocity.z);
-    }
-
-    public void CheckForHeight()
-    {
-        float yPos = SelfHips.transform.position.y;
-
-        if (yPos < DIE_HEIGHT)
-            Die();
-    }
-
-    public IEnumerator ApplyLaunchForce(float factor)
-    {
-        Hud hud = _uiFactory.GetHUD();
-        hud.Show();
-        hud.DeactivateStartText();
-        _maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
-        _movementSpeed = _persistentProgressService.PowerupProgress.flyingControl;
-
-        _audioService.PlayLaunchSound();
-        Vector3 targetPos = _initialPos + new Vector3(0f, -1f, -4f) * factor;
-
-        while (_time <= 0.8f)
-        {
-            if (_capsule == null)
-                yield break;
-
-            _capsule.position = Vector3.Lerp(_initialPos, targetPos, _time / 0.8f);
-            _time += Time.deltaTime;
-            yield return null;
+            IsDie = true;
+            IsTarget = false;
         }
 
-        _time = 0f;
-
-        while (_time <= 0.1f)
+        private void Awake()
         {
-            if (_capsule == null)
-                yield break;
-
-            _capsule.position = Vector3.Lerp(targetPos, _initialPos, _time / 0.2f);
-            _time += Time.deltaTime;
-            yield return null;
+            // Ensure required components exist even if prefab has not been updated after refactor.
+            _movementController = GetComponent<PlayerMovementController>() ?? gameObject.AddComponent<PlayerMovementController>();
+            _launchController = GetComponent<PlayerLaunchController>() ?? gameObject.AddComponent<PlayerLaunchController>();
+            _deathHandler = GetComponent<PlayerDeathHandler>() ?? gameObject.AddComponent<PlayerDeathHandler>();
+            _initializer = GetComponent<PlayerInitializer>() ?? gameObject.AddComponent<PlayerInitializer>();
         }
 
-        // if (_levelResourceService.ObservableValue.Value == 1)
-        // {
-        //     Task<UIContainer> tutorialTask = _windowService.Show(WindowId.Tutorial);
-        //     yield return tutorialTask;
-        //     (tutorialTask.Result as TutorialWindow)?.AnimateHandMovementCursor();
-        // }
-
-        Destroy(_joint);
-
-        Vector3 forceVector = new Vector3(0, factor, factor * 2f) * _maxLaunchSpeed;
-
-        foreach (Rigidbody rb in Bodies)
+        private void Start()
         {
-            if (rb == null)
-                continue;
+            // Initialize components if they exist
+            if (_initializer != null)
+            {
+                _initializer.Initialize(_gameFactory, _uiFactory, _playerFactory, this);
+            }
 
-            rb.linearVelocity = forceVector;
-            rb.AddTorque(Vector3.forward);
+            _movementController?.Configure(SelfHips);
+
+            // Initialize specialized controllers
+            InitializeMovementController();
+            InitializeLaunchController();
+            InitializeDeathHandler();
         }
 
-        if (factor > 0.1f)
+        private void InitializeMovementController()
         {
-            _gameFactory.GetSpawner()?.SpawnObjects(Bodies[0].linearVelocity);
+            if (_movementController != null && _initializer != null)
+            {
+                _movementController.Initialize(Bodies, GetMovementSpeed());
+            }
         }
-    }
 
-    public void Die() => DieAsync().Forget();
+        private void InitializeLaunchController()
+        {
+            if (_launchController != null && _initializer != null)
+            {
+                if (_launchCapsule == null)
+                    return;
 
-    private async UniTask DieAsync()
-    {
-        IsDie = true;
-        IsTarget = false;
+                Hud hud = _uiFactory.GetHUD();
+                Spawner spawner = _gameFactory.GetSpawner();
 
-        if (transform != null && transform.gameObject != null && transform.gameObject.activeInHierarchy)
-            await _fxFactory.CreatePlayerRagdoll(transform.position, Quaternion.identity);
+                _launchController.Initialize(
+                    Bodies,
+                    _launchCapsule,
+                    _launchInitialPosition,
+                    hud,
+                    _audioService,
+                    spawner,
+                    _maxLaunchSpeed
+                );
+            }
+        }
 
-        _playerFactory.RemovePlayer(this);
+        private void InitializeDeathHandler()
+        {
+            if (_deathHandler != null && _initializer != null)
+            {
+                _deathHandler.Initialize(
+                    SelfHips,
+                    _fxFactory,
+                    _playerFactory,
+                    this
+                );
+            }
+        }
+
+        public void Initialize(float maxLaunchSpeed, float movementSpeed)
+        {
+            _enabled = true;
+            _maxLaunchSpeed = maxLaunchSpeed;
+            _movementSpeed = movementSpeed;
+
+            if (_movementController != null)
+            {
+                _movementController.SetMovementSpeed(_movementSpeed);
+            }
+
+            if (_launchController != null)
+            {
+                _launchController.UpdateMaxLaunchSpeed(_maxLaunchSpeed);
+            }
+        }
+
+        public void Disable()
+        {
+            _enabled = false;
+            if (_movementController != null)
+            {
+                _movementController.SetEnabled(false);
+            }
+        }
+
+        public void SetInitial(FixedJoint joint, Transform capsule)
+        {
+            _launchCapsule = capsule;
+            _launchInitialPosition = capsule != null ? capsule.position : Vector3.zero;
+
+            // Update launch controller with capsule and initial position
+            if (_launchController != null)
+            {
+                _launchController.Initialize(
+                    Bodies,
+                    _launchCapsule,
+                    _launchInitialPosition,
+                    _uiFactory.GetHUD(),
+                    _audioService,
+                    _gameFactory.GetSpawner(),
+                    _maxLaunchSpeed
+                );
+            }
+        }
+
+        public float GetMovementSpeed() => _persistentProgressService.PowerupProgress.flyingControl;
+
+        public void Initialize()
+        {
+            float maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
+            float movementSpeed = GetMovementSpeed();
+            Initialize(maxLaunchSpeed, movementSpeed);
+        }
+
+        public void CheckForHeight()
+        {
+            if (_deathHandler != null)
+            {
+                _deathHandler.CheckForDeath();
+                return;
+            }
+
+            Rigidbody hips = SelfHips;
+            if (hips != null && hips.transform.position.y < -5f)
+            {
+                Die();
+            }
+        }
+
+        private void Update()
+        {
+            if (!_enabled)
+                return;
+
+            // Delegate death checking to death handler
+            if (_deathHandler != null)
+            {
+                _deathHandler.CheckForDeath();
+            }
+        }
+
+        public IEnumerator ApplyLaunchForce(float factor)
+        {
+            // Delegate to launch controller
+            if (_launchController != null)
+            {
+                return _launchController.ApplyLaunchForce(factor);
+            }
+
+            return null;
+        }
+
+        public void Die()
+        {
+            if (_deathHandler != null)
+            {
+                _deathHandler.Die();
+            }
+            else
+            {
+                // Fallback for backward compatibility
+                IsDie = true;
+                IsTarget = false;
+                _playerFactory.RemovePlayer(this);
+            }
+        }
+
+        public void SetupInitialState()
+        {
+            if (_initializer != null)
+            {
+                _initializer.SetupInitialState();
+            }
+        }
     }
 }

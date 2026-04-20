@@ -41,8 +41,26 @@ namespace _Project.Scripts.Infrastructure.Services.Level
         {
             var startPosition = new Vector3(0, 1.75f, -1);
             var mainPlayer = await _assetProvider.CreatePlayer(startPosition);
-            Rigidbody capsule = _sceneRefs.Slingshot.Capsule;
-            var fixedJoint = mainPlayer.SelfHips.gameObject.AddComponent<FixedJoint>();
+            Rigidbody hips = mainPlayer.SelfHips;
+            Rigidbody capsule = _sceneRefs?.Slingshot?.Capsule;
+
+            if (hips == null)
+            {
+                UnityEngine.Debug.LogError("Main player has no hips Rigidbody. Check Player prefab bindings.");
+                AddPlayer(mainPlayer);
+                _levelHolder.Add(mainPlayer.gameObject);
+                return mainPlayer;
+            }
+
+            if (capsule == null)
+            {
+                UnityEngine.Debug.LogError("Slingshot capsule is not initialized. Check scene refs and slingshot setup.");
+                AddPlayer(mainPlayer);
+                _levelHolder.Add(mainPlayer.gameObject);
+                return mainPlayer;
+            }
+
+            var fixedJoint = hips.gameObject.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = capsule;
             mainPlayer.SetInitial(fixedJoint, capsule.transform);
             AddPlayer(mainPlayer);

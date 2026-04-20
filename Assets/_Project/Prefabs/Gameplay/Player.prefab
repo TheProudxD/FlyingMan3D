@@ -2257,8 +2257,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6905923dc4866f8448f27cdc610e5b5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <SelfHips>k__BackingField: {fileID: 4189387454735673703}
-  <TrailRenderer>k__BackingField: {fileID: 1001970537107957870}
 --- !u!114 &4441170922653464387
 MonoBehaviour:
   m_ObjectHideFlags: 0
