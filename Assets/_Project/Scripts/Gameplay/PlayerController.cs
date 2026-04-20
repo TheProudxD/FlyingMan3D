@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
@@ -13,6 +12,10 @@ namespace _Project.Scripts.Gameplay
     /// Main player controller that orchestrates player behavior through specialized components.
     /// Acts as a facade for movement, launch, death, and initialization logic.
     /// </summary>
+    [RequireComponent(typeof(PlayerMovementController))]
+    [RequireComponent(typeof(PlayerLaunchController))]
+    [RequireComponent(typeof(PlayerDeathHandler))]
+    [RequireComponent(typeof(PlayerInitializer))]
     public class PlayerController : MonoBehaviour
     {
         [Inject] private GameFactory _gameFactory;
@@ -22,17 +25,11 @@ namespace _Project.Scripts.Gameplay
         [Inject] private AudioService _audioService;
         [Inject] private IPersistentProgressService _persistentProgressService;
 
-        // Component references
         private PlayerMovementController _movementController;
         private PlayerLaunchController _launchController;
         private PlayerDeathHandler _deathHandler;
         private PlayerInitializer _initializer;
-        private Rigidbody _fallbackHips;
-        private Rigidbody[] _fallbackBodies;
-        private Animator _fallbackAnimator;
-        private TrailRenderer _fallbackTrailRenderer;
 
-        // State
         private bool _enabled;
         private float _maxLaunchSpeed;
         private float _movementSpeed;
@@ -40,34 +37,25 @@ namespace _Project.Scripts.Gameplay
         private Vector3 _launchInitialPosition;
 
         // Public properties for backward compatibility
-        public Rigidbody SelfHips => _initializer?.HipsRigidbody ?? (_fallbackHips ??= GetComponentInChildren<Rigidbody>(true));
-        public TrailRenderer TrailRenderer =>
-            _initializer?.TrailRenderer ?? (_fallbackTrailRenderer ??= GetComponentInChildren<TrailRenderer>(true));
-        public Rigidbody[] Bodies => _initializer?.Bodies ?? (_fallbackBodies ??= GetComponentsInChildren<Rigidbody>(true));
-        public Animator Animator => _initializer?.Animator ?? (_fallbackAnimator ??= GetComponent<Animator>());
+        public Rigidbody SelfHips => _initializer?.HipsRigidbody;
+        public TrailRenderer TrailRenderer => _initializer?.TrailRenderer;
+        public Rigidbody[] Bodies => _initializer?.Bodies;
+        public Animator Animator => _initializer?.Animator;
 
         public bool IsPassed { get; set; }
         public bool IsTarget { get; set; }
         public bool IsDie { get; private set; }
 
-        public void MarkAsDead()
-        {
-            IsDie = true;
-            IsTarget = false;
-        }
-
         private void Awake()
         {
-            // Ensure required components exist even if prefab has not been updated after refactor.
-            _movementController = GetComponent<PlayerMovementController>() ?? gameObject.AddComponent<PlayerMovementController>();
-            _launchController = GetComponent<PlayerLaunchController>() ?? gameObject.AddComponent<PlayerLaunchController>();
-            _deathHandler = GetComponent<PlayerDeathHandler>() ?? gameObject.AddComponent<PlayerDeathHandler>();
-            _initializer = GetComponent<PlayerInitializer>() ?? gameObject.AddComponent<PlayerInitializer>();
+            _movementController = GetComponent<PlayerMovementController>();
+            _launchController = GetComponent<PlayerLaunchController>();
+            _deathHandler = GetComponent<PlayerDeathHandler>();
+            _initializer = GetComponent<PlayerInitializer>();
         }
 
         private void Start()
         {
-            // Initialize components if they exist
             if (_initializer != null)
             {
                 _initializer.Initialize(_gameFactory, _uiFactory, _playerFactory, this);
@@ -238,6 +226,12 @@ namespace _Project.Scripts.Gameplay
             {
                 _initializer.SetupInitialState();
             }
+        }
+        
+        public void MarkAsDead()
+        {
+            IsDie = true;
+            IsTarget = false;
         }
     }
 }
