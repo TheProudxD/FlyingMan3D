@@ -5,7 +5,6 @@ using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Localization.SO;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using YG;
 
 namespace _Project.Scripts.Infrastructure.Services.Localization
 {
@@ -72,7 +71,9 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
             if (_currentCollection == null)
             {
                 _currentCollection = await _assetProvider.GetLocal(Current);
-                return null;
+
+                if (_currentCollection == null)
+                    return null;
             }
 
             string text = _currentCollection.Localize(key);
@@ -93,10 +94,6 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
             return string.IsNullOrEmpty(text) ? null : text.ToUpper();
         }
 
-        public void DefineLanguage()
-        {
-            SwitchLanguage("ru");
-            // SwitchLanguage(YG2.lang);
-        }
+        public void DefineLanguage() => _ = SetLocale(Application.systemLanguage);
     }
 }

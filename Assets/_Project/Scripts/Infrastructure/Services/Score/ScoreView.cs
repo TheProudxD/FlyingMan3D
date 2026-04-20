@@ -8,15 +8,21 @@ namespace _Project.Scripts.UI.Views
 
         public override void Initialize()
         {
-            // _score = GameFactory.GetScore();
-            _score.Value.ChangedWithOld += OnScoreChanged;
-
             DisplayDefaultScore();
         }
 
-        private void OnDestroy()
+        public void Bind(Score score)
         {
-            _score.Value.ChangedWithOld -= OnScoreChanged;
+            if (ReferenceEquals(_score, score))
+            {
+                DisplayDefaultScore();
+                return;
+            }
+
+            Unsubscribe();
+            _score = score;
+            Subscribe();
+            DisplayDefaultScore();
         }
 
         protected override void DisplayDefaultScore()
@@ -34,5 +40,23 @@ namespace _Project.Scripts.UI.Views
         private void OnScoreChanged(int oldScore, int score) =>
             AnimationService.ResourceChanged(transform, oldScore, score, IncrementDuration,
                 x => Text.SetText(x.ToString(@"mm\:ss")));
+
+        private void OnDestroy() => Unsubscribe();
+
+        private void Subscribe()
+        {
+            if (_score == null)
+                return;
+
+            _score.Value.ChangedWithOld += OnScoreChanged;
+        }
+
+        private void Unsubscribe()
+        {
+            if (_score == null)
+                return;
+
+            _score.Value.ChangedWithOld -= OnScoreChanged;
+        }
     }
 }

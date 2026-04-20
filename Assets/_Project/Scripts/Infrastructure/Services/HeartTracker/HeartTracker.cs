@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Views;
 
 namespace _Project.Scripts.Gameplay
@@ -24,8 +25,8 @@ namespace _Project.Scripts.Gameplay
 
         public void Initialize()
         {
-            //_view = _uiFactory.GetHUD().LivesTrackerView;
-            //DisplayHearts();
+            TryBindView();
+            DisplayDefaultHearts();
         }
 
         private void DecreaseHeart()
@@ -40,7 +41,28 @@ namespace _Project.Scripts.Gameplay
                 OnHeartsEnded?.Invoke();
         }
 
-        private void DisplayHearts() => _view.DisplayHearts(_heartCounter);
+        private void DisplayHearts()
+        {
+            if (TryBindView() == false)
+                return;
+
+            _view.DisplayHearts(_heartCounter);
+        }
+
+        private bool TryBindView()
+        {
+            if (_view != null)
+                return true;
+
+            Hud hud = _uiFactory.GetHUD();
+
+            if (hud == null)
+                return false;
+
+            _view = hud.GetComponentInChildren<LivesTrackerView>(true);
+
+            return _view != null;
+        }
 
         public void DisplayDefaultHearts()
         {

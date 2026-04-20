@@ -1,7 +1,6 @@
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using YG;
 
 namespace _Project.Scripts.Infrastructure.Services
 {
@@ -39,7 +38,7 @@ namespace _Project.Scripts.Infrastructure.Services
             //     _assetProvider.CreatePostProcessVolume();
             // }
 
-            //ConfigurePlatformSpecificFeatures();
+            ConfigurePlatformSpecificFeatures();
         }
 
         private void ConfigurePlatformSpecificFeatures()
@@ -56,15 +55,18 @@ namespace _Project.Scripts.Infrastructure.Services
 
         private bool IsMobileDevice()
         {
-            return true;
-            // return YG2.envir.isMobile || YG2.envir.isTablet;
+            if (Application.isMobilePlatform)
+                return true;
+
+            return SystemInfo.deviceType == DeviceType.Handheld;
         }
 
         private bool IsDesktop()
         {
-            return false;
+            if (Application.isEditor)
+                return true;
 
-            // return YG2.envir.isDesktop;
+            return SystemInfo.deviceType == DeviceType.Desktop;
         }
 
         private bool PerformanceIsLow() => 1.0f / Time.deltaTime < 30; // FPS ниже 30
