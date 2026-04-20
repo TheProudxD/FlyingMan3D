@@ -8,6 +8,7 @@ using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using _Project.Scripts.Gameplay;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {

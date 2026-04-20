@@ -18,6 +18,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityUtils;
 using Object = UnityEngine.Object;
+using _Project.Scripts.Gameplay;
 
 namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 {

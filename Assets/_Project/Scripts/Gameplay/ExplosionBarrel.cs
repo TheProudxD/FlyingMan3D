@@ -3,6 +3,7 @@ using _Project.Scripts.Infrastructure.Services.Audio;
 using LitMotion;
 using Reflex.Attributes;
 using UnityEngine;
+using _Project.Scripts.Gameplay;
 
 public class ExplosionBarrel : MonoBehaviour
 {

@@ -9,6 +9,7 @@ using _Project.Scripts.Tools.Coroutine;
 using _Project.Scripts.UI.Windows;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using _Project.Scripts.Gameplay;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {

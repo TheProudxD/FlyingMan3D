@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using UnityEngine;
+using _Project.Scripts.Gameplay;
 
 public abstract class EnemyBase : MonoBehaviour
 {

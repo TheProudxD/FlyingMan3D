@@ -2,6 +2,7 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
+using _Project.Scripts.Gameplay;
 
 public class MultiplierRing : RingBase
 {

@@ -9,6 +9,7 @@ using UnityEngine;
 using YG;
 using Random = UnityEngine.Random;
 using Cysharp.Threading.Tasks;
+using _Project.Scripts.Gameplay;
 
 public class PlayerFinishMover : MonoBehaviour
 {
