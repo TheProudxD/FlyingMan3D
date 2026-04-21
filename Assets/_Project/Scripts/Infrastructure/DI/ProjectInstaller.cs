@@ -51,8 +51,6 @@ namespace _Project.Scripts.Infrastructure.DI
             BindGameplayServices(builder);
             builder.AddSingleton(typeof(LevelLifecycleService));
 
-            // builder.AddScoped(typeof(AudioLoader));
-
             builder.OnContainerBuilt += c =>
             {
                 c.Resolve<ConfigService>();
@@ -111,7 +109,6 @@ namespace _Project.Scripts.Infrastructure.DI
             builder.AddSingleton(typeof(MoneyResourceService));
             builder.AddSingleton(typeof(AnimationService));
             builder.AddSingleton(typeof(SceneLoader));
-            builder.AddSingleton(typeof(HeartTracker));
 
             builder.AddSingleton(c =>
             {

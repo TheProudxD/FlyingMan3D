@@ -28,7 +28,6 @@ namespace _Project.Scripts.UI.Windows
         [Inject] private MetricService _metricService;
         [Inject] private ConfigService _configService;
         [Inject] private UIFactory _uiFactory;
-        [Inject] private HeartTracker _heartTracker;
         [Inject] private LevelResourceService _levelResourceService;
         [Inject] private MoneyResourceService _moneyResourceService;
         [Inject] private GameFactory _gameFactory;

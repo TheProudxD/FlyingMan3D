@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Config;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Localization;
-using _Project.Scripts.Tools.Coroutine;
 using _Project.Scripts.UI;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -25,7 +22,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
         private readonly AudioService _audioService;
         private readonly GameFactory _gameFactory;
         private readonly AdsService _adsService;
-        // private readonly AudioLoader _audioLoader;
 
         private StateMachine _stateMachine;
 
@@ -58,8 +54,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
             await _assetProvider.Initialize();
             await _configService.Initialize();
             await _audioService.Initialize();
-
-            // Coroutines.StartRoutine(_audioLoader.Load());
 
             _localizationService.DefineLanguage();
             await _graphicsService.DefineGraphicsSettings();
