@@ -1,10 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using _Project.Scripts.Infrastructure.Services.Audio;
-using _Project.Scripts.Infrastructure.Services.Factories;
-using _Project.Scripts.Infrastructure.Services.PersistentProgress;
-using _Project.Scripts.UI;
-using Reflex.Attributes;
 
 namespace _Project.Scripts.Gameplay
 {
@@ -18,21 +13,12 @@ namespace _Project.Scripts.Gameplay
     [RequireComponent(typeof(PlayerInitializer))]
     public class PlayerController : MonoBehaviour
     {
-        [Inject] private GameFactory _gameFactory;
-        [Inject] private UIFactory _uiFactory;
-        [Inject] private FxFactory _fxFactory;
-        [Inject] private PlayerFactory _playerFactory;
-        [Inject] private AudioService _audioService;
-        [Inject] private IPersistentProgressService _persistentProgressService;
-
         [SerializeField] private PlayerMovementController _movementController;
         [SerializeField] private PlayerLaunchController _launchController;
         [SerializeField] private PlayerDeathHandler _deathHandler;
         [SerializeField] private PlayerInitializer _initializer;
 
         private bool _enabled;
-        private float _maxLaunchSpeed;
-        private float _movementSpeed;
         private Transform _launchCapsule;
         private Vector3 _launchInitialPosition;
 
@@ -52,14 +38,8 @@ namespace _Project.Scripts.Gameplay
 
         private void Start()
         {
-            if (_initializer != null)
-            {
-                _initializer.Initialize(_gameFactory, _uiFactory, _playerFactory, this);
-            }
-
             _movementController?.Configure(SelfHips);
 
-            // Initialize specialized controllers
             InitializeMovementController();
             InitializeLaunchController();
             InitializeDeathHandler();
@@ -68,61 +48,34 @@ namespace _Project.Scripts.Gameplay
         private void InitializeMovementController()
         {
             if (_movementController != null && _initializer != null)
-            {
-                _movementController.Initialize(Bodies, GetMovementSpeed());
-            }
+                _movementController.Initialize(Bodies, _initializer.GetMovementSpeed());
         }
 
         private void InitializeLaunchController()
         {
             if (_launchController != null && _initializer != null)
-            {
-                if (_launchCapsule == null)
-                    return;
-
-                Hud hud = _uiFactory.GetHUD();
-                Spawner spawner = _gameFactory.GetSpawner();
-
                 _launchController.Initialize(
                     Bodies,
                     _launchCapsule,
-                    _launchInitialPosition,
-                    hud,
-                    _audioService,
-                    spawner,
-                    _maxLaunchSpeed
+                    _launchInitialPosition
                 );
-            }
         }
 
         private void InitializeDeathHandler()
         {
             if (_deathHandler != null && _initializer != null)
-            {
-                _deathHandler.Initialize(
-                    SelfHips,
-                    _fxFactory,
-                    _playerFactory,
-                    this
-                );
-            }
+                _deathHandler.Initialize(SelfHips, this);
         }
 
         public void Initialize(float maxLaunchSpeed, float movementSpeed)
         {
             _enabled = true;
-            _maxLaunchSpeed = maxLaunchSpeed;
-            _movementSpeed = movementSpeed;
 
             if (_movementController != null)
-            {
-                _movementController.SetMovementSpeed(_movementSpeed);
-            }
+                _movementController.SetMovementSpeed(movementSpeed);
 
             if (_launchController != null)
-            {
-                _launchController.UpdateMaxLaunchSpeed(_maxLaunchSpeed);
-            }
+                _launchController.UpdateMaxLaunchSpeed(maxLaunchSpeed);
         }
 
         public void Disable()
@@ -139,28 +92,20 @@ namespace _Project.Scripts.Gameplay
             _launchCapsule = capsule;
             _launchInitialPosition = capsule != null ? capsule.position : Vector3.zero;
 
-            // Update launch controller with capsule and initial position
             if (_launchController != null)
             {
                 _launchController.Initialize(
                     Bodies,
                     _launchCapsule,
-                    _launchInitialPosition,
-                    _uiFactory.GetHUD(),
-                    _audioService,
-                    _gameFactory.GetSpawner(),
-                    _maxLaunchSpeed
+                    _launchInitialPosition
                 );
             }
         }
 
-        public float GetMovementSpeed() => _persistentProgressService.PowerupProgress.flyingControl;
-
         public void Initialize()
         {
-            float maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
-            float movementSpeed = GetMovementSpeed();
-            Initialize(maxLaunchSpeed, movementSpeed);
+            if (_initializer != null)
+                Initialize(_initializer.GetMaxLaunchSpeed(), _initializer.GetMovementSpeed());
         }
 
         public void CheckForHeight()
@@ -183,7 +128,6 @@ namespace _Project.Scripts.Gameplay
             if (!_enabled)
                 return;
 
-            // Delegate death checking to death handler
             if (_deathHandler != null)
             {
                 _deathHandler.CheckForDeath();
@@ -192,7 +136,6 @@ namespace _Project.Scripts.Gameplay
 
         public IEnumerator ApplyLaunchForce(float factor)
         {
-            // Delegate to launch controller
             if (_launchController != null)
             {
                 return _launchController.ApplyLaunchForce(factor);
@@ -209,10 +152,7 @@ namespace _Project.Scripts.Gameplay
             }
             else
             {
-                // Fallback for backward compatibility
-                IsDie = true;
-                IsTarget = false;
-                _playerFactory.RemovePlayer(this);
+                MarkAsDead();                
             }
         }
 

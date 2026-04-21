@@ -2,7 +2,9 @@ using System.Collections;
 using UnityEngine;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.Audio;
+using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.UI;
+using Reflex.Attributes;
 
 namespace _Project.Scripts.Gameplay
 {
@@ -12,12 +14,12 @@ namespace _Project.Scripts.Gameplay
     /// </summary>
     public class PlayerLaunchController : MonoBehaviour
     {
+        [Inject] private UIFactory _uiFactory;
+        [Inject] private GameFactory _gameFactory;
+        [Inject] private AudioService _audioService;
+
         [SerializeField] private float _launchAnimationDuration = 0.8f;
         [SerializeField] private float _retractAnimationDuration = 0.1f;
-
-        private Hud _hud;
-        private AudioService _audioService;
-        private Spawner _spawner;
 
         private Rigidbody[] _bodies;
         private Transform _capsule;
@@ -27,29 +29,22 @@ namespace _Project.Scripts.Gameplay
         public void Initialize(
             Rigidbody[] bodies,
             Transform capsule,
-            Vector3 initialPos,
-            Hud hud,
-            AudioService audioService,
-            Spawner spawner,
-            float maxLaunchSpeed)
+            Vector3 initialPos)
         {
             _bodies = bodies;
             _capsule = capsule;
             _initialPos = initialPos;
-            _hud = hud;
-            _audioService = audioService;
-            _spawner = spawner;
-            _maxLaunchSpeed = maxLaunchSpeed;
         }
 
         public void UpdateMaxLaunchSpeed(float speed) => _maxLaunchSpeed = speed;
 
         public IEnumerator ApplyLaunchForce(float factor)
         {
-            if (_hud != null)
+            Hud hud = _uiFactory?.GetHUD();
+            if (hud != null)
             {
-                _hud.Show();
-                _hud.DeactivateStartText();
+                hud.Show();
+                hud.DeactivateStartText();
             }
 
             if (_audioService != null)
@@ -96,9 +91,10 @@ namespace _Project.Scripts.Gameplay
             }
 
             // Spawn objects if launch force is significant
-            if (factor > 0.1f && _spawner != null && !_spawner.HasSpawnedLevelObjects)
+            Spawner spawner = _gameFactory?.GetSpawner();
+            if (factor > 0.1f && spawner != null && !spawner.HasSpawnedLevelObjects)
             {
-                _spawner.SpawnObjects(_bodies[0]?.linearVelocity ?? Vector3.zero);
+                spawner.SpawnObjects(_bodies[0]?.linearVelocity ?? Vector3.zero);
             }
         }
     }

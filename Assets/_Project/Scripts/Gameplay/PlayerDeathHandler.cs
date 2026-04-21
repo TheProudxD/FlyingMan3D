@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using Reflex.Attributes;
 
 namespace _Project.Scripts.Gameplay
 {
@@ -10,24 +11,19 @@ namespace _Project.Scripts.Gameplay
     /// </summary>
     public class PlayerDeathHandler : MonoBehaviour
     {
+        [Inject] private FxFactory _fxFactory;
+        [Inject] private PlayerFactory _playerFactory;
+
         [SerializeField] private float _dieHeight = -5f;
 
-        private FxFactory _fxFactory;
-        private PlayerFactory _playerFactory;
         private PlayerController _playerController;
 
         private Rigidbody _hipsRigidbody;
         private bool _isDead;
 
-        public void Initialize(
-            Rigidbody hipsRigidbody,
-            FxFactory fxFactory,
-            PlayerFactory playerFactory,
-            PlayerController playerController)
+        public void Initialize(Rigidbody hipsRigidbody, PlayerController playerController)
         {
             _hipsRigidbody = hipsRigidbody;
-            _fxFactory = fxFactory;
-            _playerFactory = playerFactory;
             _playerController = playerController;
         }
 

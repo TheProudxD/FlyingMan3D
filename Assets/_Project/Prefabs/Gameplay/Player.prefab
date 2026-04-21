@@ -2398,6 +2398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b757f0b29a74af4ebdb58a5bcca5adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerController: {fileID: 9154461922809862172}
   _hipsRigidbody: {fileID: 4189387454735673703}
   _trailRenderer: {fileID: 1001970537107957870}
   _bodies:

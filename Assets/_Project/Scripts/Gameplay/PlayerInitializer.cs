@@ -1,6 +1,7 @@
 using UnityEngine;
 using _Project.Scripts.Infrastructure.Services.Factories;
-using _Project.Scripts.UI;
+using _Project.Scripts.Infrastructure.Services.PersistentProgress;
+using Reflex.Attributes;
 
 namespace _Project.Scripts.Gameplay
 {
@@ -10,50 +11,36 @@ namespace _Project.Scripts.Gameplay
     /// </summary>
     public class PlayerInitializer : MonoBehaviour
     {
+        [Inject] private GameFactory _gameFactory;
+        [Inject] private IPersistentProgressService _persistentProgressService;
+
+        [SerializeField] private PlayerController _playerController;
         [SerializeField] private Rigidbody _hipsRigidbody;
         [SerializeField] private TrailRenderer _trailRenderer;
         [SerializeField] private Rigidbody[] _bodies;
         [SerializeField] private Animator _animator;
 
-        private GameFactory _gameFactory;
-        private UIFactory _uiFactory;
-        private PlayerFactory _playerFactory;
-        private PlayerController _playerController;
-        private bool _isInitialized;
-
         private void Awake() => CacheReferences();
 
         private void OnValidate() => CacheReferences();
 
-        public void Initialize(
-            GameFactory gameFactory,
-            UIFactory uiFactory,
-            PlayerFactory playerFactory,
-            PlayerController playerController)
-        {
-            if (_isInitialized)
-                return;
-
-            _gameFactory = gameFactory;
-            _uiFactory = uiFactory;
-            _playerFactory = playerFactory;
-            _playerController = playerController;
-
-            _isInitialized = true;
-        }
-
         public void SetupInitialState()
         {
-            float maxLaunchSpeed = _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
-            float movementSpeed = _playerController.GetMovementSpeed();
+            if (_playerController == null)
+                return;
 
-            _playerController.Initialize(maxLaunchSpeed, movementSpeed);
+            _playerController.Initialize(GetMaxLaunchSpeed(), GetMovementSpeed());
         }
 
         public void SetInitialJoint(FixedJoint joint, Transform capsule)
         {
-            _playerController.SetInitial(joint, capsule);
+            if (_playerController != null)
+                _playerController.SetInitial(joint, capsule);
         }
+
+        public float GetMovementSpeed() => _persistentProgressService.PowerupProgress.flyingControl;
+
+        public float GetMaxLaunchSpeed() => _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
 
         // Public accessors for other components
         public Rigidbody HipsRigidbody
@@ -77,6 +64,7 @@ namespace _Project.Scripts.Gameplay
 
         private void CacheReferences()
         {
+            _playerController ??= GetComponent<PlayerController>();
             _animator ??= GetComponent<Animator>();
 
             if (_bodies == null || _bodies.Length == 0)
