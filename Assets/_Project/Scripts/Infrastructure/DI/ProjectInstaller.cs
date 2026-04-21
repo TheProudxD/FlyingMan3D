@@ -128,7 +128,11 @@ namespace _Project.Scripts.Infrastructure.DI
             });
         }
 
-        private void BindAudio(ContainerBuilder builder) => builder.AddSingleton(typeof(AudioService));
+        private void BindAudio(ContainerBuilder builder)
+        {
+            builder.AddSingleton(typeof(AudioClipLoader));
+            builder.AddSingleton(typeof(AudioService));
+        }
 
         private void BindFactories(ContainerBuilder builder)
         {
@@ -152,7 +156,11 @@ namespace _Project.Scripts.Infrastructure.DI
             builder.AddSingleton(typeof(ReplayLevelState));
         }
 
-        private void BindAssets(ContainerBuilder builder) => builder.AddSingleton(typeof(AssetProvider));
+        private void BindAssets(ContainerBuilder builder)
+        {
+            builder.AddSingleton(typeof(AssetProvider));
+            builder.AddSingleton(typeof(SpriteAtlasLoader));
+        }
 
         private void BindCamera(ContainerBuilder builder) => builder.AddSingleton(c =>
         {

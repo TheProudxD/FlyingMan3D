@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Config;
 using Cysharp.Threading.Tasks;
@@ -11,14 +9,16 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
     {
         private readonly AssetProvider _assetProvider;
         private readonly ConfigService _configService;
+        private readonly AudioClipLoader _audioClipLoader;
 
         private AudioConfig _audioConfig;
         private AudioServiceView _audioServiceView;
 
-        public AudioService(AssetProvider assetProvider, ConfigService configService)
+        public AudioService(AssetProvider assetProvider, ConfigService configService, AudioClipLoader audioClipLoader)
         {
             _assetProvider = assetProvider;
             _configService = configService;
+            _audioClipLoader = audioClipLoader;
         }
 
         public async UniTask Initialize()
@@ -48,6 +48,22 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
         // public void PlayMusic() => _audioServiceView.PlaySound(_audioConfig.Music);
 
         public void PlayMusic(AudioClip music) => _audioServiceView.PlayMusic(music);
+
+        public async UniTask PlaySound(string clipKey)
+        {
+            AudioClip clip = await _audioClipLoader.LoadSound(clipKey);
+
+            if (clip != null)
+                _audioServiceView.PlaySound(clip);
+        }
+
+        public async UniTask PlayMusic(string clipKey)
+        {
+            AudioClip clip = await _audioClipLoader.LoadMusic(clipKey);
+
+            if (clip != null)
+                _audioServiceView.PlayMusic(clip);
+        }
 
         public void MuteSound() => _audioServiceView.DisableSounds();
 

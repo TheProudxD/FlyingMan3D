@@ -1,141 +1,98 @@
-﻿using System.Collections;
-using _Project.Scripts.Infrastructure.Services;
+using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
-using UnityEngine.Networking;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.U2D;
 
-namespace _Project.Scripts.Infrastructure.FSM.States
+namespace _Project.Scripts.Infrastructure.Services
 {
-    public class SpriteAtlasLoader : IService
+    public class SpriteAtlasLoader : IService, System.IDisposable
     {
-#pragma warning disable CS0414 // Field is assigned but its value is never used
-        private readonly string _atlasPathInStreamingAssets = "Atlases/Game.spriteatlas";
-#pragma warning restore CS0414 // Field is assigned but its value is never used
-
+        private AsyncOperationHandle<SpriteAtlas>? _atlasHandle;
         private SpriteAtlas _loadedAtlas;
+        private string _loadedAtlasKey;
 
-/*
-        public IEnumerator Load()
+        public bool IsLoaded => _loadedAtlas != null;
+        public string LoadedAtlasKey => _loadedAtlasKey;
+
+        public async UniTask<SpriteAtlas> Load(string atlasKey, bool forceReload = false)
         {
-
-            string path = GetStreamingAssetsPath(_atlasPathInStreamingAssets);
-
-            using UnityWebRequest webRequest = UnityWebRequestAssetBundle.GetAssetBundle(path);
-
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.result != UnityWebRequest.Result.Success)
+            if (string.IsNullOrWhiteSpace(atlasKey))
             {
-                Debug.LogError($"Failed to load AssetBundle: {webRequest.error}");
-                yield break;
+                Debug.LogError("[SpriteAtlasLoader] Atlas key is null or empty.");
+                return null;
             }
 
-            AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(webRequest);
+            if (!forceReload && _loadedAtlas != null && _loadedAtlasKey == atlasKey)
+                return _loadedAtlas;
 
-            if (bundle == null)
+            Release();
+
+            try
             {
-                Debug.LogError("Failed to extract AssetBundle");
-                yield break;
+                AsyncOperationHandle<SpriteAtlas> handle = Addressables.LoadAssetAsync<SpriteAtlas>(atlasKey);
+                _atlasHandle = handle;
+
+                SpriteAtlas atlas = await handle.Task.AsUniTask();
+
+                if (atlas == null)
+                {
+                    Debug.LogError($"[SpriteAtlasLoader] Failed to load atlas by key '{atlasKey}'.");
+                    Release();
+                    return null;
+                }
+
+                _loadedAtlas = atlas;
+                _loadedAtlasKey = atlasKey;
+                return _loadedAtlas;
             }
+            catch (Exception exception)
+            {
+                Debug.LogError($"[SpriteAtlasLoader] Failed to load atlas '{atlasKey}': {exception.Message}");
+                Release();
+                return null;
+            }
+        }
 
-            var atlasRequest =
-                bundle.LoadAssetAsync<SpriteAtlas>(
-                    System.IO.Path.GetFileNameWithoutExtension(_atlasPathInStreamingAssets));
-
-            yield return atlasRequest;
-
-            _loadedAtlas = atlasRequest.asset as SpriteAtlas;
+        public bool TryGetSprite(string spriteName, out Sprite sprite)
+        {
+            sprite = null;
 
             if (_loadedAtlas == null)
             {
-                Debug.LogError("Failed to load SpriteAtlas from AssetBundle");
-            }
-            else
-            {
-                Debug.Log("SpriteAtlas loaded successfully!");
-                // Здесь можно использовать атлас
+                Debug.LogWarning("[SpriteAtlasLoader] SpriteAtlas is not loaded yet.");
+                return false;
             }
 
-            bundle.Unload(false);
+            sprite = _loadedAtlas.GetSprite(spriteName);
+
+            if (sprite == null)
+            {
+                Debug.LogWarning(
+                    $"[SpriteAtlasLoader] Sprite '{spriteName}' was not found in atlas '{_loadedAtlasKey}'.");
+                return false;
+            }
+
+            return true;
         }
-*/
+
         public Sprite GetSprite(string spriteName)
         {
-            if (_loadedAtlas != null)
-                return _loadedAtlas.GetSprite(spriteName);
-
-            Debug.LogWarning("SpriteAtlas not loaded yet");
-            return null;
+            TryGetSprite(spriteName, out Sprite sprite);
+            return sprite;
         }
 
-        // public IEnumerator Load()
-        // {
-        //     string path = GetStreamingAssetsPath(_atlasPathInStreamingAssets);
-        //
-        //     using UnityWebRequest webRequest = UnityWebRequest.Get(path);
-        //
-        //     yield return webRequest?.SendWebRequest();
-        //
-        //     if (webRequest == null)
-        //         yield break;
-        //
-        //     if (webRequest.result is UnityWebRequest.Result.ConnectionError or UnityWebRequest.Result.ProtocolError)
-        //     {
-        //         Debug.LogError("Error loading sprite atlas: " + webRequest.error);
-        //         yield break;
-        //     }
-        //
-        //     AssetBundleCreateRequest bundleCreateRequest =
-        //         AssetBundle.LoadFromMemoryAsync(webRequest.downloadHandler.data);
-        //
-        //     yield return bundleCreateRequest;
-        //
-        //     AssetBundle bundle = bundleCreateRequest.assetBundle;
-        //
-        //     if (bundle == null)
-        //     {
-        //         Debug.LogError("Failed to load AssetBundle");
-        //         yield break;
-        //     }
-        //
-        //     var atlasRequest =
-        //         bundle.LoadAssetAsync<SpriteAtlas>(
-        //             System.IO.Path.GetFileNameWithoutExtension(_atlasPathInStreamingAssets));
-        //
-        //     yield return atlasRequest;
-        //
-        //     SpriteAtlas loadedAtlas = atlasRequest.asset as SpriteAtlas;
-        //
-        //     if (loadedAtlas == null)
-        //     {
-        //         Debug.LogError("Failed to load SpriteAtlas from AssetBundle");
-        //     }
-        //     // else
-        //     // {
-        //     //     // Здесь вы можете использовать загруженный атлас
-        //     //     Debug.Log("Sprite atlas loaded successfully!");
-        //     //
-        //     //     // Пример: получить спрайт из атласа
-        //     //     Sprite sprite = loadedAtlas.GetSprite("SpriteName");
-        //     //
-        //     //     if (sprite != null)
-        //     //     {
-        //     //         // Применить спрайт к объекту
-        //     //         GetComponent<SpriteRenderer>().sprite = sprite;
-        //     //     }
-        //     // }
-        //
-        //     // Выгружаем бандл
-        //     bundle.Unload(false);
-        // }
-
-        private string GetStreamingAssetsPath(string relativePath)
+        public void Release()
         {
-#if UNITY_WEBGL && !UNITY_EDITOR
-            return Application.absoluteURL + "StreamingAssets/" + relativePath;
-#else
-            return System.IO.Path.Combine(Application.streamingAssetsPath, relativePath);
-#endif
+            if (_atlasHandle.HasValue && _atlasHandle.Value.IsValid())
+                Addressables.Release(_atlasHandle.Value);
+
+            _atlasHandle = null;
+            _loadedAtlas = null;
+            _loadedAtlasKey = null;
         }
+
+        public void Dispose() => Release();
     }
 }
