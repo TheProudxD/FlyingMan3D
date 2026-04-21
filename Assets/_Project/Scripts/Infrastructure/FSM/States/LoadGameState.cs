@@ -12,7 +12,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 {
     public class LoadGameState : IState
     {
-        private readonly IPersistentProgressService _progressService;
         private readonly SaveLoadService _saveLoadService;
         private readonly GameFactory _gameFactory;
         private readonly UIFactory _uiFactory;
@@ -20,10 +19,9 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         private StateMachine _stateMachine;
 
-        public LoadGameState(IPersistentProgressService progressService, SaveLoadService saveLoadService,
-            GameFactory gameFactory, UIFactory uiFactory, WindowService windowService)
+        public LoadGameState(SaveLoadService saveLoadService, GameFactory gameFactory, UIFactory uiFactory,
+            WindowService windowService)
         {
-            _progressService = progressService;
             _saveLoadService = saveLoadService;
             _gameFactory = gameFactory;
             _uiFactory = uiFactory;
@@ -38,9 +36,7 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
         private async UniTask LoadProgressAsync()
         {
-            var progress = _saveLoadService.LoadProgress();
-            _progressService.Progress = progress.Item1;
-            _progressService.PowerupProgress = progress.Item2;
+            _saveLoadService.LoadProgress();
 
             await _gameFactory.Initialize();
             await _uiFactory.Initialize();
