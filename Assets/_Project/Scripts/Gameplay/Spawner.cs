@@ -42,10 +42,13 @@ namespace _Project.Scripts.Gameplay
         private float _zPos;
         private int _index;
 
+        public bool HasSpawnedLevelObjects { get; private set; }
+
         public UniTask Initialize()
         {
             int level = _levelResourceService.Current.Value;
             _index = level % _colorArray.Length;
+            HasSpawnedLevelObjects = false;
 
             _gameFactory.GetPlatform().GetComponent<Renderer>().sharedMaterial.color = _colorArray[_index].PlatformColor;
 
@@ -57,6 +60,10 @@ namespace _Project.Scripts.Gameplay
 
         private async UniTask SpawnObjectsAsync(Vector3 velocity)
         {
+            if (HasSpawnedLevelObjects)
+                return;
+
+            HasSpawnedLevelObjects = true;
             _velY = velocity.y;
             _velZ = velocity.z;
             _averageTime = _velY / _g;

@@ -96,7 +96,7 @@ namespace _Project.Scripts.Gameplay
             }
 
             // Spawn objects if launch force is significant
-            if (factor > 0.1f && _spawner != null)
+            if (factor > 0.1f && _spawner != null && !_spawner.HasSpawnedLevelObjects)
             {
                 _spawner.SpawnObjects(_bodies[0]?.linearVelocity ?? Vector3.zero);
             }

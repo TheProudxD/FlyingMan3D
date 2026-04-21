@@ -145,7 +145,6 @@ MonoBehaviour:
   _tapToPlayText: {fileID: 4655598911081570634}
   _moneyNumber: {fileID: 7049674364218269101}
   _skipLevelButton: {fileID: 504070141384020001}
-  _livesTrackerView: {fileID: 0}
   <TapToThrow>k__BackingField: {fileID: 3761288916343626273}
   <PowerupShop>k__BackingField: {fileID: 5632969708968516983}
 --- !u!1 &3761288916343626273
