@@ -1,9 +1,7 @@
-using System;
 using _Project.Scripts.Infrastructure.Services;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
-using YG;
 
 namespace _Project.Scripts.UI.Windows
 {
