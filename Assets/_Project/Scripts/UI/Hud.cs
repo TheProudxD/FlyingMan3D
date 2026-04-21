@@ -23,7 +23,7 @@ namespace _Project.Scripts.UI
         [SerializeField] private TMP_Text _playersNumberText;
         [SerializeField] private TMP_Text _tapToPlayText;
         [SerializeField] private GameObject _moneyNumber;
-        // [SerializeField] private MoreGamesButton _moreGamesButton;
+        [SerializeField] private MoreGamesButton _moreGamesButton;
         [SerializeField] private SkipLevelButton _skipLevelButton;
         private bool _showSkipLevelButton;
         private readonly CompositeMotionHandle _compositeMotionHandle = new CompositeMotionHandle();
@@ -89,7 +89,7 @@ namespace _Project.Scripts.UI
             _enemiesNumberText.transform.parent.gameObject.SetActive(false);
             _playersNumberText.transform.parent.gameObject.SetActive(false);
             _moneyNumber.SetActive(true);
-            // _moreGamesButton.Activate();
+            _moreGamesButton?.Activate();
         }
 
         public void DeactivateStartText()
@@ -103,7 +103,7 @@ namespace _Project.Scripts.UI
             _enemiesNumberText.transform.parent.gameObject.SetActive(true);
             _playersNumberText.transform.parent.gameObject.SetActive(true);
             _moneyNumber.SetActive(false);
-            // _moreGamesButton.Deactivate();
+            _moreGamesButton?.Deactivate();
 
             if (_showSkipLevelButton)
             {
