@@ -1278,6 +1278,7 @@ MonoBehaviour:
   _indicator: {fileID: 1835213289}
   _spawner: {fileID: 2037969275}
   _platform: {fileID: 62414990}
+  _localizedLabels: []
 --- !u!114 &1559853104
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -72,7 +72,6 @@ namespace _Project.Scripts.Infrastructure.FSM.States
                 _gameFactory.SetPlayerCamera();
 
                 _metricService.LevelStarted(_levelResourceService.Current.Value);
-                _saveLoadService.InformAll();
                 _loadingCurtain.Hide();
                 _stateMachine.Enter<GameLoopState, IExitableState>(this);
             }

@@ -94,6 +94,6 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
             return string.IsNullOrEmpty(text) ? null : text.ToUpper();
         }
 
-        public void DefineLanguage() => _ = SetLocale(Application.systemLanguage);
+        public void DefineLanguage() => _ = SetDefaultLocale();
     }
 }

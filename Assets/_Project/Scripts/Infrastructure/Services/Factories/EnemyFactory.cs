@@ -9,20 +9,24 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 {
     public class EnemyFactory : IService
     {
-        private readonly LevelLifecycleService _levelLifecycle;
+        private readonly LevelRuntimeObjectFactory _levelRuntimeObjectFactory;
+        private readonly LevelEntityRegistry _levelEntityRegistry;
 
-        public EnemyFactory(LevelLifecycleService levelLifecycle)
+        public EnemyFactory(
+            LevelRuntimeObjectFactory levelRuntimeObjectFactory,
+            LevelEntityRegistry levelEntityRegistry)
         {
-            _levelLifecycle = levelLifecycle;
+            _levelRuntimeObjectFactory = levelRuntimeObjectFactory;
+            _levelEntityRegistry = levelEntityRegistry;
         }
 
         public async UniTask CreateEnemy(EnemyType enemyType, Vector3 position, float rotation)
         {
-            await _levelLifecycle.CreateEnemy(enemyType, position, rotation);
+            await _levelRuntimeObjectFactory.CreateEnemy(enemyType, position, rotation);
         }
 
-        public IReadOnlyList<EnemyBase> GetAllEnemies() => _levelLifecycle.Enemies;
+        public IReadOnlyList<EnemyBase> GetAllEnemies() => _levelEntityRegistry.Enemies;
 
-        public void RemoveEnemy(EnemyBase enemy) => _levelLifecycle.RemoveEnemy(enemy);
+        public void RemoveEnemy(EnemyBase enemy) => _levelEntityRegistry.RemoveEnemy(enemy);
     }
 }

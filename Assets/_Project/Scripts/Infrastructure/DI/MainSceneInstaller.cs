@@ -1,5 +1,4 @@
 using _Project.Scripts.Gameplay;
-using _Project.Scripts.Infrastructure.Services.Debug;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Level;
 using _Project.Scripts.Infrastructure.Services.Localization.UI;
@@ -16,6 +15,7 @@ namespace _Project.Scripts.Infrastructure.DI
         [SerializeField] private Indicator _indicator;
         [SerializeField] private Spawner _spawner;
         [SerializeField] private Platform _platform;
+        [SerializeField] private LocalizedLabel[] _localizedLabels;
 
         public void InstallBindings(ContainerBuilder builder)
         {
@@ -27,8 +27,11 @@ namespace _Project.Scripts.Infrastructure.DI
                 var gameFactory = container.Resolve<GameFactory>();
                 gameFactory.SetSceneRef(sceneRefs);
 
-                var levelLifecycleService = container.Resolve<LevelLifecycleService>();
-                levelLifecycleService.SetSceneRef(sceneRefs);
+                var levelRuntimeObjectFactory = container.Resolve<LevelRuntimeObjectFactory>();
+                levelRuntimeObjectFactory.SetSceneRef(sceneRefs);
+
+                var levelPlayerLifecycleService = container.Resolve<LevelPlayerLifecycleService>();
+                levelPlayerLifecycleService.SetSceneRef(sceneRefs);
 
                 OnContainerBuilt(container);
             };
@@ -36,34 +39,35 @@ namespace _Project.Scripts.Infrastructure.DI
 
         private void OnContainerBuilt(Container container)
         {
-#if UNITY_EDITOR
-            InjectDebug(container);
-#endif
-
             container.Inject(_indicator);
             container.Inject(_spawner);
             container.Inject(_platform);
             InjectLocalizedLabel(container);
         }
 
-        private void InjectDebug(Container container)
-        {
-            DebugController debugController = FindAnyObjectByType<DebugController>();
-
-            if (debugController == null)
-                return;
-
-            container.Inject(debugController);
-        }
-
         private void InjectLocalizedLabel(Container container)
         {
-            LocalizedLabel[] labels = FindObjectsByType<LocalizedLabel>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-
-            foreach (LocalizedLabel label in labels)
+            foreach (LocalizedLabel label in _localizedLabels)
             {
+                if (label == null)
+                    continue;
+
                 container.Inject(label);
             }
+        }
+
+        private void OnValidate()
+        {
+            if (_indicator == null)
+                _indicator = GetComponentInChildren<Indicator>(true);
+
+            if (_spawner == null)
+                _spawner = GetComponentInChildren<Spawner>(true);
+
+            if (_platform == null)
+                _platform = GetComponentInChildren<Platform>(true);
+
+            _localizedLabels = GetComponentsInChildren<LocalizedLabel>(true);
         }
     }
 }

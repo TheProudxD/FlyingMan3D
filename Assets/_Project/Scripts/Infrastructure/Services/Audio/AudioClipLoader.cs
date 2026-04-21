@@ -32,7 +32,7 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
         {
             if (string.IsNullOrWhiteSpace(clipKey))
             {
-                Debug.LogError("[AudioClipLoader] Clip key is null or empty.");
+                UnityEngine.Debug.LogError("[AudioClipLoader] Clip key is null or empty.");
                 return null;
             }
 
@@ -51,7 +51,7 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
 
                 if (clip == null)
                 {
-                    Debug.LogError($"[AudioClipLoader] Failed to load clip by key '{clipKey}'.");
+                    UnityEngine.Debug.LogError($"[AudioClipLoader] Failed to load clip by key '{clipKey}'.");
                     Release(clipKey);
                     return null;
                 }
@@ -61,7 +61,7 @@ namespace _Project.Scripts.Infrastructure.Services.Audio
             }
             catch (Exception exception)
             {
-                Debug.LogError($"[AudioClipLoader] Failed to load clip '{clipKey}': {exception.Message}");
+                UnityEngine.Debug.LogError($"[AudioClipLoader] Failed to load clip '{clipKey}': {exception.Message}");
                 Release(clipKey);
                 return null;
             }

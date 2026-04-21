@@ -49,7 +49,6 @@ namespace _Project.Scripts.Infrastructure.DI
             BindStates(builder);
             BindAssets(builder);
             BindGameplayServices(builder);
-            builder.AddSingleton(typeof(LevelLifecycleService));
 
             builder.OnContainerBuilt += c =>
             {
@@ -105,6 +104,10 @@ namespace _Project.Scripts.Infrastructure.DI
 
         private void BindGameplayServices(ContainerBuilder builder)
         {
+            builder.AddSingleton(typeof(LevelEntityRegistry));
+            builder.AddSingleton(typeof(PlayerStateCopyService));
+            builder.AddSingleton(typeof(LevelRuntimeObjectFactory));
+            builder.AddSingleton(typeof(LevelPlayerLifecycleService));
             builder.AddSingleton(typeof(LevelResourceService));
             builder.AddSingleton(typeof(MoneyResourceService));
             builder.AddSingleton(typeof(AnimationService));

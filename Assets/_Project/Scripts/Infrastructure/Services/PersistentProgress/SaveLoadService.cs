@@ -13,8 +13,6 @@ namespace _Project.Scripts.Infrastructure.Services.PersistentProgress
 
         public SaveLoadService(IPersistentProgressService progressService) => _progressService = progressService;
 
-        public void InformAll() { }
-
         public void Save()
         {
             PlayerPrefs.SetInt("CurrentLevel", _playerProgress.CurrentLevel.Value);

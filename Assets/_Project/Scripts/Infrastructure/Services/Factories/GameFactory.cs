@@ -12,7 +12,9 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
 {
     public class GameFactory : IService
     {
-        private readonly LevelLifecycleService _levelLifecycle;
+        private readonly LevelEntityRegistry _levelEntityRegistry;
+        private readonly LevelRuntimeObjectFactory _levelRuntimeObjectFactory;
+        private readonly LevelPlayerLifecycleService _levelPlayerLifecycleService;
         private readonly LevelResourceService _levelResourceService;
         private readonly AssetProvider _assetProvider;
         private readonly CameraService _cameraService;
@@ -20,42 +22,51 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private LevelSceneReferences _sceneRefs;
         private LevelSystem.Level _gameLevel;
 
-        public GameFactory(LevelLifecycleService levelLifecycle, LevelResourceService levelResourceService, AssetProvider assetProvider, CameraService cameraService)
+        public GameFactory(
+            LevelEntityRegistry levelEntityRegistry,
+            LevelRuntimeObjectFactory levelRuntimeObjectFactory,
+            LevelPlayerLifecycleService levelPlayerLifecycleService,
+            LevelResourceService levelResourceService,
+            AssetProvider assetProvider,
+            CameraService cameraService)
         {
-            _levelLifecycle = levelLifecycle;
+            _levelEntityRegistry = levelEntityRegistry;
+            _levelRuntimeObjectFactory = levelRuntimeObjectFactory;
+            _levelPlayerLifecycleService = levelPlayerLifecycleService;
             _levelResourceService = levelResourceService;
             _assetProvider = assetProvider;
             _cameraService = cameraService;
         }
 
-        public async UniTask Initialize() => await _levelLifecycle.Initialize();
+        public async UniTask Initialize() => await _levelEntityRegistry.Initialize();
 
-        public void SetSceneRef(LevelSceneReferences sceneRefs)
+        public void SetSceneRef(LevelSceneReferences sceneRefs) => _sceneRefs = sceneRefs;
+
+        public void ClearLevelHolder()
         {
-            _sceneRefs = sceneRefs;
+            _levelEntityRegistry.ClearLevel();
+            _levelRuntimeObjectFactory.ResetState();
         }
-
-        public void ClearLevelHolder() => _levelLifecycle.ClearLevelHolder();
 
         public LevelSystem.Level CreateLevel() =>
             _gameLevel = _assetProvider.CreateLevel(_levelResourceService.Current.Value);
 
         public LevelSystem.Level GetCurrentLevel() => _gameLevel;
 
-        public Finish GetFinish() => _levelLifecycle.GetFinish();
+        public Finish GetFinish() => _levelRuntimeObjectFactory.GetFinish();
 
         public async UniTask<Finish> CreateFinish(Vector3 vector3, Quaternion identity) =>
-            await _levelLifecycle.CreateFinish(vector3, identity);
+            await _levelRuntimeObjectFactory.CreateFinish(vector3, identity);
 
         public async UniTask<RingHolder>
             GetRing(Vector3 calculateRingPosition, Spawner.Colors[] colorArray, int index) =>
-            await _levelLifecycle.CreateRing(calculateRingPosition, colorArray, index);
+            await _levelRuntimeObjectFactory.CreateRing(calculateRingPosition, colorArray, index);
 
         public async UniTask CreateBarrel(Vector3 randomPosition) =>
-            await _levelLifecycle.CreateBarrel(randomPosition);
+            await _levelRuntimeObjectFactory.CreateBarrel(randomPosition);
 
         public async UniTask CreateSlingshot(Vector3 position) =>
-            await _levelLifecycle.CreateSlingshot(position);
+            await _levelRuntimeObjectFactory.CreateSlingshot(position);
 
         public Platform GetPlatform() => _sceneRefs.Platform;
 
@@ -64,13 +75,13 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         public Indicator GetIndicator() => _sceneRefs.Indicator;
 
         public void SetPlayerCamera() =>
-            _cameraService.SetPlayerCamera(_levelLifecycle.GetMainPlayer());
+            _cameraService.SetPlayerCamera(_levelPlayerLifecycleService.GetMainPlayer());
 
         public void SetFinishCamera(float finishZPosition) =>
             _cameraService.SetFinishCamera(finishZPosition);
 
-        public ObservableVariable<int> EnemiesCounter => _levelLifecycle.EnemiesCounter;
+        public ObservableVariable<int> EnemiesCounter => _levelEntityRegistry.EnemiesCounter;
 
-        public ObservableVariable<int> PlayersCounter => _levelLifecycle.PlayersCounter;
+        public ObservableVariable<int> PlayersCounter => _levelEntityRegistry.PlayersCounter;
     }
 }

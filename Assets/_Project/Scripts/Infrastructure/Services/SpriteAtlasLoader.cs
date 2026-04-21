@@ -20,7 +20,7 @@ namespace _Project.Scripts.Infrastructure.Services
         {
             if (string.IsNullOrWhiteSpace(atlasKey))
             {
-                Debug.LogError("[SpriteAtlasLoader] Atlas key is null or empty.");
+                UnityEngine.Debug.LogError("[SpriteAtlasLoader] Atlas key is null or empty.");
                 return null;
             }
 
@@ -38,7 +38,7 @@ namespace _Project.Scripts.Infrastructure.Services
 
                 if (atlas == null)
                 {
-                    Debug.LogError($"[SpriteAtlasLoader] Failed to load atlas by key '{atlasKey}'.");
+                    UnityEngine.Debug.LogError($"[SpriteAtlasLoader] Failed to load atlas by key '{atlasKey}'.");
                     Release();
                     return null;
                 }
@@ -49,7 +49,7 @@ namespace _Project.Scripts.Infrastructure.Services
             }
             catch (Exception exception)
             {
-                Debug.LogError($"[SpriteAtlasLoader] Failed to load atlas '{atlasKey}': {exception.Message}");
+                UnityEngine.Debug.LogError($"[SpriteAtlasLoader] Failed to load atlas '{atlasKey}': {exception.Message}");
                 Release();
                 return null;
             }
@@ -61,7 +61,7 @@ namespace _Project.Scripts.Infrastructure.Services
 
             if (_loadedAtlas == null)
             {
-                Debug.LogWarning("[SpriteAtlasLoader] SpriteAtlas is not loaded yet.");
+                UnityEngine.Debug.LogWarning("[SpriteAtlasLoader] SpriteAtlas is not loaded yet.");
                 return false;
             }
 
@@ -69,7 +69,7 @@ namespace _Project.Scripts.Infrastructure.Services
 
             if (sprite == null)
             {
-                Debug.LogWarning(
+                UnityEngine.Debug.LogWarning(
                     $"[SpriteAtlasLoader] Sprite '{spriteName}' was not found in atlas '{_loadedAtlasKey}'.");
                 return false;
             }
