@@ -13,6 +13,7 @@ namespace _Project.Scripts.Gameplay
         [Inject] private GameFactory _gameFactory;
         [Inject] private EnemyFactory _enemyFactory;
         [Inject] private AudioService _audioService;
+        [Inject] private PlayerFinishTransitionService _playerFinishTransitionService;
 
         private bool _attack;
         private bool _isGameOver;
@@ -48,67 +49,23 @@ namespace _Project.Scripts.Gameplay
         private IEnumerator SetAttackState(Collider other)
         {
             Transform root = other.gameObject.transform.root;
-            root.tag = "FreePlayer";
 
             if (!root.TryGetComponent(out PlayerController playerController))
                 yield break;
 
-            float maxVelocity = 4;
-
-            foreach (Rigidbody r in playerController.Bodies)
-            {
-                r.linearVelocity /= maxVelocity;
-
-                // Utils.LerpFunction(1, x =>
-                // {
-                //     if (r.velocity.x > maxVelocity)
-                //     {
-                //         r.velocity = maxVelocity * new Vector3(Math.Abs(x), Math.Abs(x), Math.Abs(x));
-                //     }
-                // });
-            }
-
-            Rigidbody hips = playerController.SelfHips;
-            playerController.Disable();
-            Destroy(playerController.TrailRenderer);
+            _playerFinishTransitionService.BeginTransition(playerController);
             Time.timeScale = 0.5f;
             yield return _waiter;
-
             Time.timeScale = 1;
 
             if (root == null || root.gameObject == null)
                 yield break;
 
-            var rg = root.gameObject.AddComponent<Rigidbody>();
-            rg.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            if (!root.TryGetComponent(out PlayerFinishMover playerFinishMover))
+            PlayerFinishMover playerFinishMover = _playerFinishTransitionService.CompleteTransition(playerController);
+            if (playerFinishMover == null)
                 yield break;
 
             playerFinishMover.Initialize();
-
-            if (root.TryGetComponent(out CapsuleCollider capsuleCollider))
-                capsuleCollider.enabled = true;
-
-            playerController.Animator.enabled = true;
-
-            Rigidbody[] rgs = playerController.Bodies;
-
-            for (int i = 0; i < rgs.Length; i++)
-            {
-                rgs[i].isKinematic = true;
-                rgs[i].useGravity = false;
-            }
-
-            Collider[] colliders = root.GetComponentsInChildren<Collider>();
-
-            for (int i = 1; i < colliders.Length; i++)
-            {
-                colliders[i].enabled = false;
-            }
-
-            //root.position = new Vector3(Random.Range(-8, 8), transform.position.y + root.transform.position.y, transform.position.z + Random.Range(-8f, 8f));
-            root.position = new Vector3(hips.transform.position.x, hips.transform.position.y, hips.transform.position.z);
-            hips.transform.localPosition = Vector3.zero;
         }
     }
 }

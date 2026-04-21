@@ -1,12 +1,9 @@
-using _Project.Scripts.Infrastructure.Services.AssetManagement;
-using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
-using YG;
 using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Gameplay
@@ -14,9 +11,7 @@ namespace _Project.Scripts.Gameplay
     public class PlayerFinishMover : MonoBehaviour
     {
         [Inject] private GameFactory _gameFactory;
-        [Inject] private AudioService _audioService;
-        [Inject] private EnemyFactory _enemyFactory;
-        [Inject] private FxFactory _fxFactory;
+        [Inject] private PlayerFinishCombatService _playerFinishCombatService;
         [Inject] private IPersistentProgressService _persistentProgressService;
 
         private static readonly int IsGround = Animator.StringToHash("IsGround");
@@ -75,7 +70,7 @@ namespace _Project.Scripts.Gameplay
 
             if (_target == null)
             {
-                _target = NearestTarget();
+                _target = _playerFinishCombatService.GetNearestTarget(transform.position);
             }
             else if (_target != null)
             {
@@ -104,32 +99,6 @@ namespace _Project.Scripts.Gameplay
             return hitsCount > 0;
         }
 
-        private GameObject NearestTarget()
-        {
-            var enemies = _enemyFactory.GetAllEnemies();
-            if (enemies == null)
-                return null;
-
-            float minDistance = float.MaxValue;
-            int index = 0;
-            for (int i = 1; i < enemies.Count; i++)
-            {
-                float distance = Distance(enemies[i].transform.position, transform.position);
-
-                if (minDistance <= distance)
-                    continue;
-
-                minDistance = distance;
-                index = i;
-            }
-
-            _target = enemies.Count > 0 ? enemies[index].gameObject : null;
-
-            return _target;
-        }
-
-        private float Distance(Vector3 v1, Vector3 v2) => (v1 - v2).magnitude;
-
         private void OnCollisionEnter(Collision collision)
         {
             FightAsync(collision).Forget();
@@ -142,32 +111,20 @@ namespace _Project.Scripts.Gameplay
 
         private async UniTask FightAsync(Collision collision)
         {
-            if (collision.transform.root.TryGetComponent(out EnemyBase enemy) && !enemy.IsDie && !_playerController.IsDie)
-            {
-                _audioService.PlayHitSound();
+            PlayerFinishCollisionResult result = await _playerFinishCombatService.ResolveCollision(
+                _playerController,
+                transform,
+                collision,
+                Health,
+                _damage,
+                _canSmoke
+            );
 
-                if (_canSmoke)
-                {
-                    _canSmoke = false;
-                    await _fxFactory.CreateSmoke(new Vector3(0f, 2f, transform.position.z), Quaternion.Euler(-90f, 0f, 0f));
-                }
+            Health = result.Health;
+            _canSmoke = result.CanSmoke;
 
-                enemy.TakeDamage(_damage);
-                Health--;
-
-                if (Health <= 0)
-                {
-                    _audioService.PlayDieSound();
-                    _playerController.Die();
-                }
-            }
-
-            if (gameObject != null && gameObject.transform != null && gameObject.transform.root != null &&
-                gameObject.transform.root.gameObject != null && (gameObject.transform.root.gameObject.CompareTag("Enemy") ||
-                                                                 collision.gameObject.CompareTag("Platform") == false))
-            {
+            if (!result.ShouldEnableMovement)
                 return;
-            }
 
             _playerController.Animator.SetBool(IsGround, true);
             _canMove = true;

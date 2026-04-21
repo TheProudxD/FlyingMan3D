@@ -104,6 +104,8 @@ namespace _Project.Scripts.Infrastructure.DI
 
         private void BindGameplayServices(ContainerBuilder builder)
         {
+            builder.AddSingleton(typeof(PlayerFinishTransitionService));
+            builder.AddSingleton(typeof(PlayerFinishCombatService));
             builder.AddSingleton(typeof(LevelEntityRegistry));
             builder.AddSingleton(typeof(PlayerStateCopyService));
             builder.AddSingleton(typeof(LevelRuntimeObjectFactory));
