@@ -34,7 +34,14 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
         private async UniTask SwitchLanguageAsync(string lang)
         {
             bool tryParse = Enum.TryParse(lang, out Locale @case);
-            await SetLocale(tryParse ? @case : Locale.en);
+
+            if (tryParse)
+            {
+                await SetLocale(@case);
+                return;
+            }
+
+            await SetDefaultLocale();
         }
 
         public Task SetLocale(SystemLanguage systemLanguage) => UpdateLocale(LocaleSettings.GetLocale(systemLanguage));

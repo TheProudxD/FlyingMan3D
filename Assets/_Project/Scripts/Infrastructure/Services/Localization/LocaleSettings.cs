@@ -41,7 +41,7 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
             {
                 Locale.es, new LocaleConfig
                 {
-                    Name = "Russian",
+                    Name = "Spanish",
                     Code = Locale.es,
                     SystemLanguages = new[]
                     {
@@ -72,23 +72,31 @@ namespace _Project.Scripts.Infrastructure.Services.Localization
 
         public static LocaleConfig GetLocale(SystemLanguage systemLanguage)
         {
-            LocaleConfig localeConfig =
-                Locales.FirstOrDefault(l => l.Value.SystemLanguages.Contains(systemLanguage)).Value;
-
-            if (localeConfig == null)
+            foreach (LocaleConfig localeConfig in Locales.Values)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                UnityEngine.Debug.LogWarning("No locale for " + systemLanguage);
-#endif
+                SystemLanguage[] systemLanguages = localeConfig.SystemLanguages;
 
-                localeConfig = GetDefault();
+                if (systemLanguages == null)
+                    continue;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                UnityEngine.Debug.Log("Using default locale " + localeConfig);
-#endif
+                for (int i = 0; i < systemLanguages.Length; i++)
+                {
+                    if (systemLanguages[i] == systemLanguage)
+                        return localeConfig;
+                }
             }
 
-            return localeConfig;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            UnityEngine.Debug.LogWarning("No locale for " + systemLanguage);
+#endif
+
+            LocaleConfig fallbackLocale = GetDefault();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            UnityEngine.Debug.Log("Using default locale " + fallbackLocale);
+#endif
+
+            return fallbackLocale;
         }
         
         public static LocaleConfig GetDefault() => Locales[Locale.en];
