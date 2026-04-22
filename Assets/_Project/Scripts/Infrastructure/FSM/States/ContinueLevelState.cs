@@ -36,8 +36,8 @@ namespace _Project.Scripts.Infrastructure.FSM.States
 
             PlayerController player = await _playerFactory.CreateMainPlayer();
             Hud hud = _uiFactory.GetHUD();
-            hud.Show();
-            hud.ActivateStartText();
+            hud?.Show();
+            hud?.ActivateStartText();
 
             player.Initialize();
             _gameFactory.SetPlayerCamera();

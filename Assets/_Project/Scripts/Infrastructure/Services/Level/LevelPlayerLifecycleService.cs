@@ -1,8 +1,9 @@
+using System;
+using System.Collections.Generic;
 using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Scene;
 using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.Level
@@ -30,23 +31,24 @@ namespace _Project.Scripts.Infrastructure.Services.Level
         {
             var startPosition = new Vector3(0, 1.75f, -1);
             PlayerController mainPlayer = await _assetProvider.CreatePlayer(startPosition);
+            if (mainPlayer == null)
+                throw new InvalidOperationException("Failed to create main player instance.");
+
             Rigidbody hips = mainPlayer.SelfHips;
             Rigidbody capsule = _sceneRefs?.Slingshot?.Capsule;
 
             if (hips == null)
             {
-                UnityEngine.Debug.LogError("Main player has no hips Rigidbody. Check Player prefab bindings.");
-                AddPlayer(mainPlayer);
-                _entityRegistry.TrackLevelObject(mainPlayer.gameObject);
-                return mainPlayer;
+                UnityEngine.Object.Destroy(mainPlayer.gameObject);
+                throw new InvalidOperationException(
+                    "Main player has no hips Rigidbody. Check Player prefab bindings.");
             }
 
             if (capsule == null)
             {
-                UnityEngine.Debug.LogError("Slingshot capsule is not initialized. Check scene refs and slingshot setup.");
-                AddPlayer(mainPlayer);
-                _entityRegistry.TrackLevelObject(mainPlayer.gameObject);
-                return mainPlayer;
+                UnityEngine.Object.Destroy(mainPlayer.gameObject);
+                throw new InvalidOperationException(
+                    "Slingshot capsule is not initialized. Check scene refs and slingshot setup.");
             }
 
             var fixedJoint = hips.gameObject.AddComponent<FixedJoint>();
