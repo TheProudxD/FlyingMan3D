@@ -19,10 +19,6 @@ namespace _Project.Scripts.Gameplay
         [SerializeField] private PlayerController _playerController;
         [SerializeField] private TextMeshProUGUI _healthText;
         [SerializeField] private Canvas _healthCanvas;
-        [SerializeField] private LayerMask _groundLayer;
-
-        private float _raycastDistance = 100;
-        private readonly RaycastHit[] _raycastHits = new RaycastHit[2];
 
         private float _moveSpeed;
         private float _stopDistance;
@@ -50,9 +46,7 @@ namespace _Project.Scripts.Gameplay
         public void Initialize()
         {
             enabled = true;
-            _target = null;
-            _canSmoke = true;
-            _fightInProgress = false;
+            ResetCombatState();
 
             if (_gameFactory.GetCurrentLevel() == null || _persistentProgressService?.PowerupProgress == null)
                 return;
@@ -75,26 +69,43 @@ namespace _Project.Scripts.Gameplay
 
         private void Update()
         {
-            _playerController.CheckForHeight();
+            _playerController?.CheckForHeight();
 
             if (!_canMove)
                 return;
 
+            if (!TryEnsureTarget())
+                return;
+
+            MoveTowardsTarget();
+        }
+
+        private void ResetCombatState()
+        {
+            _target = null;
+            _canSmoke = true;
+            _fightInProgress = false;
+        }
+
+        private bool TryEnsureTarget()
+        {
             if (!HasValidTarget())
                 _target = _playerFinishCombatService.GetNearestTarget(transform.position);
 
-            if (HasValidTarget())
-            {
-                _moveDistance = _target.transform.position - transform.position;
-                _moveDistance.y = 0f;
+            return HasValidTarget();
+        }
 
-                if (_moveDistance.magnitude <= _stopDistance)
-                    return;
+        private void MoveTowardsTarget()
+        {
+            _moveDistance = _target.transform.position - transform.position;
+            _moveDistance.y = 0f;
 
-                Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
-                transform.Translate(Vector3.forward * (_moveSpeed * Time.deltaTime));
-            }
+            if (_moveDistance.magnitude <= _stopDistance)
+                return;
+
+            Quaternion targetRotation = Quaternion.LookRotation(_moveDistance);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+            transform.Translate(Vector3.forward * (_moveSpeed * Time.deltaTime));
         }
 
         private bool HasValidTarget()
@@ -106,19 +117,6 @@ namespace _Project.Scripts.Gameplay
                 return !enemy.IsDie;
 
             return true;
-        }
-
-        public bool IsGrounded()
-        {
-            int hitsCount = Physics.RaycastNonAlloc(
-                _playerController.SelfHips.position,
-                Vector3.down,
-                _raycastHits,
-                _raycastDistance,
-                _groundLayer
-            );
-
-            return hitsCount > 0;
         }
 
         private void OnCollisionEnter(Collision collision)

@@ -11,12 +11,30 @@ namespace _Project.Scripts.Gameplay
         private readonly EnemyFactory _enemyFactory;
         private readonly AudioService _audioService;
         private readonly FxFactory _fxFactory;
+        private readonly GameFactory _gameFactory;
 
-        public PlayerFinishCombatService(EnemyFactory enemyFactory, AudioService audioService, FxFactory fxFactory)
+        public PlayerFinishCombatService(
+            EnemyFactory enemyFactory,
+            AudioService audioService,
+            FxFactory fxFactory,
+            GameFactory gameFactory)
         {
             _enemyFactory = enemyFactory;
             _audioService = audioService;
             _fxFactory = fxFactory;
+            _gameFactory = gameFactory;
+        }
+
+        public void StartCombat(float finishZPosition)
+        {
+            _audioService.PlayHitSound();
+            _gameFactory.SetFinishCamera(finishZPosition);
+
+            foreach (EnemyBase enemy in _enemyFactory.GetAllEnemies())
+            {
+                if (enemy != null && enemy.gameObject.activeInHierarchy)
+                    enemy.Initialize();
+            }
         }
 
         public async UniTask<PlayerFinishCollisionResult> ResolveCollision(

@@ -2433,9 +2433,6 @@ MonoBehaviour:
   _playerController: {fileID: 9154461922809862172}
   _healthText: {fileID: 3689083413507674111}
   _healthCanvas: {fileID: 3841038850648120551}
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 193
 --- !u!4 &7601387721896550201 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8913716230897266256, guid: aeb65e1fc7475fb4c870cfaa843411c2, type: 3}

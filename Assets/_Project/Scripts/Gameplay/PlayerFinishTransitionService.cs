@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using _Project.Scripts.Infrastructure.Services;
+using Cysharp.Threading.Tasks;
 using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.Gameplay
@@ -7,8 +9,36 @@ namespace _Project.Scripts.Gameplay
     public class PlayerFinishTransitionService : IService
     {
         private const float MaxVelocityDivider = 4f;
+        private static readonly TimeSpan TransitionSlowMotionDuration = TimeSpan.FromSeconds(1.5f);
 
-        public void BeginTransition(PlayerController playerController)
+        public async UniTask TransitionPlayerAsync(
+            PlayerController playerController,
+            bool shouldPlayTransitionSlowMotion)
+        {
+            if (playerController == null)
+                return;
+
+            BeginTransition(playerController);
+
+            if (shouldPlayTransitionSlowMotion)
+            {
+                Time.timeScale = 0.5f;
+
+                try
+                {
+                    await UniTask.Delay(TransitionSlowMotionDuration);
+                }
+                finally
+                {
+                    Time.timeScale = 1f;
+                }
+            }
+
+            PlayerFinishMover playerFinishMover = CompleteTransition(playerController);
+            playerFinishMover?.Initialize();
+        }
+
+        private void BeginTransition(PlayerController playerController)
         {
             if (playerController == null)
                 return;
@@ -28,7 +58,7 @@ namespace _Project.Scripts.Gameplay
                 Object.Destroy(playerController.TrailRenderer);
         }
 
-        public PlayerFinishMover CompleteTransition(PlayerController playerController)
+        private PlayerFinishMover CompleteTransition(PlayerController playerController)
         {
             if (playerController == null)
                 return null;

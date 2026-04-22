@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.Services.Factories
 {
-    public class GameFactory : IService
+    public class GameFactory : IService, ITaskInitializable
     {
         private readonly LevelEntityRegistry _levelEntityRegistry;
         private readonly LevelRuntimeObjectFactory _levelRuntimeObjectFactory;
