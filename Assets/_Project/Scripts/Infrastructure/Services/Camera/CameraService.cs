@@ -2,7 +2,7 @@ using _Project.Scripts.Gameplay;
 using _Project.Scripts.Tools.Camera;
 using UnityEngine;
 
-namespace _Project.Scripts.Infrastructure.Services.Factories
+namespace _Project.Scripts.Infrastructure.Services.Camera
 {
     public sealed class CameraService : IService
     {

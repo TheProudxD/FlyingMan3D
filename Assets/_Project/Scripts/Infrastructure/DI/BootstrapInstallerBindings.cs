@@ -1,4 +1,5 @@
 using _Project.Scripts.Infrastructure.Services.Localization.UI;
+using _Project.Scripts.Tools.Extensions;
 using Reflex.Core;
 
 namespace _Project.Scripts.Infrastructure.DI

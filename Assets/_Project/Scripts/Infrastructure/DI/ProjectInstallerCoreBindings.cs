@@ -1,14 +1,16 @@
-using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
+using _Project.Scripts.Infrastructure.Services.Camera;
 using _Project.Scripts.Infrastructure.Services.Config;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Localization;
 using _Project.Scripts.Infrastructure.Services.Logger;
+using _Project.Scripts.Infrastructure.Timer;
 using _Project.Scripts.Tools.Camera;
 using _Project.Scripts.UI;
 using Reflex.Core;
 using ILogger = _Project.Scripts.Infrastructure.Services.Logger.ILogger;
+using GameTimer = _Project.Scripts.Infrastructure.Timer.Timer;
 
 namespace _Project.Scripts.Infrastructure.DI
 {
@@ -20,7 +22,7 @@ namespace _Project.Scripts.Infrastructure.DI
             LoadingCurtain loadingCurtainPrefab)
         {
             builder.AddSingleton<ILogger>(_ => new NoLogger(true));
-            builder.AddSingleton(c => new Timer(0));
+            builder.AddSingleton(c => new GameTimer(0));
 
             builder.AddSingleton(typeof(ProjectObjectInjector));
             builder.AddSingleton(typeof(AssetProvider));

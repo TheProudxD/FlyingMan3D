@@ -1,6 +1,7 @@
 using _Project.Scripts.Gameplay;
 using _Project.Scripts.Infrastructure.Observable;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
+using _Project.Scripts.Infrastructure.Services.Camera;
 using _Project.Scripts.Infrastructure.Services.Level;
 using _Project.Scripts.Infrastructure.Services.Resources;
 using _Project.Scripts.Infrastructure.Services.Scene;

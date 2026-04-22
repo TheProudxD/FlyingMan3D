@@ -5,7 +5,7 @@ using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Tools.Coroutine;
 using UnityEngine;
 
-namespace _Project.Scripts.Gameplay
+namespace _Project.Scripts.Infrastructure.Timer
 {
     public class Timer : IService
     {

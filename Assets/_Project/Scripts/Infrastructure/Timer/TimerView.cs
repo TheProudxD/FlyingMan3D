@@ -1,4 +1,4 @@
-using _Project.Scripts.Gameplay;
+using _Project.Scripts.Infrastructure.Timer;
 using LitMotion;
 using Reflex.Attributes;
 using TMPro;

@@ -5,17 +5,22 @@ using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.Windows;
 using _Project.Scripts.UI.Windows;
 using Cysharp.Threading.Tasks;
+using GameTimer = _Project.Scripts.Infrastructure.Timer.Timer;
 
 namespace _Project.Scripts.Infrastructure.FSM.States
 {
     public class LoseLevelState : IState
     {
-        private readonly Timer _timer;
+        private readonly GameTimer _timer;
         private readonly WindowService _windowService;
         private readonly AudioService _audioService;
         private readonly PlayerFactory _playerFactory;
 
-        public LoseLevelState(WindowService windowService, Timer timer, AudioService audioService, PlayerFactory playerFactory)
+        public LoseLevelState(
+            WindowService windowService,
+            GameTimer timer,
+            AudioService audioService,
+            PlayerFactory playerFactory)
         {
             _windowService = windowService;
             _timer = timer;

@@ -8,7 +8,7 @@ namespace _Project.Scripts.Infrastructure.Services
     public class InputReader : IService
     {
         private const string LAYER_NAME = "Default";
-        private readonly Camera _camera;
+        private readonly UnityEngine.Camera _camera;
         private readonly List<RaycastResult> _uiRaycastResults = new(8);
 
         public InputReader(CameraSetup cameraSetup) => _camera = cameraSetup.MainCamera;
