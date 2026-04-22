@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 namespace _Project.Scripts.Gameplay
 {
@@ -9,21 +9,23 @@ namespace _Project.Scripts.Gameplay
     [RequireComponent(typeof(PlayerInitializer))]
     public class PlayerController : MonoBehaviour
     {
+        [SerializeField] private PlayerMovementController _movementController;
+        [SerializeField] private PlayerLaunchController _launchController;
+        [SerializeField] private PlayerDeathHandler _deathHandler;
         [SerializeField] private PlayerInitializer _initializer;
-
-        private bool _enabled;
-        private Transform _launchCapsule;
-
+        
         // Public properties for backward compatibility
-        public Rigidbody SelfHips => _initializer?.HipsRigidbody;
-        public TrailRenderer TrailRenderer => _initializer?.TrailRenderer;
-        public Rigidbody[] Bodies => _initializer?.Bodies;
-        public Animator Animator => _initializer?.Animator;
+        public Rigidbody SelfHips => _initializer.SelfHips;
+        public TrailRenderer TrailRenderer => _initializer.TrailRenderer;
+        public Rigidbody[] Bodies => _initializer.Bodies;
+        public Animator Animator => _initializer.Animator;
 
         public bool IsPassed { get; set; }
         public bool IsTarget { get; set; }
         public bool IsDie { get; private set; }
 
+        private bool _enabled;
+        
         private void Awake() => CacheComponentReferences();
 
         private void OnValidate() => CacheComponentReferences();
@@ -36,13 +38,12 @@ namespace _Project.Scripts.Gameplay
         public void Disable()
         {
             _enabled = false;
-            _initializer?.DisableMovement();
+            _movementController?.SetEnabled(false);
         }
 
         public void SetInitial(Transform capsule)
         {
-            _launchCapsule = capsule;
-            _initializer?.SetLaunchAnchor(_launchCapsule);
+            _launchController?.SetLaunchAnchor(capsule);
         }
 
         public void Initialize()
@@ -51,19 +52,20 @@ namespace _Project.Scripts.Gameplay
             _initializer?.ApplyRuntimeSettings();
         }
 
-        public void CheckForHeight() => _initializer?.CheckForDeath();
-
         private void Update()
         {
             if (!_enabled)
                 return;
 
-            _initializer?.CheckForDeath();
+            CheckForHeight();
         }
 
-        public IEnumerator ApplyLaunchForce(float factor) => _initializer?.ApplyLaunchForce(factor);
+        public void CheckForHeight() => _deathHandler?.CheckForDeath();
 
-        public void Die() => _initializer?.Die();
+        public IEnumerator ApplyLaunchForce(float factor) =>
+            _launchController?.ApplyLaunchForce(factor);
+
+        public void Die() => _deathHandler?.Die();
         
         public void MarkAsDead()
         {
@@ -73,7 +75,9 @@ namespace _Project.Scripts.Gameplay
 
         private void CacheComponentReferences()
         {
-            _initializer ??= GetComponent<PlayerInitializer>();
+            _movementController ??= GetComponent<PlayerMovementController>();
+            _launchController ??= GetComponent<PlayerLaunchController>();
+            _deathHandler ??= GetComponent<PlayerDeathHandler>();
         }
     }
 }

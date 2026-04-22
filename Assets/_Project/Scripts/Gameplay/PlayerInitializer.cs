@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
@@ -14,10 +13,9 @@ namespace _Project.Scripts.Gameplay
 
         [SerializeField] private PlayerMovementController _movementController;
         [SerializeField] private PlayerLaunchController _launchController;
-        [SerializeField] private PlayerDeathHandler _deathHandler;
         [SerializeField] private Rigidbody _hipsRigidbody;
-        [SerializeField] private TrailRenderer _trailRenderer;
         [SerializeField] private Rigidbody[] _bodies;
+        [SerializeField] private TrailRenderer _trailRenderer;
         [SerializeField] private Animator _animator;
 
         private void Awake() => CacheReferences();
@@ -31,11 +29,6 @@ namespace _Project.Scripts.Gameplay
             _launchController?.ConfigureBodies(_bodies);
         }
 
-        public void SetLaunchAnchor(Transform launchCapsule)
-        {
-            _launchController?.SetLaunchAnchor(launchCapsule);
-        }
-
         public void ApplyRuntimeSettings()
         {
             _movementController?.SetMovementSpeed(GetMovementSpeed());
@@ -45,30 +38,23 @@ namespace _Project.Scripts.Gameplay
                 _launchController?.SetMaxLaunchSpeed(currentLevel.MaxLaunchSpeed);
         }
 
-        public void DisableMovement() => _movementController?.SetEnabled(false);
-
-        public void CheckForDeath() => _deathHandler?.CheckForDeath();
-
-        public IEnumerator ApplyLaunchForce(float factor) =>
-            _launchController?.ApplyLaunchForce(factor);
-
-        public void Die() => _deathHandler?.Die();
-
         public float GetMovementSpeed() => _persistentProgressService.PowerupProgress.flyingControl;
-
-        public Rigidbody HipsRigidbody => _hipsRigidbody;
+        
+        public Rigidbody SelfHips => _hipsRigidbody;
         public TrailRenderer TrailRenderer => _trailRenderer;
         public Rigidbody[] Bodies => _bodies;
         public Animator Animator => _animator;
-
+        
         private void CacheReferences()
         {
             _movementController ??= GetComponent<PlayerMovementController>();
             _launchController ??= GetComponent<PlayerLaunchController>();
-            _deathHandler ??= GetComponent<PlayerDeathHandler>();
             _animator ??= GetComponent<Animator>();
             _trailRenderer ??= GetComponentInChildren<TrailRenderer>(true);
-
+            
+            if (_hipsRigidbody == null)
+                _hipsRigidbody = GetComponentInChildren<Rigidbody>(true);
+            
             if (_bodies == null || _bodies.Length == 0)
                 _bodies = GetComponentsInChildren<Rigidbody>(true);
 
