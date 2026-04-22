@@ -47,6 +47,7 @@ namespace _Project.Scripts.UI.Windows
         private WaitForSecondsRealtime _showRestartButtonCoroutine;
         private WinImagesConfig _winImagesConfig;
         private int _rewardAmount;
+        private Coroutine _showNextLevelButtonRoutine;
 
         protected override void OnAwake()
         {
@@ -78,7 +79,7 @@ namespace _Project.Scripts.UI.Windows
             _replayLevelButton.Activate();
             SubscribeRewardFx();
 
-            StartCoroutine(ShowNextLevelButtonCoroutine());
+            _showNextLevelButtonRoutine = StartCoroutine(ShowNextLevelButtonCoroutine());
 
             _moneyResourceService.Add(this, _rewardAmount);
             _metricService.LevelPassed(_levelResourceService.Current.Value);
@@ -159,6 +160,9 @@ namespace _Project.Scripts.UI.Windows
 
         private void LoadNextLevel()
         {
+            if (IsHiding)
+                return;
+
             _nextLevelButton.Deactivate();
             AudioService.PlayClickSound();
             _adsService.PlayInterstitial();
@@ -174,15 +178,24 @@ namespace _Project.Scripts.UI.Windows
 
         public override void Hide()
         {
+            if (!BeginHide())
+                return;
+
             _nextLevelButton.Remove(PlayMoneyFX);
             _replayLevelButton.Remove(Restart);
             _multiplierButton.Remove(MultiplyMoney);
             UnsubscribeRewardFx();
 
+            if (_showNextLevelButtonRoutine != null)
+            {
+                StopCoroutine(_showNextLevelButtonRoutine);
+                _showNextLevelButtonRoutine = null;
+            }
+
             _animationService.FadeIn(_popup.gameObject, _animationsConfig.HideDuration, callback: () =>
             {
                 Time.timeScale = 1;
-                base.Hide();
+                CloseImmediately();
             });
         }
     }

@@ -94,7 +94,9 @@ namespace _Project.Scripts.UI.Windows
 
         public override void Hide()
         {
-            base.Hide();
+            if (!BeginHide())
+                return;
+
             Hud hud = _uiFactory.GetHUD();
             hud.Show();
             Time.timeScale = 1;
@@ -107,6 +109,7 @@ namespace _Project.Scripts.UI.Windows
                 StopCoroutine(_closeTutorialCoroutine);
 
             _metricService.TutorialPassed();
+            CloseImmediately();
         }
 
         private IEnumerator CloseTutorial()

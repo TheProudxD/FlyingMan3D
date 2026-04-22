@@ -40,6 +40,9 @@ namespace _Project.Scripts.UI.Windows
         
         public override void Hide()
         {
+            if (!BeginHide())
+                return;
+
             _continueGameButton.Remove(ContinueGame);
             _restartButton.Remove(Hide);
             _restartButton.Deactivate();
@@ -47,7 +50,7 @@ namespace _Project.Scripts.UI.Windows
 
             Time.timeScale = 1;
 
-            _animationService.FadeIn(_popup.gameObject, _fadeInDuration, callback: () => base.Hide());
+            _animationService.FadeIn(_popup.gameObject, _fadeInDuration, callback: CloseImmediately);
         }
     }
 }

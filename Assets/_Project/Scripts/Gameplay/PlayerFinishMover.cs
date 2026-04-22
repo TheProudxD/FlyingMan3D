@@ -33,6 +33,7 @@ namespace _Project.Scripts.Gameplay
         private float _rotationSpeed = 100;
         private int _health;
         private int _damage = 1;
+        private bool _fightInProgress;
 
         public int Health
         {
@@ -51,6 +52,7 @@ namespace _Project.Scripts.Gameplay
             enabled = true;
             _target = null;
             _canSmoke = true;
+            _fightInProgress = false;
 
             if (_gameFactory.GetCurrentLevel() == null || _persistentProgressService?.PowerupProgress == null)
                 return;
@@ -121,33 +123,59 @@ namespace _Project.Scripts.Gameplay
 
         private void OnCollisionEnter(Collision collision)
         {
+            if (!CanStartFight(collision))
+                return;
+
             FightAsync(collision).Forget();
         }
 
         private void OnCollisionStay(Collision other)
         {
+            if (!CanStartFight(other))
+                return;
+
             FightAsync(other).Forget();
+        }
+
+        private bool CanStartFight(Collision collision)
+        {
+            return collision != null &&
+                   !_fightInProgress &&
+                   _playerController != null &&
+                   !_playerController.IsDie &&
+                   isActiveAndEnabled;
         }
 
         private async UniTask FightAsync(Collision collision)
         {
-            PlayerFinishCollisionResult result = await _playerFinishCombatService.ResolveCollision(
-                _playerController,
-                transform,
-                collision,
-                Health,
-                _damage,
-                _canSmoke
-            );
+            _fightInProgress = true;
 
-            Health = result.Health;
-            _canSmoke = result.CanSmoke;
+            try
+            {
+                PlayerFinishCollisionResult result = await _playerFinishCombatService.ResolveCollision(
+                    _playerController,
+                    transform,
+                    collision,
+                    Health,
+                    _damage,
+                    _canSmoke
+                );
 
-            if (!result.ShouldEnableMovement)
-                return;
+                Health = result.Health;
+                _canSmoke = result.CanSmoke;
 
-            _playerController.Animator.SetBool(IsGround, true);
-            _canMove = true;
+                if (!result.ShouldEnableMovement)
+                    return;
+
+                if (_playerController.Animator != null)
+                    _playerController.Animator.SetBool(IsGround, true);
+
+                _canMove = true;
+            }
+            finally
+            {
+                _fightInProgress = false;
+            }
         }
     }
 }

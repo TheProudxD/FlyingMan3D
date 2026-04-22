@@ -15,6 +15,8 @@ namespace _Project.Scripts.UI.Windows
 
         [SerializeField] private Button _closeButton;
 
+        protected bool IsHiding { get; private set; }
+
         private void Awake() => OnAwake();
 
         private void Start()
@@ -27,6 +29,7 @@ namespace _Project.Scripts.UI.Windows
 
         public override void Show()
         {
+            IsHiding = false;
             AudioService.PlayWindowShowSound();
             gameObject.SetActive(true);
         }
@@ -39,7 +42,7 @@ namespace _Project.Scripts.UI.Windows
                 _closeButton.onClick.AddListener(() =>
                 {
                     AudioService.PlayClickSound();
-                    WindowService.Hide(this);
+                    Hide();
                 });
         }
 
@@ -48,5 +51,16 @@ namespace _Project.Scripts.UI.Windows
         protected virtual void SubscribeUpdates() { }
 
         protected virtual void Cleanup() { }
+
+        protected bool BeginHide()
+        {
+            if (IsHiding)
+                return false;
+
+            IsHiding = true;
+            return true;
+        }
+
+        protected void CloseImmediately() => WindowService.Hide(this);
     }
 }

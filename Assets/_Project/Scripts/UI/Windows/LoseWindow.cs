@@ -66,11 +66,14 @@ namespace _Project.Scripts.UI.Windows
 
         public override void Hide()
         {
+            if (!BeginHide())
+                return;
+
             _continueRequested = false;
             _skipButton.Deactivate();
             _restartButton.Remove(RestartGame);
             _skipButton.Remove(ContinueGame);
-            _animationService.FadeIn(_popup.gameObject, _fadeInDuration, callback: () => base.Hide());
+            _animationService.FadeIn(_popup.gameObject, _fadeInDuration, callback: CloseImmediately);
         }
     }
 }
