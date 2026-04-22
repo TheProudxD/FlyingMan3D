@@ -11,8 +11,8 @@ namespace _Project.Scripts.Infrastructure.Services.Level
     {
         private readonly AssetProvider _assetProvider;
         private readonly LevelEntityRegistry _entityRegistry;
-
         private LevelSceneReferences _sceneRefs;
+
         private Finish _finish;
 
         public LevelRuntimeObjectFactory(AssetProvider assetProvider, LevelEntityRegistry entityRegistry)

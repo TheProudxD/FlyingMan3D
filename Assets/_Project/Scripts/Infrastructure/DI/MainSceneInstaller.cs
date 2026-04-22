@@ -19,33 +19,26 @@ namespace _Project.Scripts.Infrastructure.DI
 
         public void InstallBindings(ContainerBuilder builder)
         {
-            var sceneRefs = new LevelSceneReferences(_indicator, _spawner, _platform);
+            LevelSceneReferences sceneRefs = new LevelSceneReferences(_indicator, _spawner, _platform);
             builder.AddSingleton(_ => sceneRefs);
-
             builder.OnContainerBuilt += container =>
             {
-                var gameFactory = container.Resolve<GameFactory>();
-                gameFactory.SetSceneRef(sceneRefs);
-
-                var levelRuntimeObjectFactory = container.Resolve<LevelRuntimeObjectFactory>();
-                levelRuntimeObjectFactory.SetSceneRef(sceneRefs);
-
-                var levelPlayerLifecycleService = container.Resolve<LevelPlayerLifecycleService>();
-                levelPlayerLifecycleService.SetSceneRef(sceneRefs);
-
-                OnContainerBuilt(container);
+                container.Resolve<GameFactory>().SetSceneRef(sceneRefs);
+                container.Resolve<LevelRuntimeObjectFactory>().SetSceneRef(sceneRefs);
+                container.Resolve<LevelPlayerLifecycleService>().SetSceneRef(sceneRefs);
+                InjectSceneComponents(container);
             };
         }
 
-        private void OnContainerBuilt(Container container)
+        private void InjectSceneComponents(Container container)
         {
-            container.Inject(_indicator);
-            container.Inject(_spawner);
-            container.Inject(_platform);
-            InjectLocalizedLabel(container);
+            InjectIfAssigned(container, _indicator);
+            InjectIfAssigned(container, _spawner);
+            InjectIfAssigned(container, _platform);
+            InjectLocalizedLabels(container);
         }
 
-        private void InjectLocalizedLabel(Container container)
+        private void InjectLocalizedLabels(Container container)
         {
             foreach (LocalizedLabel label in _localizedLabels)
             {
@@ -54,6 +47,12 @@ namespace _Project.Scripts.Infrastructure.DI
 
                 container.Inject(label);
             }
+        }
+
+        private static void InjectIfAssigned(Container container, Object target)
+        {
+            if (target != null)
+                container.Inject(target);
         }
 
         private void OnValidate()

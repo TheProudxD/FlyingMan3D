@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using _Project.Scripts.Gameplay;
-using _Project.Scripts.Infrastructure.FSM.States;
 using _Project.Scripts.Infrastructure.Services;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Windows;
 using _Project.Scripts.UI;
-using _Project.Scripts.UI.Views;
 using _Project.Scripts.UI.Windows;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -20,7 +14,6 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private readonly WindowRegistry _windowRegistry;
 
         private Transform _uiRoot;
-        private UIFactory _iuiFactoryImplementation;
         private Hud _hud;
 
         public UIFactory(AssetProvider assetProvider, WindowRegistry windowRegistry)

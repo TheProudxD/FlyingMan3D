@@ -179,12 +179,7 @@ namespace _Project.Scripts.Infrastructure.DI
         private void BindLoadingBar(ContainerBuilder builder)
         {
             builder.AddSingleton(c =>
-            {
-                LoadingCurtain loadingCurtain =
-                    c.Resolve<AssetProvider>().Instantiate<LoadingCurtain>(_loadingCurtain.gameObject);
-                return loadingCurtain;
-            });
-            // builder.AddSingleton(async c => await c.Resolve<AssetProvider>().CreateLoadingCurtain());
+                c.Resolve<AssetProvider>().Instantiate<LoadingCurtain>(_loadingCurtain.gameObject));
         }
     }
 }

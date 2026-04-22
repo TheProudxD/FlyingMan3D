@@ -12,7 +12,6 @@ namespace _Project.Scripts.Infrastructure.Services.Level
         private readonly AssetProvider _assetProvider;
         private readonly LevelEntityRegistry _entityRegistry;
         private readonly PlayerStateCopyService _playerStateCopyService;
-
         private LevelSceneReferences _sceneRefs;
 
         public LevelPlayerLifecycleService(

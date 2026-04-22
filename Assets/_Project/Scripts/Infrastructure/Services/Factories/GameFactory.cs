@@ -18,8 +18,8 @@ namespace _Project.Scripts.Infrastructure.Services.Factories
         private readonly LevelResourceService _levelResourceService;
         private readonly AssetProvider _assetProvider;
         private readonly CameraService _cameraService;
-
         private LevelSceneReferences _sceneRefs;
+
         private LevelSystem.Level _gameLevel;
 
         public GameFactory(
