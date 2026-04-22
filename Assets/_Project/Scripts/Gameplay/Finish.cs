@@ -29,24 +29,26 @@ namespace _Project.Scripts.Gameplay
             if (other.gameObject.transform.root.CompareTag("Player") == false)
                 return;
 
-            StartCoroutine(SetAttackState(other));
+            bool shouldStartCombat = !_attack;
 
-            if (_attack)
-                return;
-
-            _audioService.PlayHitSound();
-
-            _attack = true;
-            _gameFactory.SetFinishCamera(transform.position.z);
-
-            foreach (EnemyBase e in _enemyFactory.GetAllEnemies())
+            if (shouldStartCombat)
             {
-                if (e.gameObject.activeInHierarchy)
-                    e.Initialize();
+                _audioService.PlayHitSound();
+
+                _attack = true;
+                _gameFactory.SetFinishCamera(transform.position.z);
+
+                foreach (EnemyBase enemy in _enemyFactory.GetAllEnemies())
+                {
+                    if (enemy != null && enemy.gameObject.activeInHierarchy)
+                        enemy.Initialize();
+                }
             }
+
+            StartCoroutine(SetAttackState(other, shouldStartCombat));
         }
 
-        private IEnumerator SetAttackState(Collider other)
+        private IEnumerator SetAttackState(Collider other, bool shouldPlayTransitionSlowMotion)
         {
             Transform root = other.gameObject.transform.root;
 
@@ -54,9 +56,13 @@ namespace _Project.Scripts.Gameplay
                 yield break;
 
             _playerFinishTransitionService.BeginTransition(playerController);
-            Time.timeScale = 0.5f;
-            yield return _waiter;
-            Time.timeScale = 1;
+
+            if (shouldPlayTransitionSlowMotion)
+            {
+                Time.timeScale = 0.5f;
+                yield return _waiter;
+                Time.timeScale = 1;
+            }
 
             if (root == null || root.gameObject == null)
                 yield break;

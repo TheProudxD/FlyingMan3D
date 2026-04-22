@@ -23,11 +23,19 @@ namespace _Project.Scripts.Infrastructure.Services.Windows
         {
             if (_openedWindows.TryGetValue(windowId, out var container))
             {
-                UnityEngine.Debug.LogError($"Double opening window: {windowId}");
-                return container;
+                if (container != null)
+                    return container;
+
+                _openedWindows.Remove(windowId);
             }
 
             var creator = _windowRegistry.GetFactory(windowId);
+            if (creator == null)
+            {
+                UnityEngine.Debug.LogError($"No creator registered for window: {windowId}");
+                return null;
+            }
+
             UIContainer window = await creator();
 
             if (window == null)
@@ -47,25 +55,24 @@ namespace _Project.Scripts.Infrastructure.Services.Windows
         {
             if (_openedWindows.Remove(windowId, out UIContainer window))
             {
-                _openedWindowIds.Remove(window);
-                Object.Destroy(window.gameObject);
+                if (window != null)
+                {
+                    _openedWindowIds.Remove(window);
+                    Object.Destroy(window.gameObject);
+                }
+
                 _resourceManager.ReleaseAsset(windowId);
-            }
-            else
-            {
-                UnityEngine.Debug.LogError($"Trying to hide already hidden window: {windowId}");
             }
         }
 
         public void Hide(UIContainer windowBase)
         {
+            if (windowBase == null)
+                return;
+
             if (_openedWindowIds.TryGetValue(windowBase, out WindowId windowId))
             {
                 Hide(windowId);
-            }
-            else
-            {
-                UnityEngine.Debug.LogError($"Trying to hide window that is not currently opened: {windowBase?.name ?? "null"}");
             }
         }
     }

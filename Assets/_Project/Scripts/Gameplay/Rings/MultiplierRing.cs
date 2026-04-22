@@ -1,12 +1,9 @@
-using _Project.Scripts.Infrastructure.Services.Factories;
-using Reflex.Attributes;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay
 {
     public class MultiplierRing : RingBase
     {
-        [Inject] private PlayerFactory _playerFactory;
         private bool _firstPlayer;
         private int _playerCount;
 
@@ -21,7 +18,7 @@ namespace _Project.Scripts.Gameplay
 
             if (!_firstPlayer)
             {
-                _playerCount = _playerFactory.GetAllPlayers().Count;
+                _playerCount = PlayerFactory.GetAllPlayers().Count;
                 _firstPlayer = true;
             }
 
@@ -35,7 +32,7 @@ namespace _Project.Scripts.Gameplay
 
             for (int i = 0; i < Effect - 1; i++)
             {
-                _playerFactory.GetNewPlayer();
+                PlayerFactory.GetNewPlayer();
             }
 
             _playerCount--;

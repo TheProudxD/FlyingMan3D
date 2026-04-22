@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Config;
+using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.Localization;
 using _Project.Scripts.Infrastructure.Services.Localization.SO;
@@ -56,16 +57,37 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 
         public async UniTask<UIContainer> Instantiate(WindowId windowId, Transform uiRoot)
         {
+            if (_configService == null)
+            {
+                UnityEngine.Debug.LogError("[AssetProvider] ConfigService is not assigned for window instantiation.");
+                return null;
+            }
+
             WindowConfig windowConfig = _configService.ForWindow(windowId);
-            // windowConfig.Prefab.gameObject.SetActive(false);
+            if (windowConfig == null || windowConfig.Prefab == null)
+            {
+                UnityEngine.Debug.LogError($"[AssetProvider] Missing window config or prefab for {windowId}.");
+                return null;
+            }
+
             AsyncOperationHandle<GameObject> asyncOperationHandle = windowConfig.Prefab.LoadAssetAsync<GameObject>();
             Task<GameObject> task = asyncOperationHandle.Task;
             await task;
-            
+
+            if (task.Result == null)
+            {
+                UnityEngine.Debug.LogError($"[AssetProvider] Failed to load prefab for window {windowId}.");
+                return null;
+            }
+
             var component = Instantiate<UIContainer>(task.Result, parent: uiRoot);
+            if (component == null)
+            {
+                UnityEngine.Debug.LogError($"[AssetProvider] Loaded window prefab for {windowId} has no UIContainer.");
+                return null;
+            }
 
             component.gameObject.SetActive(true);
-            // windowConfig.Prefab.gameObject.SetActive(true);
             return component;
         }
 
@@ -110,9 +132,14 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public async UniTask<RingHolder> CreateRing(Vector3 position, Spawner.Colors[] colors, int level)
         {
             var ringPrefab = await Instantiate<RingHolder>(AssetPath.RING, position);
+            if (ringPrefab == null)
+                return null;
 
-            ringPrefab.Renderers.sharedMaterial.color = colors[level].RingColor;
-            ringPrefab.TransRenderers.sharedMaterial.color = colors[level].RingTransColor;
+            if (ringPrefab.Renderers != null)
+                ringPrefab.Renderers.sharedMaterial.color = colors[level].RingColor;
+
+            if (ringPrefab.TransRenderers != null)
+                ringPrefab.TransRenderers.sharedMaterial.color = colors[level].RingTransColor;
 
             return ringPrefab;
         }
@@ -152,8 +179,15 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         public UniTask<ExplosionBarrel> CreateBarrel(Vector3 transformPosition) =>
             Instantiate<ExplosionBarrel>(AssetPath.BARREL, transformPosition);
 
-        public void GetRingByType(RingData ringData, GameObject currentChildGo)
+        public void GetRingByType(
+            RingData ringData,
+            GameObject currentChildGo,
+            PlayerFactory playerFactory,
+            AudioService audioService)
         {
+            if (ringData == null || currentChildGo == null)
+                return;
+
             RingBase ring = ringData.RingType switch
             {
                 RingType.Additive => currentChildGo.AddComponent<AdditiveRing>(),
@@ -163,20 +197,33 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
                 _ => null
             };
 
-            InitializeRing(ring, ringData);
+            InitializeRing(ring, ringData, playerFactory, audioService);
         }
 
-        private void InitializeRing(RingBase ring, RingData ringData)
+        private void InitializeRing(
+            RingBase ring,
+            RingData ringData,
+            PlayerFactory playerFactory,
+            AudioService audioService)
         {
+            if (ring == null)
+                return;
+
             ring.Effect = ringData.Effect;
             ring.Speed = ringData.Speed;
             ring.MovementAxis = ringData.MovementAxis;
-            _projectObjectInjector.Inject(ring);
+            ring.Construct(playerFactory, audioService);
         }
 
         private GameObject Instantiate(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
             Transform parent = null, bool isActivateGameObject = true)
         {
+            if (prefab == null)
+            {
+                UnityEngine.Debug.LogError("[AssetProvider] Tried to instantiate null prefab.");
+                return null;
+            }
+
             prefab.SetActive(false);
             GameObject gameObject = Object.Instantiate(prefab, position, rotation, parent);
             _projectObjectInjector.Inject(gameObject);
@@ -204,9 +251,23 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             Transform parent = null, bool isActivateGameObject = true, bool componentEnabled = true)
             where T : MonoBehaviour
         {
+            if (prefab == null)
+            {
+                UnityEngine.Debug.LogError($"[AssetProvider] Tried to instantiate null prefab for component {typeof(T).Name}.");
+                return null;
+            }
+
             prefab.SetActive(false);
             GameObject gameObject = Object.Instantiate(prefab, position, rotation, parent);
             T component = gameObject.GetComponent<T>();
+            if (component == null)
+            {
+                UnityEngine.Debug.LogError($"[AssetProvider] Prefab {prefab.name} has no component {typeof(T).Name}.");
+                Object.Destroy(gameObject);
+                prefab.SetActive(isActivateGameObject);
+                return null;
+            }
+
             _projectObjectInjector.Inject(component);
             component.enabled = componentEnabled;
             gameObject.SetActive(isActivateGameObject);

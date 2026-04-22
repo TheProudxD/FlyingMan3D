@@ -31,6 +31,8 @@ namespace _Project.Scripts.UI
         [field: SerializeField] public GameObject TapToThrow { get; private set; }
         [field: SerializeField] public GameObject PowerupShop { get; private set; }
 
+        private bool _isSubscribedToCounters;
+
         public void Initialize()
         {
             Hide();
@@ -42,10 +44,11 @@ namespace _Project.Scripts.UI
 
             _pauseButton.Activate();
             _skipLevelButton.Deactivate();
-            _gameFactory.EnemiesCounter.ChangedWithOld += EnemiesCounterChanged;
-            _gameFactory.PlayersCounter.ChangedWithOld += PlayersCounterChanged;
+            SetCountersSubscribed(true);
             _gameFactory.EnemiesCounter?.Invoke();
             _gameFactory.PlayersCounter?.Invoke();
+
+            _compositeMotionHandle?.Cancel();
 
             _animationService.ShakingScale(_tapToPlayText.transform, 1f, 1.2f, 0.7f, loops: -1,
                 compositeMotionHandle: _compositeMotionHandle);
@@ -60,8 +63,7 @@ namespace _Project.Scripts.UI
             _enemiesNumberText.transform.parent.gameObject.SetActive(false);
             _playersNumberText.transform.parent.gameObject.SetActive(false);
             _pauseButton.Deactivate();
-            _gameFactory.EnemiesCounter.ChangedWithOld -= EnemiesCounterChanged;
-            _gameFactory.PlayersCounter.ChangedWithOld -= PlayersCounterChanged;
+            SetCountersSubscribed(false);
         }
 
         public void ShowSkipLevelButton() => _showSkipLevelButton = true;
@@ -111,6 +113,30 @@ namespace _Project.Scripts.UI
             }
 
             _showSkipLevelButton = false;
+        }
+
+        private void SetCountersSubscribed(bool value)
+        {
+            if (_gameFactory?.EnemiesCounter == null || _gameFactory?.PlayersCounter == null)
+                return;
+
+            if (value)
+            {
+                if (_isSubscribedToCounters)
+                    return;
+
+                _gameFactory.EnemiesCounter.ChangedWithOld += EnemiesCounterChanged;
+                _gameFactory.PlayersCounter.ChangedWithOld += PlayersCounterChanged;
+                _isSubscribedToCounters = true;
+                return;
+            }
+
+            if (!_isSubscribedToCounters)
+                return;
+
+            _gameFactory.EnemiesCounter.ChangedWithOld -= EnemiesCounterChanged;
+            _gameFactory.PlayersCounter.ChangedWithOld -= PlayersCounterChanged;
+            _isSubscribedToCounters = false;
         }
     }
 }

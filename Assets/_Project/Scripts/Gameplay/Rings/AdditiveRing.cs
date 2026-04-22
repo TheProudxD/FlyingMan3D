@@ -1,13 +1,9 @@
-using _Project.Scripts.Infrastructure.Services.Factories;
-using Reflex.Attributes;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay
 {
     public class AdditiveRing : RingBase
     {
-        [Inject] private PlayerFactory _playerFactory;
-
         private bool _additionHappened;
 
         protected override string Key => "+";
@@ -23,7 +19,7 @@ namespace _Project.Scripts.Gameplay
                 return;
 
             for (int i = 0; i < Effect; i++)
-                _playerFactory.GetNewPlayer();
+                PlayerFactory.GetNewPlayer();
 
             _additionHappened = true;
 

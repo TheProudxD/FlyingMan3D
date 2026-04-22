@@ -40,17 +40,27 @@ namespace _Project.Scripts.Gameplay
             set
             {
                 _health = value;
-                _healthText.SetText(_health.ToString());
+
+                if (_healthText != null)
+                    _healthText.SetText(_health.ToString());
             }
         }
 
         public void Initialize()
         {
             enabled = true;
+            _target = null;
+            _canSmoke = true;
+
+            if (_gameFactory.GetCurrentLevel() == null || _persistentProgressService?.PowerupProgress == null)
+                return;
+
             _stopDistance = _gameFactory.GetCurrentLevel().StopDistance;
             _moveSpeed = _persistentProgressService.PowerupProgress.movingSpeed;
             Health = Random.Range(1, _persistentProgressService.PowerupProgress.health + 1);
-            _healthCanvas.gameObject.SetActive(true);
+
+            if (_healthCanvas != null)
+                _healthCanvas.gameObject.SetActive(true);
         }
 
         private void Start()
@@ -68,11 +78,10 @@ namespace _Project.Scripts.Gameplay
             if (!_canMove)
                 return;
 
-            if (_target == null)
-            {
+            if (!HasValidTarget())
                 _target = _playerFinishCombatService.GetNearestTarget(transform.position);
-            }
-            else if (_target != null)
+
+            if (HasValidTarget())
             {
                 _moveDistance = _target.transform.position - transform.position;
                 _moveDistance.y = 0f;
@@ -84,6 +93,17 @@ namespace _Project.Scripts.Gameplay
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
                 transform.Translate(Vector3.forward * (_moveSpeed * Time.deltaTime));
             }
+        }
+
+        private bool HasValidTarget()
+        {
+            if (_target == null || !_target.activeInHierarchy)
+                return false;
+
+            if (_target.TryGetComponent(out EnemyBase enemy))
+                return !enemy.IsDie;
+
+            return true;
         }
 
         public bool IsGrounded()

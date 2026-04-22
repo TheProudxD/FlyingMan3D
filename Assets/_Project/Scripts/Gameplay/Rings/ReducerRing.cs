@@ -1,13 +1,9 @@
-using _Project.Scripts.Infrastructure.Services.Factories;
-using Reflex.Attributes;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay
 {
     public class ReducerRing : RingBase
     {
-        [Inject] private PlayerFactory _playerFactory;
-
         private bool _reductionHappened;
 
         protected override string Key => "-";
@@ -22,11 +18,11 @@ namespace _Project.Scripts.Gameplay
             if (_reductionHappened)
                 return;
 
-            var players = _playerFactory.GetAllPlayers();
+            var players = PlayerFactory.GetAllPlayers();
 
             for (int i = 0; i < Effect && players.Count > 1; i++)
             {
-                _playerFactory.DestroyLastPlayer();
+                PlayerFactory.DestroyLastPlayer();
             }
 
             _reductionHappened = true;

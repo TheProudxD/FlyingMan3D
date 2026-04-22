@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using _Project.Scripts.Infrastructure;
+using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.AssetManagement;
 using _Project.Scripts.Infrastructure.Services.Factories;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
@@ -18,6 +19,7 @@ namespace _Project.Scripts.Gameplay
         [Inject] private GameFactory _gameFactory;
         [Inject] private EnemyFactory _enemyFactory;
         [Inject] private PlayerFactory _playerFactory;
+        [Inject] private AudioService _audioService;
         [Inject] private AssetProvider _assetProvider;
         [Inject] private LevelResourceService _levelResourceService;
 
@@ -103,9 +105,12 @@ namespace _Project.Scripts.Gameplay
                 for (int j = 0; j < level.Rings[i].InsideRings.Length; j++)
                 {
                     RingHolder ring = await _gameFactory.GetRing(CalculateRingPosition(time, i, j), _colorArray, _index);
+                    if (ring == null)
+                        continue;
 
                     RingData ringData = level.Rings[i].InsideRings[j];
-                    _assetProvider.GetRingByType(ringData, ring.transform.GetChild(0).gameObject);
+                    Transform ringChild = ring.transform.childCount > 0 ? ring.transform.GetChild(0) : null;
+                    _assetProvider.GetRingByType(ringData, ringChild?.gameObject, _playerFactory, _audioService);
                 }
 
                 time += timeDif;

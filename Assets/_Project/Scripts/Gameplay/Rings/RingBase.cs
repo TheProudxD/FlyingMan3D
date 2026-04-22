@@ -1,6 +1,5 @@
 using _Project.Scripts.Infrastructure.Services.Audio;
 using _Project.Scripts.Infrastructure.Services.Factories;
-using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
 
@@ -8,8 +7,8 @@ namespace _Project.Scripts.Gameplay
 {
     public abstract class RingBase : MonoBehaviour
     {
-        [Inject] protected GameFactory GameFactory;
-        [Inject] protected AudioService AudioService;
+        protected PlayerFactory PlayerFactory;
+        protected AudioService AudioService;
 
         protected abstract string Key { get; }
         public int Effect { get; set; }
@@ -20,13 +19,20 @@ namespace _Project.Scripts.Gameplay
         private Vector3 _targetPosition;
         private bool _movingToTarget = true;
 
+        public void Construct(PlayerFactory playerFactory, AudioService audioService)
+        {
+            PlayerFactory = playerFactory;
+            AudioService = audioService;
+        }
+
         private void Start()
         {
             _startPosition = transform.position;
             _targetPosition = _startPosition + MovementAxis;
 
             var text = GetComponentInChildren<TMP_Text>();
-            text.SetText(Key + Effect);
+            if (text != null)
+                text.SetText(Key + Effect);
         }
 
         private void Update()

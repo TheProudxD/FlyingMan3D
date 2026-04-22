@@ -70,20 +70,24 @@ namespace _Project.Scripts.Gameplay
                 return null;
 
             float minDistance = float.MaxValue;
-            int index = 0;
+            EnemyBase nearestEnemy = null;
 
-            for (int i = 1; i < enemies.Count; i++)
+            for (int i = 0; i < enemies.Count; i++)
             {
-                float distance = Vector3.Distance(enemies[i].transform.position, position);
+                EnemyBase enemy = enemies[i];
+                if (enemy == null || enemy.IsDie || !enemy.gameObject.activeInHierarchy)
+                    continue;
+
+                float distance = Vector3.Distance(enemy.transform.position, position);
 
                 if (minDistance <= distance)
                     continue;
 
                 minDistance = distance;
-                index = i;
+                nearestEnemy = enemy;
             }
 
-            return enemies[index]?.gameObject;
+            return nearestEnemy?.gameObject;
         }
     }
 
