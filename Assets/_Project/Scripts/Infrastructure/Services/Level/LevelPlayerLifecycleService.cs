@@ -51,7 +51,7 @@ namespace _Project.Scripts.Infrastructure.Services.Level
 
             var fixedJoint = hips.gameObject.AddComponent<FixedJoint>();
             fixedJoint.connectedBody = capsule;
-            mainPlayer.SetInitial(fixedJoint, capsule.transform);
+            mainPlayer.SetInitial(capsule.transform);
             AddPlayer(mainPlayer);
 
             _entityRegistry.TrackLevelObject(mainPlayer.gameObject);

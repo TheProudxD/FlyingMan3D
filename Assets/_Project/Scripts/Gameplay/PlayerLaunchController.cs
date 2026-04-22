@@ -8,10 +8,6 @@ using Reflex.Attributes;
 
 namespace _Project.Scripts.Gameplay
 {
-    /// <summary>
-    /// Handles player launch sequence, animation, and physics application.
-    /// Manages the catapult launch mechanics and UI transitions.
-    /// </summary>
     public class PlayerLaunchController : MonoBehaviour
     {
         [Inject] private UIFactory _uiFactory;
@@ -26,17 +22,18 @@ namespace _Project.Scripts.Gameplay
         private Vector3 _initialPos;
         private float _maxLaunchSpeed;
 
-        public void Initialize(
-            Rigidbody[] bodies,
-            Transform capsule,
-            Vector3 initialPos)
+        public void ConfigureBodies(Rigidbody[] bodies)
         {
             _bodies = bodies;
-            _capsule = capsule;
-            _initialPos = initialPos;
         }
 
-        public void UpdateMaxLaunchSpeed(float speed) => _maxLaunchSpeed = speed;
+        public void SetLaunchAnchor(Transform capsule)
+        {
+            _capsule = capsule;
+            _initialPos = capsule != null ? capsule.position : Vector3.zero;
+        }
+
+        public void SetMaxLaunchSpeed(float maxLaunchSpeed) => _maxLaunchSpeed = maxLaunchSpeed;
 
         public IEnumerator ApplyLaunchForce(float factor)
         {
@@ -81,6 +78,9 @@ namespace _Project.Scripts.Gameplay
             // Apply launch force to all bodies
             Vector3 forceVector = new Vector3(0, factor, factor * 2f) * _maxLaunchSpeed;
 
+            if (_bodies == null || _bodies.Length == 0)
+                yield break;
+
             foreach (Rigidbody rb in _bodies)
             {
                 if (rb == null)
@@ -92,9 +92,10 @@ namespace _Project.Scripts.Gameplay
 
             // Spawn objects if launch force is significant
             Spawner spawner = _gameFactory?.GetSpawner();
-            if (factor > 0.1f && spawner != null && !spawner.HasSpawnedLevelObjects)
+            Rigidbody launchSource = _bodies[0];
+            if (factor > 0.1f && spawner != null && !spawner.HasSpawnedLevelObjects && launchSource != null)
             {
-                spawner.SpawnObjects(_bodies[0]?.linearVelocity ?? Vector3.zero);
+                spawner.SpawnObjects(launchSource.linearVelocity);
             }
         }
     }

@@ -5,27 +5,20 @@ using Reflex.Attributes;
 
 namespace _Project.Scripts.Gameplay
 {
-    /// <summary>
-    /// Handles player death detection, ragdoll creation, and cleanup.
-    /// Manages the death state and coordinates with player factory for removal.
-    /// </summary>
     public class PlayerDeathHandler : MonoBehaviour
     {
         [Inject] private FxFactory _fxFactory;
         [Inject] private PlayerFactory _playerFactory;
 
         [SerializeField] private float _dieHeight = -5f;
+        [SerializeField] private PlayerController _playerController;
+        [SerializeField] private Rigidbody _hipsRigidbody;
 
-        private PlayerController _playerController;
-
-        private Rigidbody _hipsRigidbody;
         private bool _isDead;
 
-        public void Initialize(Rigidbody hipsRigidbody, PlayerController playerController)
-        {
-            _hipsRigidbody = hipsRigidbody;
-            _playerController = playerController;
-        }
+        private void Awake() => CacheReferences();
+
+        private void OnValidate() => CacheReferences();
 
         public void CheckForDeath()
         {
@@ -61,6 +54,12 @@ namespace _Project.Scripts.Gameplay
 
             // Remove player from factory
             _playerFactory.RemovePlayer(_playerController);
+        }
+
+        private void CacheReferences()
+        {
+            _playerController ??= GetComponent<PlayerController>();
+            _hipsRigidbody ??= GetComponentInChildren<Rigidbody>(true);
         }
     }
 }

@@ -1,20 +1,20 @@
+using System.Collections;
 using UnityEngine;
 using _Project.Scripts.Infrastructure.Services.Factories;
+using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 using Reflex.Attributes;
 
 namespace _Project.Scripts.Gameplay
 {
-    /// <summary>
-    /// Handles player initialization, component setup, and dependency injection.
-    /// Manages the initial state and connections between player components.
-    /// </summary>
     public class PlayerInitializer : MonoBehaviour
     {
         [Inject] private GameFactory _gameFactory;
         [Inject] private IPersistentProgressService _persistentProgressService;
 
-        [SerializeField] private PlayerController _playerController;
+        [SerializeField] private PlayerMovementController _movementController;
+        [SerializeField] private PlayerLaunchController _launchController;
+        [SerializeField] private PlayerDeathHandler _deathHandler;
         [SerializeField] private Rigidbody _hipsRigidbody;
         [SerializeField] private TrailRenderer _trailRenderer;
         [SerializeField] private Rigidbody[] _bodies;
@@ -24,48 +24,50 @@ namespace _Project.Scripts.Gameplay
 
         private void OnValidate() => CacheReferences();
 
-        public void SetupInitialState()
+        public void InitializeStructuralComponents()
         {
-            if (_playerController == null)
-                return;
-
-            _playerController.Initialize(GetMaxLaunchSpeed(), GetMovementSpeed());
+            _movementController?.Configure(_hipsRigidbody);
+            _movementController?.Initialize(_bodies, GetMovementSpeed());
+            _launchController?.ConfigureBodies(_bodies);
         }
 
-        public void SetInitialJoint(FixedJoint joint, Transform capsule)
+        public void SetLaunchAnchor(Transform launchCapsule)
         {
-            if (_playerController != null)
-                _playerController.SetInitial(joint, capsule);
+            _launchController?.SetLaunchAnchor(launchCapsule);
         }
+
+        public void ApplyRuntimeSettings()
+        {
+            _movementController?.SetMovementSpeed(GetMovementSpeed());
+
+            Level currentLevel = _gameFactory?.GetCurrentLevel();
+            if (currentLevel != null)
+                _launchController?.SetMaxLaunchSpeed(currentLevel.MaxLaunchSpeed);
+        }
+
+        public void DisableMovement() => _movementController?.SetEnabled(false);
+
+        public void CheckForDeath() => _deathHandler?.CheckForDeath();
+
+        public IEnumerator ApplyLaunchForce(float factor) =>
+            _launchController?.ApplyLaunchForce(factor);
+
+        public void Die() => _deathHandler?.Die();
 
         public float GetMovementSpeed() => _persistentProgressService.PowerupProgress.flyingControl;
 
-        public float GetMaxLaunchSpeed() => _gameFactory.GetCurrentLevel().MaxLaunchSpeed;
-
-        // Public accessors for other components
-        public Rigidbody HipsRigidbody
-        {
-            get
-            {
-                if (_hipsRigidbody == null)
-                {
-                    CacheReferences();
-
-                    if (_hipsRigidbody == null)
-                        _hipsRigidbody = GetComponentInChildren<Rigidbody>(true);
-                }
-
-                return _hipsRigidbody;
-            }
-        }
+        public Rigidbody HipsRigidbody => _hipsRigidbody;
         public TrailRenderer TrailRenderer => _trailRenderer;
         public Rigidbody[] Bodies => _bodies;
         public Animator Animator => _animator;
 
         private void CacheReferences()
         {
-            _playerController ??= GetComponent<PlayerController>();
+            _movementController ??= GetComponent<PlayerMovementController>();
+            _launchController ??= GetComponent<PlayerLaunchController>();
+            _deathHandler ??= GetComponent<PlayerDeathHandler>();
             _animator ??= GetComponent<Animator>();
+            _trailRenderer ??= GetComponentInChildren<TrailRenderer>(true);
 
             if (_bodies == null || _bodies.Length == 0)
                 _bodies = GetComponentsInChildren<Rigidbody>(true);

@@ -2340,9 +2340,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6905923dc4866f8448f27cdc610e5b5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementController: {fileID: -8036922864640587598}
-  _launchController: {fileID: -1795803471702380212}
-  _deathHandler: {fileID: -7086498004900797085}
   _initializer: {fileID: -1436203082616704617}
 --- !u!114 &-8036922864640587598
 MonoBehaviour:
@@ -2386,6 +2383,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dieHeight: -5
+  _playerController: {fileID: 9154461922809862172}
+  _hipsRigidbody: {fileID: 4189387454735673703}
 --- !u!114 &-1436203082616704617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2399,6 +2398,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerController: {fileID: 9154461922809862172}
+  _movementController: {fileID: -8036922864640587598}
+  _launchController: {fileID: -1795803471702380212}
+  _deathHandler: {fileID: -7086498004900797085}
   _hipsRigidbody: {fileID: 4189387454735673703}
   _trailRenderer: {fileID: 1001970537107957870}
   _bodies:
