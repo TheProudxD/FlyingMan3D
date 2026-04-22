@@ -57,9 +57,6 @@ namespace _Project.Scripts.Gameplay
             
             if (_bodies == null || _bodies.Length == 0)
                 _bodies = GetComponentsInChildren<Rigidbody>(true);
-
-            if (_hipsRigidbody == null)
-                _hipsRigidbody = GetComponentInChildren<Rigidbody>(true);
         }
     }
 }

@@ -15,10 +15,10 @@ namespace _Project.Scripts.Gameplay
         [SerializeField] private PlayerInitializer _initializer;
         
         // Public properties for backward compatibility
-        public Rigidbody SelfHips => _initializer.SelfHips;
-        public TrailRenderer TrailRenderer => _initializer.TrailRenderer;
-        public Rigidbody[] Bodies => _initializer.Bodies;
-        public Animator Animator => _initializer.Animator;
+        public Rigidbody SelfHips => _initializer?.SelfHips;
+        public TrailRenderer TrailRenderer => _initializer?.TrailRenderer;
+        public Rigidbody[] Bodies => _initializer?.Bodies;
+        public Animator Animator => _initializer?.Animator;
 
         public bool IsPassed { get; set; }
         public bool IsTarget { get; set; }
@@ -78,6 +78,7 @@ namespace _Project.Scripts.Gameplay
             _movementController ??= GetComponent<PlayerMovementController>();
             _launchController ??= GetComponent<PlayerLaunchController>();
             _deathHandler ??= GetComponent<PlayerDeathHandler>();
+            _initializer ??= GetComponent<PlayerInitializer>();
         }
     }
 }
