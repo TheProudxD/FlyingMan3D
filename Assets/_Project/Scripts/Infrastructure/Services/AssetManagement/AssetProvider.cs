@@ -6,13 +6,11 @@ using _Project.Scripts.Infrastructure.Services.Config;
 using _Project.Scripts.Infrastructure.Services.LevelSystem;
 using _Project.Scripts.Infrastructure.Services.Localization;
 using _Project.Scripts.Infrastructure.Services.Localization.SO;
-using _Project.Scripts.Tools;
 using _Project.Scripts.Tools.Camera;
 using _Project.Scripts.Tools.Extensions;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows;
 using Cysharp.Threading.Tasks;
-using Reflex.Core;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -24,16 +22,25 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
 {
     public class AssetProvider : IService, IDisposable, ITaskInitializable
     {
-        private readonly Container _container;
+        private readonly ProjectObjectInjector _projectObjectInjector;
         private ConfigService _configService;
 
-        public AssetProvider(Container container) => _container = container;
+        public AssetProvider(ProjectObjectInjector projectObjectInjector) =>
+            _projectObjectInjector = projectObjectInjector;
 
         public UniTask Initialize()
         {
-            _configService = _container.Resolve<ConfigService>();
+            if (_configService == null)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                UnityEngine.Debug.LogError("[AssetProvider] ConfigService is not assigned.");
+#endif
+            }
+
             return UniTask.CompletedTask;
         }
+
+        public void SetConfigService(ConfigService configService) => _configService = configService;
 
         public UniTask<AudioServiceView> CreateAudioServiceView() =>
             Instantiate<AudioServiceView>(AssetPath.AUDIO_SERVICE_VIEW);
@@ -164,7 +171,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             ring.Effect = ringData.Effect;
             ring.Speed = ringData.Speed;
             ring.MovementAxis = ringData.MovementAxis;
-            _container.Inject(ring);
+            _projectObjectInjector.Inject(ring);
         }
 
         private GameObject Instantiate(GameObject prefab, Vector3 position = default, Quaternion rotation = default,
@@ -172,7 +179,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
         {
             prefab.SetActive(false);
             GameObject gameObject = Object.Instantiate(prefab, position, rotation, parent);
-            _container.Inject(gameObject);
+            _projectObjectInjector.Inject(gameObject);
             gameObject.SetActive(isActivateGameObject);
             prefab.SetActive(isActivateGameObject);
             return gameObject;
@@ -200,7 +207,7 @@ namespace _Project.Scripts.Infrastructure.Services.AssetManagement
             prefab.SetActive(false);
             GameObject gameObject = Object.Instantiate(prefab, position, rotation, parent);
             T component = gameObject.GetComponent<T>();
-            _container.Inject(component);
+            _projectObjectInjector.Inject(component);
             component.enabled = componentEnabled;
             gameObject.SetActive(isActivateGameObject);
             prefab.SetActive(isActivateGameObject);

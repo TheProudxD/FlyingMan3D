@@ -52,8 +52,8 @@ namespace _Project.Scripts.Infrastructure.DI
 
             builder.OnContainerBuilt += c =>
             {
-                c.Resolve<ConfigService>();
-                c.Resolve<UIFactory>();
+                c.Resolve<ProjectObjectInjector>().SetContainer(c);
+                c.Resolve<AssetProvider>().SetConfigService(c.Resolve<ConfigService>());
             };
         }
 
@@ -163,6 +163,7 @@ namespace _Project.Scripts.Infrastructure.DI
 
         private void BindAssets(ContainerBuilder builder)
         {
+            builder.AddSingleton(typeof(ProjectObjectInjector));
             builder.AddSingleton(typeof(AssetProvider));
             builder.AddSingleton(typeof(SpriteAtlasLoader));
         }
