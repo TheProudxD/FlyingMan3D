@@ -1,7 +1,7 @@
 using _Project.Scripts.Infrastructure.Observable;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
 
-namespace _Project.Scripts.Infrastructure.Services.Resource_Management
+namespace _Project.Scripts.Infrastructure.Services.Resources
 {
     public abstract class ResourceService<T> : IService
     {

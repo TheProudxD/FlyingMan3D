@@ -1,6 +1,6 @@
 using System;
 
-namespace _Project.Scripts.Tools.Update_Management
+namespace _Project.Scripts.Tools.Updates
 {
     using UnityEngine;
     using System.Collections.Generic;

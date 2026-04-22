@@ -1,7 +1,5 @@
 using _Project.Scripts.Infrastructure.Observable;
 using _Project.Scripts.Infrastructure.Services.PersistentProgress;
-using _Project.Scripts.Infrastructure.Services.Resource_Management;
-
 namespace _Project.Scripts.Infrastructure.Services.Resources
 {
     public class MoneyResourceService : ResourceService<int>

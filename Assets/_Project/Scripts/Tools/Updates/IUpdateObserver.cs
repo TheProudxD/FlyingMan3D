@@ -1,4 +1,4 @@
-namespace _Project.Scripts.Tools.Update_Management
+namespace _Project.Scripts.Tools.Updates
 {
     public interface IUpdateObserver
     {
