@@ -172,7 +172,7 @@ Main сцена — основная игровая сцена.
 - `RestartLevelState`
 - `ReplayLevelState`
 
-`ContinueLevelState` существует, но фактически пустой и сейчас не образует рабочего gameplay branch.
+`ContinueLevelState` реализован как revive-ветка после rewarded ad: состояние пересоздаёт основного игрока на текущей рогатке, возвращает HUD и indicator и затем переводит игру обратно в `GameLoopState`.
 
 ### 5.3. DI через Reflex
 
@@ -185,7 +185,7 @@ Main сцена — основная игровая сцена.
 Что важно:
 
 - `BootstrapInstaller` после сборки контейнера вручную инжектит все `LocalizedLabel` и активирует `GameBootstraper`;
-- `MainSceneInstaller` собирает `LevelSceneReferences` и передаёт их в `GameFactory` и `LevelLifecycleService`;
+- `MainSceneInstaller` собирает `LevelSceneReferences` и передаёт их в `GameFactory` и level-сервисы, которым нужны scene refs;
 - `ProjectInstaller` объявляет почти все глобальные сервисы как singletons.
 
 Это хороший слой orchestration, близкий к идеям из `UNITY_COMPOSITION_GUIDE.md`: зависимости централизованы, сервисы явно разделены по ответственности.
@@ -267,26 +267,25 @@ Addressable keys вынесены в `AssetPath.cs`.
 - `UIFactory` — создание UI root и регистрация window factories;
 - `FxFactory` — дым и ragdoll VFX.
 
-### 6.4. LevelLifecycleService
+### 6.4. Level Services
 
-Ключевой файл:
+Ключевые файлы:
 
-- `Assets/_Project/Scripts/Infrastructure/Services/Level/LevelLifecycleService.cs`
+- `Assets/_Project/Scripts/Infrastructure/Services/Level/LevelEntityRegistry.cs`
+- `Assets/_Project/Scripts/Infrastructure/Services/Level/LevelPlayerLifecycleService.cs`
+- `Assets/_Project/Scripts/Infrastructure/Services/Level/LevelRuntimeObjectFactory.cs`
+- `Assets/_Project/Scripts/Infrastructure/Services/Level/PlayerStateCopyService.cs`
 
-Это один из самых важных сервисов проекта.
+После рефакторинга бывший `LevelLifecycleService` разрезан на несколько маленьких сервисов.
 
-Он:
+По ролям:
 
-- хранит runtime-списки игроков и врагов;
-- держит `ObservableVariable<int>` для `PlayersCounter` и `EnemiesCounter`;
-- создаёт главного игрока;
-- создаёт клонов игроков;
-- создаёт врагов;
-- создаёт финиш;
-- создаёт кольца;
-- создаёт бочки;
-- создаёт рогатку;
-- очищает level holder при рестарте/перезагрузке.
+- `LevelEntityRegistry` хранит runtime-списки игроков и врагов, считает `PlayersCounter` и `EnemiesCounter`, а также отвечает за cleanup;
+- `LevelPlayerLifecycleService` создаёт главного игрока и клонов игроков, а также регистрирует их в registry;
+- `LevelRuntimeObjectFactory` создаёт врагов, финиш, кольца, бочки и рогатку;
+- `PlayerStateCopyService` копирует физическое состояние игрока при клонировании.
+
+Это лучше соответствует compositional-подходу из guide: вместо одного god-service проект использует несколько узких level-сервисов.
 
 По сути это runtime lifecycle manager всей игровой сцены.
 
@@ -398,16 +397,16 @@ Addressable keys вынесены в `AssetPath.cs`.
 
 Вместо одного большого `Player` проект уже разложен на отдельные responsibility blocks:
 
-- `PlayerInitializer` собирает ссылки и готовит объект;
+- `PlayerInitializer` занимается инициализацией и runtime-настройкой player-ветки;
 - `PlayerMovementController` отвечает за боковое управление;
 - `PlayerLaunchController` отвечает за анимацию рогатки и стартовый импульс;
 - `PlayerDeathHandler` отвечает за смерть и ragdoll;
 - `PlayerFinishMover` отвечает за поведение в финальной боевой фазе;
-- `PlayerController` выступает orchestration/facade-слоем.
+- `PlayerController` выступает тонким gameplay-facade-слоем: держит публичный API игрока, state-флаги и делегирует поведение в специализированные компоненты.
 
 Дополнительная особенность:
 
-- в `Awake()` `PlayerController` умеет сам добавить недостающие саб-компоненты через `AddComponent`, чтобы старый prefab не ломался после рефакторинга.
+- structural-ссылки на компоненты кэшируются через `OnValidate`/`Awake`, а не через runtime `AddComponent` compatibility-ветки.
 
 ### 7.2. Launch mechanic
 
@@ -516,7 +515,7 @@ Addressable keys вынесены в `AssetPath.cs`.
 
 Ключевой файл:
 
-- `LevelLifecycleService.GetNewPlayer()`
+- `LevelPlayerLifecycleService.GetNewPlayer()`
 
 Клоны создаются не абстрактно и не как счётчик, а как реальные новые `PlayerController`.
 
@@ -564,7 +563,7 @@ Addressable keys вынесены в `AssetPath.cs`.
 Важно:
 
 - `EnemyType.WithGun` и `EnemyType.WithGunAndShield` существуют в enum;
-- но в `LevelLifecycleService` оба сейчас мапятся на обычный `Simple` enemy prefab;
+- но в `LevelRuntimeObjectFactory` оба сейчас мапятся на обычный `Simple` enemy prefab;
 - отдельных геймплейных различий у них нет.
 
 ### 7.9. Финиш и переход в боевую фазу
@@ -845,7 +844,7 @@ Engine:
 
 ### Что совпадает с философией гайда
 
-- есть чёткий orchestration layer через `ProjectInstaller`, `GameFactory`, `LevelLifecycleService`, `PlayerController`;
+- есть чёткий orchestration layer через `ProjectInstaller`, `GameFactory`, level-services и `PlayerController`;
 - player logic разложена на несколько специализированных контроллеров;
 - UI отделён от сервисов и опирается на DI;
 - counters и UI-реакции опираются на observable/events;
@@ -874,16 +873,16 @@ Engine:
 
 ### 12.1. Системы, которые выглядят незавершёнными или частично выключенными
 
-- `ContinueLevelState` пустой.
+- `ContinueLevelState` уже не пустой: это рабочая revive-ветка после rewarded ad.
 - В `LoseWindow` код для continue/skip-компенсации закомментирован, кнопка skip скрыта.
 - `Timer` и `TimerView` существуют, но таймер не запускается gameplay-потоком.
-- `HeartTracker` зарегистрирован в DI, но фактически не подключён к HUD.
-- `StatisticsWindow` существует как класс, но не зарегистрирован в `WindowId`/`UIFactory`/`WindowsData`.
-- `ReviewThanksWindow` тоже существует, но не зарегистрирован как runtime window.
+- `HeartTracker` удалён из проекта как неиспользуемая система.
+- `StatisticsWindow` удалён как orphaned window.
+- `ReviewThanksWindow` удалён как orphaned window.
 - `ReviewData` есть как config-класс, но не входит в `ConfigContainer`, значит `ConfigService.Get<ReviewData>()` сейчас не сможет корректно сработать.
-- `CoinRewardAnimation` реализован, но его использование в `WinWindow` закомментировано.
+- `CoinRewardAnimation` реализован и используется в `WinWindow` как опциональная reward animation.
 - `ScoreView` содержит закомментированную инициализацию `_score` и выглядит как сломанный/inactive код.
-- `InputReader` зарегистрирован как сервис, но core gameplay продолжает читать `Input` напрямую.
+- core gameplay переведён на `InputReader`; прямой `Input` больше не является основной схемой в gameplay-контуре.
 - `GameData` config-класс существует, но по текущему коду не используется.
 
 ### 12.2. Реклама и live-сервисы
@@ -916,7 +915,7 @@ Engine:
 3. `Assets/_Project/Scripts/Infrastructure/FSM/States/LoadGameState.cs`
 4. `Assets/_Project/Scripts/Infrastructure/FSM/States/LoadLevelState.cs`
 5. `Assets/_Project/Scripts/Infrastructure/Services/Factories/GameFactory.cs`
-6. `Assets/_Project/Scripts/Infrastructure/Services/Level/LevelLifecycleService.cs`
+6. `Assets/_Project/Scripts/Infrastructure/Services/Level/LevelPlayerLifecycleService.cs`
 7. `Assets/_Project/Scripts/Gameplay/Spawner.cs`
 8. `Assets/_Project/Scripts/Gameplay/PlayerController.cs`
 9. `Assets/_Project/Scripts/Gameplay/PlayerFinishMover.cs`
