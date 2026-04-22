@@ -1,5 +1,4 @@
 using _Project.Scripts.Infrastructure.Services.Localization.UI;
-using _Project.Scripts.Tools;
 using _Project.Scripts.Tools.Extensions;
 using Reflex.Core;
 using UnityEngine;
@@ -12,26 +11,8 @@ namespace _Project.Scripts.Infrastructure.DI
         [SerializeField] private GameBootstraper _gameBootstraper;
         [SerializeField] private LocalizedLabel[] _localizedLabels;
 
-        public void InstallBindings(ContainerBuilder builder) => builder.OnContainerBuilt += OnContainerBuilt;
-
-        private void OnContainerBuilt(Container container)
-        {
-            InjectLocalizedLabel(container);
-
-            if (_gameBootstraper != null)
-                _gameBootstraper.Activate();
-        }
-
-        private void InjectLocalizedLabel(Container container)
-        {
-            foreach (LocalizedLabel label in _localizedLabels)
-            {
-                if (label == null)
-                    continue;
-
-                container.Inject(label);
-            }
-        }
+        public void InstallBindings(ContainerBuilder builder) =>
+            builder.BindBootstrapScene(_gameBootstraper, _localizedLabels);
 
         private void OnValidate()
         {
